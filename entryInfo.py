@@ -5,7 +5,7 @@ from sys import argv, stderr, exit
 
 class entryInfo (object):
 
-    def __init__(self, name= None, netid= None, email= None, phone= None, description= None, address= None):
+    def __init__(self, name= '', netid= '', email= '', phone= '', description= '', address= ''):
         self._name = name
         self._netid = netid
         self._email = email
@@ -28,19 +28,21 @@ class entryInfo (object):
     def setDescription(self, description):
         self._description = description   
 
-    def getName(self, name): 
+    def getName(self): 
         return self._name    
     
-    def getNetid(self, netid):
+    def getNetid(self):
         return self._netid 
 
-    def getEmail(self, email):
+    def getEmail(self):
         return self._email  
 
-    def getPhone(self, phone):
-        if (isinstance(phone, )):
-            raise Exception('Phone number is invalid')
+    def getPhone(self):
         return self._phone  
 
-    def getDescription(self, description):
+    def getDescription(self):
         return self._description  
+    
+    
+    def getAddress(self):
+        return self._address  
