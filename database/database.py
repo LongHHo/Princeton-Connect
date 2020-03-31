@@ -1,6 +1,7 @@
 #!/usr/bin/python
 import psycopg2
 from configparser import ConfigParser
+from sys import argv, stderr, exit
 import entryInfo 
 
 def config(filename='database.ini', section='postgresql'):
@@ -20,6 +21,7 @@ def config(filename='database.ini', section='postgresql'):
  
     return db
 
+# inserts userEntry into database
 def insertEntry(entryInfo):
     """ Connect to the PostgreSQL database server """
     conn = None
@@ -38,7 +40,6 @@ def insertEntry(entryInfo):
                VALUES(%s, %s, %s, %s, %s, %s)"""
 
              
-        
         # execute a statement
         name = entryInfo.getName()
         netid = entryInfo.getNetid()
@@ -62,8 +63,72 @@ def insertEntry(entryInfo):
             conn.close()
             print('Database connection closed.')
 
-
+# based on fields of entry, queries all rows in database containing these fields
+def searchEntry(entry):
+    """ Connect to the PostgreSQL database server """
+    conn = None
+    try:
+        # read connection parameters
+        params = config()
  
+        # connect to the PostgreSQL server
+        print('Connecting to the PostgreSQL database...')
+        conn = psycopg2.connect(**params)
+      
+        # create a cursor
+        cur = conn.cursor()
+    
+        sql = """
+            SELECT *
+            FROM userInformation
+            WHERE userInformation.netid LIKE %s AND
+            userInformation.name LIKE %s AND
+            userInformation.email LIKE %s AND
+            userInformation.phone LIKE %s AND
+            userInformation.description LIKE %s AND
+            userInformation.address LIKE %s;
+        """
+
+             
+        # execute a statement
+        name = entry.retName()
+        netid = entry.retNetid()
+        phone = entry.retPhone()
+        email = entry.retEmail()
+        address = entry.retAddress()
+        description = entry.retDescription()
+
+        
+        cur.execute(sql, (netid, name, email, phone, description, address))
+        row = cur.fetchone()
+
+        entries = []
+        while row is not None:
+            user = entryInfo.entryInfo()
+            print(row[0])
+            user.setNetid(str(row[0]))
+            user.setName(str(row[1]))
+            user.setEmail(str(row[2]))
+            user.setPhone(str(row[3]))
+            user.setDescription(str(row[4]))
+            user.setAddress(str(row[5]))
+            entries.append(user)
+            row = cur.fetchone()
+          
+        print('success')
+        # close the communication with the PostgreSQL
+        cur.close()
+        return entries
+        
+    except (Exception, psycopg2.DatabaseError) as error:
+        print(error)
+    finally:
+        if conn is not None:
+            conn.close()
+            print('Database connection closed.')
+
+
+# prints all rows in userInformation table
 def displayRows():
     """ Connect to the PostgreSQL database server """
     conn = None
@@ -99,13 +164,17 @@ def displayRows():
             conn.close()
             print('Database connection closed.')
 
-def main():
+def main(argv):
 
-    info = entryInfo.entryInfo('Test Ho', 'test', 'test@gmail.com', '111')
+    info = entryInfo.entryInfo()
+    info.setAddress(str(argv[1]))
+    print(info.getAddress())
     # insertEntry(info)
-    displayRows()
+    query = searchEntry(info)
+    for entry in query:
+        print(entry.retUserInfo())
 
  
  
 if __name__ == '__main__':
-    main()
+    main(argv)
