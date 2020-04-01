@@ -63,7 +63,8 @@ def insertEntry(entryInfo):
             conn.close()
             print('Database connection closed.')
 
-# based on fields of entry, queries all rows in database containing these fields
+# based on fields of entry, returns a list of all rows in database containing these fields
+# in which each row is a userInfo object
 def searchEntry(entry):
     """ Connect to the PostgreSQL database server """
     conn = None
@@ -105,7 +106,6 @@ def searchEntry(entry):
         entries = []
         while row is not None:
             user = entryInfo.entryInfo()
-            print(row[0])
             user.setNetid(str(row[0]))
             user.setName(str(row[1]))
             user.setEmail(str(row[2]))
