@@ -3,6 +3,11 @@ import psycopg2
 from configparser import ConfigParser
 from sys import argv, stderr, exit
 import entryInfo 
+import googlemaps
+from datetime import datetime
+import requests
+
+# gmaps = googlemaps.Client(key='AIzaSyDQe5G3tqd5Vfwefn7w3Djrv1L1bmlKkTw')
 
 def config(filename='database.ini', section='postgresql'):
     # create a parser
@@ -21,7 +26,25 @@ def config(filename='database.ini', section='postgresql'):
  
     return db
 
+
+# returns latitude and longitude of a given address
+def geocode(address):
+    try:
+        url = ('https://maps.googleapis.com/maps/api/geocode/json?address={}&key={}'
+            .format(address.replace(' ','+'), 'AIzaSyDQe5G3tqd5Vfwefn7w3Djrv1L1bmlKkTw'))
+       
+        response = requests.get(url)
+        resp_json_payload = response.json()
+        lat = resp_json_payload['results'][0]['geometry']['location']['lat']
+        lng = resp_json_payload['results'][0]['geometry']['location']['lng']
+        return lat, lng
+    except Exception as e:
+        print(e)
+
+
+
 # inserts userEntry into database
+# entryInfo is an entryInfo object
 def insertEntry(entryInfo):
     """ Connect to the PostgreSQL database server """
     conn = None
@@ -36,10 +59,11 @@ def insertEntry(entryInfo):
         # create a cursor
         cur = conn.cursor()
 
-        sql = """INSERT INTO userInformation (netid, name, phone, email, description, address) 
+        insertUser = """INSERT INTO userInformation (netid, name, phone, email, description, address) 
                VALUES(%s, %s, %s, %s, %s, %s)"""
 
-             
+        insertCoordinates = """INSERT INTO coordinates (netid, address, latitude, longitude) 
+               VALUES(%s, %s, %s, %s)"""
         # execute a statement
         name = entryInfo.getName()
         netid = entryInfo.getNetid()
@@ -49,7 +73,20 @@ def insertEntry(entryInfo):
         description = entryInfo.getDescription()
 
         
-        cur.execute(sql, (netid, name, phone, email, description, address))
+        cur.execute(insertUser, (netid, name, phone, email, description, address))
+        
+        print('before')
+        coordinates = geocode(address)
+        print('after')
+   
+        latitude = float(coordinates[0])
+        longitude = float(coordinates[1])
+
+        print(latitude)
+        print(longitude)
+
+        cur.execute(insertCoordinates, (netid, address, latitude, longitude))
+
 
         conn.commit()            
         print('success')
@@ -65,6 +102,7 @@ def insertEntry(entryInfo):
 
 # based on fields of entry, returns a list of all rows in database containing these fields
 # in which each row is a userInfo object
+# entry is a entryInfo object
 def searchEntry(entry):
     """ Connect to the PostgreSQL database server """
     conn = None
@@ -155,6 +193,17 @@ def displayRows():
             print() 
             row = cur.fetchone()
 
+        cur.execute('SELECT * from coordinates;')
+        
+        print('--Coordinates--')
+        row = cur.fetchone()
+
+        while row is not None:
+            for item in row:
+                print(str(item) + " ", end=' ')
+            print() 
+            row = cur.fetchone()
+
        # close the communication with the PostgreSQL
         cur.close()
     except (Exception, psycopg2.DatabaseError) as error:
@@ -166,13 +215,9 @@ def displayRows():
 
 def main(argv):
 
-    info = entryInfo.entryInfo()
-    info.setAddress(str(argv[1]))
-    print(info.getAddress())
-    # insertEntry(info)
-    query = searchEntry(info)
-    for entry in query:
-        print(entry.retUserInfo())
+    displayRows()
+
+
 
  
  
