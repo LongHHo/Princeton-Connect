@@ -2,7 +2,7 @@
 import psycopg2
 from configparser import ConfigParser
 from sys import argv, stderr, exit
-import entryInfo 
+import entryInfo
 import googlemaps
 from datetime import datetime
 import requests
@@ -14,7 +14,7 @@ def config(filename='database.ini', section='postgresql'):
     parser = ConfigParser()
     # read config file
     parser.read(filename)
- 
+
     # get section, default to postgresql
     db = {}
     if parser.has_section(section):
@@ -23,7 +23,7 @@ def config(filename='database.ini', section='postgresql'):
             db[param[0]] = param[1]
     else:
         raise Exception('Section {0} not found in the {1} file'.format(section, filename))
- 
+
     return db
 
 
@@ -32,7 +32,7 @@ def geocode(address):
     try:
         url = ('https://maps.googleapis.com/maps/api/geocode/json?address={}&key={}'
             .format(address.replace(' ','+'), 'AIzaSyDQe5G3tqd5Vfwefn7w3Djrv1L1bmlKkTw'))
-       
+
         response = requests.get(url)
         resp_json_payload = response.json()
         lat = resp_json_payload['results'][0]['geometry']['location']['lat']
@@ -51,18 +51,18 @@ def insertEntry(entryInfo):
     try:
         # read connection parameters
         params = config()
- 
+
         # connect to the PostgreSQL server
         print('Connecting to the PostgreSQL database...')
         conn = psycopg2.connect(**params)
-      
+
         # create a cursor
         cur = conn.cursor()
 
-        insertUser = """INSERT INTO userInformation (netid, name, phone, email, description, address) 
+        insertUser = """INSERT INTO userInformation (netid, name, phone, email, description, address)
                VALUES(%s, %s, %s, %s, %s, %s)"""
 
-        insertCoordinates = """INSERT INTO coordinates (netid, address, latitude, longitude) 
+        insertCoordinates = """INSERT INTO coordinates (netid, address, latitude, longitude)
                VALUES(%s, %s, %s, %s)"""
         # execute a statement
         name = entryInfo.getName()
@@ -72,13 +72,13 @@ def insertEntry(entryInfo):
         address = entryInfo.getAddress()
         description = entryInfo.getDescription()
 
-        
+
         cur.execute(insertUser, (netid, name, phone, email, description, address))
-        
+
         print('before')
         coordinates = geocode(address)
         print('after')
-   
+
         latitude = float(coordinates[0])
         longitude = float(coordinates[1])
 
@@ -88,11 +88,11 @@ def insertEntry(entryInfo):
         cur.execute(insertCoordinates, (netid, address, latitude, longitude))
 
 
-        conn.commit()            
+        conn.commit()
         print('success')
         # close the communication with the PostgreSQL
         cur.close()
-        
+
     except (Exception, psycopg2.DatabaseError) as error:
         print(error)
     finally:
@@ -109,14 +109,14 @@ def searchEntry(entry):
     try:
         # read connection parameters
         params = config()
- 
+
         # connect to the PostgreSQL server
         print('Connecting to the PostgreSQL database...')
         conn = psycopg2.connect(**params)
-      
+
         # create a cursor
         cur = conn.cursor()
-    
+
         sql = """
             SELECT *
             FROM userInformation
@@ -128,7 +128,7 @@ def searchEntry(entry):
             userInformation.address LIKE %s;
         """
 
-             
+
         # execute a statement
         name = entry.retName()
         netid = entry.retNetid()
@@ -137,7 +137,7 @@ def searchEntry(entry):
         address = entry.retAddress()
         description = entry.retDescription()
 
-        
+
         cur.execute(sql, (netid, name, email, phone, description, address))
         row = cur.fetchone()
 
@@ -152,12 +152,12 @@ def searchEntry(entry):
             user.setAddress(str(row[5]))
             entries.append(user)
             row = cur.fetchone()
-          
+
         print('success')
         # close the communication with the PostgreSQL
         cur.close()
         return entries
-        
+
     except (Exception, psycopg2.DatabaseError) as error:
         print(error)
     finally:
@@ -173,35 +173,35 @@ def displayRows():
     try:
         # read connection parameters
         params = config()
- 
+
         # connect to the PostgreSQL server
         print('Connecting to the PostgreSQL database...')
         conn = psycopg2.connect(**params)
-      
+
         # create a cursor
         cur = conn.cursor()
-        
+
    # execute a statement
         cur.execute('SELECT * from userInformation;')
-        
-        
+
+
         row = cur.fetchone()
 
         while row is not None:
             for item in row:
                 print(item + " ", end=' ')
-            print() 
+            print()
             row = cur.fetchone()
 
         cur.execute('SELECT * from coordinates;')
-        
+
         print('--Coordinates--')
         row = cur.fetchone()
 
         while row is not None:
             for item in row:
                 print(str(item) + " ", end=' ')
-            print() 
+            print()
             row = cur.fetchone()
 
        # close the communication with the PostgreSQL
@@ -217,9 +217,5 @@ def main(argv):
 
     displayRows()
 
-
-
- 
- 
 if __name__ == '__main__':
     main(argv)
