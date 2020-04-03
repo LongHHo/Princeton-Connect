@@ -1,1 +1,1 @@
-web: gunicorn registrar:app
+web: gunicorn server:app
