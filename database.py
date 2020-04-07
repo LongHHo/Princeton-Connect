@@ -41,6 +41,41 @@ def geocode(address):
     except Exception as e:
         print(e)
 
+def deleteEntry(netid):
+    """ Connect to the PostgreSQL database server """
+    conn = None
+    try:
+        # read connection parameters
+        params = config()
+
+        # connect to the PostgreSQL server
+        print('Connecting to the PostgreSQL database...')
+        conn = psycopg2.connect(**params)
+
+        # create a cursor
+        cur = conn.cursor()
+
+        deleteUserInfo = """
+            DELETE FROM userInformation WHERE netid = %s;
+        """
+        deleteCoordinates = """
+            DELETE FROM coordinates WHERE netid = %s;
+        """
+
+        cur.execute(deleteUserInfo, (netid,))
+        cur.execute(deleteCoordinates, (netid,))
+        
+
+        conn.commit()
+        # close the communication with the PostgreSQL
+        cur.close()
+
+    except (Exception, psycopg2.DatabaseError) as error:
+        print(error)
+    finally:
+        if conn is not None:
+            conn.close()
+            print('Database connection closed.')
 
 
 # inserts userEntry into database
@@ -60,10 +95,18 @@ def insertEntry(entryInfo):
         cur = conn.cursor()
 
         insertUser = """INSERT INTO userInformation (netid, name, phone, email, description, address)
-               VALUES(%s, %s, %s, %s, %s, %s)"""
+               VALUES(%s, %s, %s, %s, %s, %s) 
+               ON CONFLICT (netid) 
+               DO UPDATE SET
+               (name, phone, email, description, address) 
+                  = (EXCLUDED.name, EXCLUDED.phone, EXCLUDED.email, EXCLUDED.description, EXCLUDED.address);"""
 
         insertCoordinates = """INSERT INTO coordinates (netid, address, latitude, longitude)
-               VALUES(%s, %s, %s, %s)"""
+               VALUES(%s, %s, %s, %s) 
+               ON CONFLICT (netid) 
+               DO UPDATE SET
+               (address, latitude, longitude) 
+                  = (EXCLUDED.address, EXCLUDED.latitude, EXCLUDED.longitude);"""
         # execute a statement
         name = entryInfo.getName()
         netid = entryInfo.getNetid()
@@ -214,8 +257,12 @@ def displayRows():
             print('Database connection closed.')
 
 def main(argv):
+    user = entryInfo.entryInfo('Long Ho', 'lhho', 'lhho@princeton.edu', '7142602003', 'just a cali boy looking for kangaroos', 'Churchill Ave, Hobart TAS 7005, Australia')
+    userTwo = entryInfo.entryInfo('Slim Jim', 'sjim', 'sjim@princeton.edu', '1234567', 'im a stick', '4000 Union Pacific Ave, Commerce, CA')
+    insertEntry(user)
+    insertEntry(userTwo)
+    # deleteEntry('sjim')
 
-    displayRows()
 
 if __name__ == '__main__':
     main(argv)
