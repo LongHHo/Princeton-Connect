@@ -7,10 +7,12 @@
 
 from sys import argv
 from database import searchEntry, insertEntry
+from sys import argv, stderr, exit
+from sys import argv, stderr, exit
 from flask import Flask, request, make_response, redirect, url_for
 from flask import render_template, session
 import entryInfo
-# from CASClient import CASClient
+from CASClient import CASClient
 
 #-----------------------------------------------------------------------
 
@@ -27,21 +29,33 @@ app.secret_key = b'\xcdt\x8dn\xe1\xbdW\x9d[}yJ\xfc\xa3~/'
 @app.route('/')
 @app.route('/templates/home')
 def home():
+    try:
+        username = CASClient().authenticate()
+        print(username)
+        html = render_template('home.html')
+        response = make_response(html)
+        return response
+    except Exception as e:
+        print(e, file= stderr)
 
     html = render_template('home.html')
     response = make_response(html)
     return response
 
+
 #-----------------------------------------------------------------------
 
 @app.route('/templates/submit')
 def submit():
+    try:
+        username = CASClient().authenticate()
 
-    # username = CASClient().authenticate()
+        html = render_template('submit.html')
+        response = make_response(html)
+        return response
+    except Exception as e:
+        print(e, file=stderr)
 
-    html = render_template('submit.html')
-    response = make_response(html)
-    return response
 
 #-----------------------------------------------------------------------
 
@@ -49,7 +63,8 @@ def submit():
 @app.route('/templates/lookup')
 def lookup():
     try:
-            # username = CASClient().authenticate()
+            username = CASClient().authenticate()
+            print(username)
             netid = request.args.get('netid')
             name = request.args.get('name')
             email = request.args.get('email')
@@ -77,6 +92,32 @@ def lookup():
         html = render_template('error.html', error=e)
         response = make_response(html)
         return response
+
+@app.route('/templates/handleSubmit')
+def handleSubmit():
+    try:
+        # username = CASClient().authenticate()
+        print('HI')
+        netid = request.args.get('netid')
+        name = request.args.get('name')
+        email = request.args.get('email')
+        phone = request.args.get('phone')
+        description = request.args.get('description')
+        address = request.args.get('address')
+
+        cityLat = request.args.get('cityLat')
+        cityLng = request.args.get('cityLng')
+
+        print(str(cityLat))
+        print(str(cityLng))
+        print(address)
+
+        html = render_template('submit.html')
+        response = make_response(html)
+        return response
+    except Exception as e:
+        print(e, file=stderr)
+
 
 #-----------------------------------------------------------------------
 
