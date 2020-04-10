@@ -26,24 +26,24 @@ app.secret_key = b'\xcdt\x8dn\xe1\xbdW\x9d[}yJ\xfc\xa3~/'
 # interface to search for entries
 #-----------------------------------------------------------------------
 
-@app.route('/')
-@app.route('/templates/home')
-def home():
-    try:
-        html = render_template('home.html')
-        response = make_response(html)
-        return response
-    except Exception as e:
-        print(e, file= stderr)
+# @app.route('/')
+# @app.route('/templates/home')
+# def home():
+#     try:
+#         html = render_template('home.html')
+#         response = make_response(html)
+#         return response
+#     except Exception as e:
+#         print(e, file= stderr)
 
-    html = render_template('home.html')
-    response = make_response(html)
-    return response
+#     html = render_template('home.html')
+#     response = make_response(html)
+#     return response
 
 
 #-----------------------------------------------------------------------
 
-@app.route('/templates/submit')
+@app.route('/')
 def submit():
     try:
         # username = CASClient().authenticate()
