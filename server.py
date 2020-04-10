@@ -30,14 +30,22 @@ app.secret_key = b'\xcdt\x8dn\xe1\xbdW\x9d[}yJ\xfc\xa3~/'
 @app.route('/templates/home')
 def home():
     try:
+        #username = CASClient().authenticate()
+       
         html = render_template('home.html')
         response = make_response(html)
         return response
     except Exception as e:
         print(e, file= stderr)
 
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> 6e999868f46436f929608af6d6041a6ffee79f9b
 #-----------------------------------------------------------------------
 
+@app.route('/')
 @app.route('/templates/submit')
 def submit():
     try:
