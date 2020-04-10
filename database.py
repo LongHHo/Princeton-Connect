@@ -7,7 +7,7 @@ import googlemaps
 from datetime import datetime
 import requests
 
-# gmaps = googlemaps.Client(key='AIzaSyDQe5G3tqd5Vfwefn7w3Djrv1L1bmlKkTw')
+gmaps = googlemaps.Client(key='AIzaSyDQe5G3tqd5Vfwefn7w3Djrv1L1bmlKkTw')
 
 def config(filename='database.ini', section='postgresql'):
     # create a parser
