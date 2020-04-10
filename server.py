@@ -7,14 +7,8 @@
 
 from sys import argv
 from database import searchEntry, insertEntry
-<<<<<<< HEAD
 from sys import argv, stderr, exit
-=======
-<<<<<<< HEAD
 from sys import argv, stderr, exit
-=======
->>>>>>> c7a884138db6f1ddbb22c3c6a8d414c2621b0c0a
->>>>>>> 8ef43efe05e73de820f876cfc1c627000817e1fa
 from flask import Flask, request, make_response, redirect, url_for
 from flask import render_template, session
 import entryInfo
@@ -35,34 +29,22 @@ app.secret_key = b'\xcdt\x8dn\xe1\xbdW\x9d[}yJ\xfc\xa3~/'
 @app.route('/')
 @app.route('/templates/home')
 def home():
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> 8ef43efe05e73de820f876cfc1c627000817e1fa
     try:
         html = render_template('home.html')
         response = make_response(html)
         return response
     except Exception as e:
         print(e, file= stderr)
-<<<<<<< HEAD
-=======
-=======
 
     html = render_template('home.html')
     response = make_response(html)
     return response
->>>>>>> c7a884138db6f1ddbb22c3c6a8d414c2621b0c0a
->>>>>>> 8ef43efe05e73de820f876cfc1c627000817e1fa
+
 
 #-----------------------------------------------------------------------
 
 @app.route('/templates/submit')
 def submit():
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> 8ef43efe05e73de820f876cfc1c627000817e1fa
     try:
         # username = CASClient().authenticate()
 
@@ -71,17 +53,7 @@ def submit():
         return response
     except Exception as e:
         print(e, file=stderr)
-<<<<<<< HEAD
-=======
-=======
 
-    # username = CASClient().authenticate()
-
-    html = render_template('submit.html')
-    response = make_response(html)
-    return response
->>>>>>> c7a884138db6f1ddbb22c3c6a8d414c2621b0c0a
->>>>>>> 8ef43efe05e73de820f876cfc1c627000817e1fa
 
 #-----------------------------------------------------------------------
 
