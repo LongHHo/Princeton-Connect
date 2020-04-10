@@ -12,7 +12,7 @@ from flask import Flask, request, make_response, redirect, url_for
 from flask import render_template, session
 import entryInfo
 import json
-# from CASClient import CASClient
+from CASClient import CASClient
 
 #-----------------------------------------------------------------------
 
@@ -30,7 +30,7 @@ app.secret_key = b'\xcdt\x8dn\xe1\xbdW\x9d[}yJ\xfc\xa3~/'
 @app.route('/templates/home')
 def home():
     try:
-        #username = CASClient().authenticate()
+        username = CASClient().authenticate()
        
         html = render_template('home.html')
         response = make_response(html)
@@ -44,7 +44,9 @@ def home():
 @app.route('/templates/submit')
 def submit():
     try:
-        # username = CASClient().authenticate()
+        username = CASClient().authenticate()
+
+
         markersData = getAll() #getting all the user info
         html = render_template('submit.html', markersData=json.dumps(markersData))
         response = make_response(html)
@@ -58,7 +60,8 @@ def submit():
 @app.route('/templates/lookup')
 def lookup():
     try:
-            # username = CASClient().authenticate()
+            username = CASClient().authenticate()
+
             netid = request.args.get('netid')
             name = request.args.get('name')
             email = request.args.get('email')
@@ -87,11 +90,15 @@ def lookup():
         response = make_response(html)
         return response
 
-@app.route('/templates/handleSubmit')
+# handle after the submit button
+# i am having trouble fetching netid from cas so "your entry" page not done
+@app.route('/templates/handleSubmit', methods=['GET'])
 def handleSubmit():
     try:
-        # username = CASClient().authenticate()
-        print('HI')
+        
+        username = CASClient().authenticate()
+
+
         netid = request.args.get('netid')
         name = request.args.get('name')
         email = request.args.get('email')
@@ -99,14 +106,15 @@ def handleSubmit():
         description = request.args.get('description')
         address = request.args.get('address')
 
-        cityLat = request.args.get('cityLat')
-        cityLng = request.args.get('cityLng')
+        
+        entry = entryInfo.entryInfo(name, netid, email, phone, description, address)
+        insertEntry(entry)
+      
+        # Step 1: Display entry, if it is not None
 
-        print(str(cityLat))
-        print(str(cityLng))
-        print(address)
-
-        html = render_template('submit.html')
+        # Step 2: Have option to EDIT and DELETE entry
+        markersData = getAll()
+        html = render_template('submit.html', markersData=json.dumps(markersData))
         response = make_response(html)
         return response
     except Exception as e:
