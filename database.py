@@ -41,6 +41,8 @@ def geocode(address):
     except Exception as e:
         print(e)
 
+
+# deletes entry based on just the netid
 def deleteEntry(netid):
     """ Connect to the PostgreSQL database server """
     conn = None
@@ -80,6 +82,7 @@ def deleteEntry(netid):
 
 # inserts userEntry into database
 # entryInfo is an entryInfo object
+# if entryInfo already exists in database, then updates it
 def insertEntry(entryInfo):
     """ Connect to the PostgreSQL database server """
     conn = None
