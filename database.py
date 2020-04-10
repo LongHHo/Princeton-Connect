@@ -7,7 +7,7 @@ import googlemaps
 from datetime import datetime
 import requests
 
-gmaps = googlemaps.Client(key='AIzaSyDQe5G3tqd5Vfwefn7w3Djrv1L1bmlKkTw')
+# gmaps = googlemaps.Client(key='AIzaSyDQe5G3tqd5Vfwefn7w3Djrv1L1bmlKkTw')
 
 def config(filename='database.ini', section='postgresql'):
     # create a parser
@@ -143,6 +143,8 @@ def insertEntry(entryInfo):
             conn.close()
             print('Database connection closed.')
 
+
+
 # based on fields of entry, returns a list of all rows in database containing these fields
 # in which each row is a userInfo object
 # entry is a entryInfo object
@@ -256,12 +258,61 @@ def displayRows():
             conn.close()
             print('Database connection closed.')
 
+def getAll():
+    """ Connect to the PostgreSQL database server """
+    conn = None
+    try:
+        # read connection parameters
+        params = config()
+
+        # connect to the PostgreSQL server
+        print('Connecting to the PostgreSQL database...')
+        conn = psycopg2.connect(**params)
+
+        # create a cursor
+        cur = conn.cursor()
+
+        sql = """
+            SELECT *
+            FROM userInformation
+        """
+
+
+        cur.execute(sql)
+        row = cur.fetchone()
+
+        entries = []
+        sub = []
+        while row is not None:
+            sub.append(str(row[0]))
+            sub.append(str(row[1]))
+            sub.append(str(row[2]))
+            sub.append(str(row[3]))
+            sub.append(str(row[4]))
+            # change actual address to coordinates
+            coordinates = geocode(str(row[5]))
+            if (coordinates is not None):
+                print('******')
+                sub.append(coordinates[0])
+                sub.append(coordinates[1])
+        
+            entries.append(sub)
+            sub = []
+            row = cur.fetchone()
+
+        # close the communication with the PostgreSQL
+        cur.close()
+        return entries
+    except (Exception, psycopg2.DatabaseError) as error:
+        print(error)
+    
+
 def main(argv):
     user = entryInfo.entryInfo('Long Ho', 'lhho', 'lhho@princeton.edu', '7142602003', 'just a cali boy looking for kangaroos', 'Churchill Ave, Hobart TAS 7005, Australia')
     userTwo = entryInfo.entryInfo('Slim Jim', 'sjim', 'sjim@princeton.edu', '1234567', 'im a stick', '4000 Union Pacific Ave, Commerce, CA')
     insertEntry(user)
     insertEntry(userTwo)
-    # deleteEntry('sjim')
+    
 
 
 if __name__ == '__main__':

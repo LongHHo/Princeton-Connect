@@ -6,12 +6,12 @@
 #-----------------------------------------------------------------------
 
 from sys import argv
-from database import searchEntry, insertEntry
-from sys import argv, stderr, exit
+from database import searchEntry, insertEntry, getAll
 from sys import argv, stderr, exit
 from flask import Flask, request, make_response, redirect, url_for
 from flask import render_template, session
 import entryInfo
+import json
 # from CASClient import CASClient
 
 #-----------------------------------------------------------------------
@@ -36,24 +36,18 @@ def home():
     except Exception as e:
         print(e, file= stderr)
 
-    html = render_template('home.html')
-    response = make_response(html)
-    return response
-
-
 #-----------------------------------------------------------------------
 
 @app.route('/templates/submit')
 def submit():
     try:
         # username = CASClient().authenticate()
-
-        html = render_template('submit.html')
+        markersData = getAll() #getting all the user info
+        html = render_template('submit.html', markersData=json.dumps(markersData))
         response = make_response(html)
         return response
     except Exception as e:
         print(e, file=stderr)
-
 
 #-----------------------------------------------------------------------
 
