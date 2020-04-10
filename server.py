@@ -43,6 +43,7 @@ def home():
 #-----------------------------------------------------------------------
 
 @app.route('/')
+@app.route('/templates/submit')
 def submit():
     try:
         # username = CASClient().authenticate()
