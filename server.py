@@ -12,7 +12,7 @@ from flask import Flask, request, make_response, redirect, url_for
 from flask import render_template, session
 import entryInfo
 import json
-from CASClient import CASClient
+# from CASClient import CASClient
 
 #-----------------------------------------------------------------------
 
@@ -30,7 +30,7 @@ app.secret_key = b'\xcdt\x8dn\xe1\xbdW\x9d[}yJ\xfc\xa3~/'
 @app.route('/templates/home')
 def home():
     try:
-        username = CASClient().authenticate()
+        # username = CASClient().authenticate()
        
         html = render_template('home.html')
         response = make_response(html)
@@ -44,7 +44,7 @@ def home():
 @app.route('/templates/submit')
 def submit():
     try:
-        username = CASClient().authenticate()
+        # username = CASClient().authenticate()
 
 
         markersData = getAll() #getting all the user info
@@ -60,7 +60,7 @@ def submit():
 @app.route('/templates/lookup')
 def lookup():
     try:
-            username = CASClient().authenticate()
+            # username = CASClient().authenticate()
 
             netid = request.args.get('netid')
             name = request.args.get('name')
@@ -94,7 +94,7 @@ def lookup():
 def handleSubmit():
     try:
         
-        username = CASClient().authenticate()
+        # username = CASClient().authenticate()
 
 
         netid = request.args.get('netid')
