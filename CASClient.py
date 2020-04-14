@@ -29,11 +29,13 @@ class CASClient:
     # "ticket" parameter added by the CAS server.
 	
     def stripTicket(self):
+        print("At beginning of strip Ticket")
         url = request.url
         if url is None:
             return "something is badly wrong"
         url = sub(r'ticket=[^&]*&?', '', url)
         url = sub(r'\?&?$|&$', '', url)
+        print("At end of strip Ticket")
         return url
         
     #-------------------------------------------------------------------
@@ -42,6 +44,7 @@ class CASClient:
     # valid, return the user's username; otherwise, return None.
 
     def validate(self, ticket):
+        print("At beginning of validate")
         val_url = self.cas_url + "validate" + \
             '?service=' + quote(self.stripTicket()) + \
             '&ticket=' + quote(ticket)
@@ -52,6 +55,7 @@ class CASClient:
         secondLine = r[1].decode('utf-8')
         if not firstLine.startswith('yes'):
             return None
+        print("At end of validate")
         return secondLine
         
     #-------------------------------------------------------------------
@@ -60,10 +64,11 @@ class CASClient:
     # Do not return unless the user is successfully authenticated.
    	
     def authenticate(self):
-        
+        print("At beginning of authenticate")
         # If the user's username is in the session, then the user was
         # authenticated previously.  So return the user's username.
         if 'username' in session:
+            print("At end of authenticate if user in session")
             return session.get('username')
            
         # If the request contains a login ticket, then try to
@@ -74,7 +79,8 @@ class CASClient:
             if username is not None:             
                 # The user is authenticated, so store the user's
                 # username in the session.               
-                session['username'] = username        
+                session['username'] = username 
+                print("At end of authenticate if user is not none")       
                 return username
       
         # The request does not contain a valid login ticket, so
@@ -83,6 +89,7 @@ class CASClient:
             + '?service=' + quote(self.stripTicket())
             
         abort(redirect(login_url))
+        print("At end of authenticate")
 
 #-----------------------------------------------------------------------
 
