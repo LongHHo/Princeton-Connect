@@ -31,10 +31,8 @@ app.secret_key = b'\xcdt\x8dn\xe1\xbdW\x9d[}yJ\xfc\xa3~/'
 def home():
     try:
 
-        if 'username' not in session:
-            username = CASClient().authenticate().strip()
-        else:
-            username = session.get('username').strip()
+        username = CASClient().authenticate()
+
         
         html = render_template('home.html')
         response = make_response(html)
@@ -49,11 +47,7 @@ def home():
 @app.route('/templates/submit')
 def submit():
     try:
-        if 'username' not in session:
-            username = CASClient().authenticate().strip()
-        else:
-            username = session.get('username').strip()
-
+        username = CASClient().authenticate()
 
         markersData = getAll() #getting all the user info
         html = render_template('submit.html', markersData=json.dumps(markersData))
@@ -68,10 +62,7 @@ def submit():
 @app.route('/templates/lookup')
 def lookup():
     try:
-        if 'username' not in session:
-            username = CASClient().authenticate().strip()
-        else:
-            username = session.get('username').strip()
+            username = CASClient().authenticate()
 
             netid = request.args.get('netid')
             name = request.args.get('name')
@@ -105,10 +96,7 @@ def lookup():
 def handleSubmit():
     try:
         
-        if 'username' not in session:
-            username = CASClient().authenticate().strip()
-        else:
-            username = session.get('username').strip()
+        username = CASClient().authenticate()
 
 
         netid = request.args.get('netid')
