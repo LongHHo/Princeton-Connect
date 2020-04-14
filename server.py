@@ -48,7 +48,7 @@ def home():
 
 @app.route('/templates/submit')
 def submit():
-    # try:
+    try:
     #     if 'username' not in session:
     #         username = CASClient().authenticate().strip()
     #     else:
