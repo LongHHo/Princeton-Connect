@@ -12,7 +12,7 @@ from flask import Flask, request, make_response, redirect, url_for
 from flask import render_template, session
 import entryInfo
 import json
-# from CASClient import CASClient
+from CASClient import CASClient
 
 #-----------------------------------------------------------------------
 
@@ -31,10 +31,10 @@ app.secret_key = b'\xcdt\x8dn\xe1\xbdW\x9d[}yJ\xfc\xa3~/'
 def home():
     try:
 
-        # if 'username' not in session:
-        #     username = CASClient().authenticate().strip()
-        # else:
-        #     username = session.get('username').strip()
+        if 'username' not in session:
+            username = CASClient().authenticate().strip()
+        else:
+            username = session.get('username').strip()
         
         html = render_template('home.html')
         response = make_response(html)
@@ -49,10 +49,10 @@ def home():
 @app.route('/templates/submit')
 def submit():
     try:
-    #     if 'username' not in session:
-    #         username = CASClient().authenticate().strip()
-    #     else:
-    #         username = session.get('username').strip()
+        if 'username' not in session:
+            username = CASClient().authenticate().strip()
+        else:
+            username = session.get('username').strip()
 
 
         markersData = getAll() #getting all the user info
@@ -68,10 +68,10 @@ def submit():
 @app.route('/templates/lookup')
 def lookup():
     try:
-        # if 'username' not in session:
-        #     username = CASClient().authenticate().strip()
-        # else:
-        #     username = session.get('username').strip()
+        if 'username' not in session:
+            username = CASClient().authenticate().strip()
+        else:
+            username = session.get('username').strip()
 
             netid = request.args.get('netid')
             name = request.args.get('name')
@@ -105,10 +105,10 @@ def lookup():
 def handleSubmit():
     try:
         
-        # if 'username' not in session:
-        #     username = CASClient().authenticate().strip()
-        # else:
-        #     username = session.get('username').strip()
+        if 'username' not in session:
+            username = CASClient().authenticate().strip()
+        else:
+            username = session.get('username').strip()
 
 
         netid = request.args.get('netid')
