@@ -4,6 +4,9 @@
       <title> Princeton Connect</title>
       <meta charset="utf-8">
       <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDQe5G3tqd5Vfwefn7w3Djrv1L1bmlKkTw&libraries=places, geometry"></script>
+
   </head>
   <body>
       <div id = "header">
@@ -12,11 +15,13 @@
 
       <!-- Top navigation -->
       <ul class="nav">
-        <li><a href="/templates/submit">Submit Entry</a></li>
+        <!--<li><a href="/templates/submit">Submit Entry</a></li> -->
+        <li><button class = "open-button" onclick="openForm()">Open Form</button></li>
         <li><a class = "active" href="/">Home</a></li>
         <li><a href="/templates/lookup">Entry Look-Up</a></li>
       </ul>
-
+  
+    
 
       <div id = "content">
         <h3> Welcome to Princeton Connect!</h3>
@@ -25,5 +30,57 @@
           for already existing entries by clicking the 'Entry Look-Up' button.
         </p>
       </div>
+
+      <div class="form-popup" id="myForm">
+        <form action="/templates/handleSubmit" class="form-container">
+          <h3>Submit/Edit your Entry</h3>
+
+          <label for="netid"><b>netid</b></label>
+          <input type="text" placeholder="Enter netid" id="netid" name="netid" required>
+
+          <label for="name"><b>Name</b></label>
+          <input type="text" placeholder="Enter name" id="name" name="name" required>
+
+          <label for="email"><b>Email</b></label>
+          <input type="text" placeholder="Enter email" id="email" name="email" required>
+
+          <label for="phone"><b>Phone</b></label>
+          <input type="text" placeholder="Enter phone" id="phone" name="phone" required>
+
+          <label for="description"><b>Description</b></label>
+          <input type="text" placeholder="" id="description" name="description" required>
+
+          <label for="address"><b>Address</b></label>
+          <input type="text" placeholder="Enter address" id="address" name="address" required>
+
+          <button type="submit" class="btn">Submit</button>
+          <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
+        </form>
+      </div>
+
+      <script>
+      function openForm() {
+        document.getElementById("myForm").style.display = "block";
+      }
+
+      function closeForm() {
+        document.getElementById("myForm").style.display = "none";
+      }
+
+
+
+      function initialize() {
+      var input = document.getElementById('address');
+      var autocomplete = new google.maps.places.Autocomplete(input);
+      // changes whenever user selects new address in drop down
+      google.maps.event.addListener(autocomplete, 'place_changed', function () {
+                  var place = autocomplete.getPlace();
+              });
+        }
+
+      google.maps.event.addDomListener(window, 'load', initialize);
+
+      </script>
+
     </body>
 </html>

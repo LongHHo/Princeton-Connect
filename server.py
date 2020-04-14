@@ -12,7 +12,7 @@ from flask import Flask, request, make_response, redirect, url_for
 from flask import render_template, session
 import entryInfo
 import json
-from CASClient import CASClient
+# from CASClient import CASClient
 
 #-----------------------------------------------------------------------
 
@@ -30,7 +30,7 @@ app.secret_key = b'\xcdt\x8dn\xe1\xbdW\x9d[}yJ\xfc\xa3~/'
 @app.route('/templates/home')
 def home():
     try:
-        username = CASClient().authenticate()
+        # username = CASClient().authenticate()
        
         html = render_template('home.html')
         response = make_response(html)
@@ -40,19 +40,20 @@ def home():
 
 #-----------------------------------------------------------------------
 
-@app.route('/')
-@app.route('/templates/submit')
-def submit():
-    try:
-        username = CASClient().authenticate()
+# @app.route('/')
+# @app.route('/templates/submit')
+# def submit():
+#     try:
+#         username = CASClient().authenticate()
 
 
-        markersData = getAll() #getting all the user info
-        html = render_template('submit.html', markersData=json.dumps(markersData))
-        response = make_response(html)
-        return response
-    except Exception as e:
-        print(e, file=stderr)
+#         markersData = getAll() #getting all the user info
+#         html = render_template('submitform.html', markersData=json.dumps(markersData))
+#         response = make_response(html)
+#         return response
+#     except Exception as e:
+#         print(e, file=stderr)
+    
 
 #-----------------------------------------------------------------------
 
@@ -60,7 +61,7 @@ def submit():
 @app.route('/templates/lookup')
 def lookup():
     try:
-            username = CASClient().authenticate()
+            # username = CASClient().authenticate()
 
             netid = request.args.get('netid')
             name = request.args.get('name')
@@ -96,8 +97,7 @@ def lookup():
 def handleSubmit():
     try:
         
-        username = CASClient().authenticate()
-
+      # username = CASClient().authenticate()
 
         netid = request.args.get('netid')
         name = request.args.get('name')
@@ -113,8 +113,11 @@ def handleSubmit():
         # Step 1: Display entry, if it is not None
 
         # Step 2: Have option to EDIT and DELETE entry
-        markersData = getAll()
-        html = render_template('submit.html', markersData=json.dumps(markersData))
+        # markersData = getAll()
+        # html = render_template('submit.html', markersData=json.dumps(markersData))
+
+
+        html = render_template('home.html')
         response = make_response(html)
         return response
     except Exception as e:
@@ -123,31 +126,6 @@ def handleSubmit():
 
 #-----------------------------------------------------------------------
 
-# @app.route('/searchresults')
-# def searchResults():
-
-#     username = CASClient().authenticate()
-
-#     author = request.args.get('author')
-#     if (author is None) or (author.strip() == ''):
-#         errorMsg = 'Please type an author name.'
-#         return redirect(url_for('searchForm', errorMsg=errorMsg))
-
-#     session['prevAuthor'] = author
-
-#     database = Database()
-#     database.connect()
-#     books = database.search(author)
-#     database.disconnect()
-
-#     html = render_template('searchresults.html',
-#         ampm=getAmPm(),
-#         currentTime=getCurrentTime(),
-#         username=username,
-#         author=author,
-#         books=books)
-#     response = make_response(html)
-#     return response
 
 #-----------------------------------------------------------------------
 
