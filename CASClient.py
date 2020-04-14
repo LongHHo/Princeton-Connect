@@ -74,7 +74,9 @@ class CASClient:
         # If the request contains a login ticket, then try to
         # validate it.
         ticket = request.args.get('ticket')
+        print("Got ticket")
         if ticket is not None:
+            print("Ticket is not none")
             username = self.validate(ticket)
             if username is not None:             
                 # The user is authenticated, so store the user's
