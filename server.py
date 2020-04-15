@@ -26,26 +26,22 @@ app.secret_key = b'\xcdt\x8dn\xe1\xbdW\x9d[}yJ\xfc\xa3~/'
 # interface to search for entries
 #-----------------------------------------------------------------------
 
-@app.route('/', methods=['GET'])
-@app.route('/templates/home', methods=['GET'])
+@app.route('/')
+@app.route('/templates/home')
 def home():
-    try:
 
+    username = CASClient().authenticate()
 
-        username = CASClient().authenticate()
-
-        
-        html = render_template('home.html')
-        response = make_response(html)
-        return response
+    html = render_template('home.html')
+    response = make_response(html)
+    return response
     
-    except Exception as e:
-        print(e, file= stderr)
+
 
 #-----------------------------------------------------------------------
 
 
-@app.route('/templates/submit', methods=['GET'])
+@app.route('/templates/submit')
 def submit():
     try:
         username = CASClient().authenticate()
@@ -60,7 +56,7 @@ def submit():
 #-----------------------------------------------------------------------
 
 # can only search for entries in database, not a function to insert
-@app.route('/templates/lookup', methods=['GET'])
+@app.route('/templates/lookup')
 def lookup():
     try:
             username = CASClient().authenticate()
