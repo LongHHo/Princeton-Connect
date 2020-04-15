@@ -26,7 +26,7 @@ app.secret_key = b'\xcdt\x8dn\xe1\xbdW\x9d[}yJ\xfc\xa3~/'
 # interface to search for entries
 #-----------------------------------------------------------------------
 
-@app.route('/')
+@app.route('/', methods=['GET'])
 @app.route('/templates/home', methods=['GET'])
 def home():
     try:
