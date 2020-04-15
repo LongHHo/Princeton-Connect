@@ -30,11 +30,33 @@ app.secret_key = b'\xcdt\x8dn\xe1\xbdW\x9d[}yJ\xfc\xa3~/'
 @app.route('/')
 @app.route('/templates/home')
 def home():
-    username = CASClient().authenticate()
+    netid = CASClient().authenticate()
     
-    print(username)
-       
-    html = render_template('home.html')
+    
+    # find particular entry of user
+    user = entryInfo.entryInfo()
+    user.setNetid(netid.strip('\n'))
+    
+    entry = searchEntry(user)
+    userEntry = entryInfo.entryInfo()
+    if (len(entry) > 1):
+        raise Exception('Only one entry per user')
+    elif (len(entry) == 1):
+        userEntry = entry[0]
+    
+    netid=userEntry.getNetid()
+    name=userEntry.getName(),
+    phone=userEntry.getPhone()
+    email=userEntry.getEmail()
+    description=userEntry.getDescription(), 
+    address=userEntry.getAddress()
+
+    print(netid)
+
+    html = render_template('home.html', netid=netid, name=name, phone=phone, email=email, description=description,
+         address=address)
+
+
     response = make_response(html)
     return response
 
@@ -60,7 +82,7 @@ def home():
 # can only search for entries in database, not a function to insert
 @app.route('/templates/lookup', methods=['GET'])
 def lookup():
-    try:
+        # maybe put a "hello username" at the top
         username = CASClient().authenticate()
 
 
@@ -71,7 +93,6 @@ def lookup():
         description = request.args.get('description')
         address = request.args.get('address')
 
-        print(description)
         user = entryInfo.entryInfo()
         user.setNetid(netid)
         user.setName(name)
@@ -87,42 +108,59 @@ def lookup():
         response = make_response(html)
 
         return response
-    except Exception as e:
-        html = render_template('error.html', error=e)
-        response = make_response(html)
-        return response
+
 
 # handle after the submit button
 # i am having trouble fetching netid from cas so "your entry" page not done
 @app.route('/templates/handleSubmit', methods=['GET'])
 def handleSubmit():
-    try:
-        username = CASClient().authenticate()
+    
+    username = CASClient().authenticate()
 
 
-        netid = request.args.get('netid')
-        name = request.args.get('name')
-        email = request.args.get('email')
-        phone = request.args.get('phone')
-        description = request.args.get('description')
-        address = request.args.get('address')
+    netid = request.args.get('netid')
+    name = request.args.get('name')
+    email = request.args.get('email')
+    phone = request.args.get('phone')
+    description = request.args.get('description')
+    address = request.args.get('address')
 
-        
-        entry = entryInfo.entryInfo(name, netid, email, phone, description, address)
-        insertEntry(entry)
-      
-        # Step 1: Display entry, if it is not None
+    
+    entry = entryInfo.entryInfo(name, netid, email, phone, description, address)
+    insertEntry(entry)
+    
+    # Step 1: Display entry, if it is not None
 
-        # Step 2: Have option to EDIT and DELETE entry
-        # markersData = getAll()
-        # html = render_template('submit.html', markersData=json.dumps(markersData))
+    # Step 2: Have option to EDIT and DELETE entry
+    # markersData = getAll()
+    # html = render_template('submit.html', markersData=json.dumps(markersData))
+    
+    
+    # find entry of logged on user, put in entry   
+    user = entryInfo.entryInfo()
+    user.setNetid(username.strip('\n'))
+    
+    entry = searchEntry(user)
+    userEntry = entryInfo.entryInfo()
+    if (len(entry) > 1):
+        raise Exception('Only one entry per user')
+    elif (len(entry) == 1):
+        userEntry = entry[0]
+    
+    netid=userEntry.getNetid()
+    name=userEntry.getName(),
+    phone=userEntry.getPhone()
+    email=userEntry.getEmail()
+    description=userEntry.getDescription(), 
+    address=userEntry.getAddress()
 
 
-        html = render_template('home.html')
-        response = make_response(html)
-        return response
-    except Exception as e:
-        print(e, file=stderr)
+    html = render_template('home.html', netid=netid, name=name, phone=phone, email=email, description=description,
+        address=address)
+    response = make_response(html)
+
+    return response
+            
 
 
 #-----------------------------------------------------------------------
