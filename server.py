@@ -6,7 +6,7 @@
 #-----------------------------------------------------------------------
 
 from sys import argv
-from database import searchEntry, insertEntry, getAll
+from database import searchEntry, insertEntry, getAll, deleteEntry
 from sys import argv, stderr, exit
 from flask import Flask, request, make_response, redirect, url_for
 from flask import render_template, session
@@ -35,8 +35,10 @@ def home():
     
     # find particular entry of user
     user = entryInfo.entryInfo()
+    # cas client appends a new line so get rid of it
     user.setNetid(netid.strip('\n'))
     
+    # search for user in database
     entry = searchEntry(user)
     userEntry = entryInfo.entryInfo()
     if (len(entry) > 1):
@@ -44,15 +46,17 @@ def home():
     elif (len(entry) == 1):
         userEntry = entry[0]
     
+
+    # If userEntry exists puts in string elements of each field
+    # If it doesn't each get statement is '' and we pass in '' for each name-value pair
     netid=userEntry.getNetid()
     name=userEntry.getName(),
     phone=userEntry.getPhone()
     email=userEntry.getEmail()
     description=userEntry.getDescription(), 
     address=userEntry.getAddress()
-
-    print(netid)
-
+    
+    # each field is part of the user entry so it displays in the submit form
     html = render_template('home.html', netid=netid, name=name, phone=phone, email=email, description=description,
          address=address)
 
@@ -117,7 +121,7 @@ def handleSubmit():
     
     username = CASClient().authenticate()
 
-
+    # puts in fields based on submit form input
     netid = request.args.get('netid')
     name = request.args.get('name')
     email = request.args.get('email')
@@ -129,9 +133,7 @@ def handleSubmit():
     entry = entryInfo.entryInfo(name, netid, email, phone, description, address)
     insertEntry(entry)
     
-    # Step 1: Display entry, if it is not None
 
-    # Step 2: Have option to EDIT and DELETE entry
     # markersData = getAll()
     # html = render_template('submit.html', markersData=json.dumps(markersData))
     
@@ -147,6 +149,8 @@ def handleSubmit():
     elif (len(entry) == 1):
         userEntry = entry[0]
     
+    # If userEntry exists puts in string elements of each field
+    # If it doesn't each get statement is '' and we pass in '' for each name-value pair
     netid=userEntry.getNetid()
     name=userEntry.getName(),
     phone=userEntry.getPhone()
@@ -156,14 +160,30 @@ def handleSubmit():
 
 
     html = render_template('home.html', netid=netid, name=name, phone=phone, email=email, description=description,
-        address=address)
+         address=address)
     response = make_response(html)
 
     return response
             
+@app.route('/templates/delete', methods=['GET'])
+def handleDelete():
+    
+    username = CASClient().authenticate()
+    
+    # cas client appends a new line
+    deleteEntry(username.strip('\n'))
+    
+
+    # entry won't exist so pass in empty strings
+    # json doesn't do None
+    html = render_template('home.html', netid='', name='', 
+    phone='', email='', description='',
+         address='')
+    response = make_response(html)
+
+    return response
 
 
-#-----------------------------------------------------------------------
 
 
 #-----------------------------------------------------------------------
