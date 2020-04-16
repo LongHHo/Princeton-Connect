@@ -16,12 +16,11 @@
       <!-- Top navigation -->
       <ul class="nav">
         <!--<li><a href="/templates/submit">Submit Entry</a></li> -->
-        <li><button class = "open-button" onclick="openForm()">Open Form</button></li>
+        <li><button class = "open-button" onclick="openForm()">Submit/Edit Your Entry</button></li>
         <li><a class = "active" href="/">Home</a></li>
         <li><a href="/templates/lookup">Entry Look-Up</a></li>
       </ul>
   
-    
 
       <div id = "content">
         <h3> Welcome to Princeton Connect!</h3>
@@ -31,32 +30,40 @@
         </p>
       </div>
 
-      <div class="form-popup" id="myForm">
-        <form action="/templates/handleSubmit" class="form-container">
-          <h3>Submit/Edit your Entry</h3>
-
-          <label for="netid"><b>netid</b></label>
-          <input type="text" placeholder="Enter netid" id="netid" name="netid" required>
-
-          <label for="name"><b>Name</b></label>
-          <input type="text" placeholder="Enter name" id="name" name="name" required>
-
-          <label for="email"><b>Email</b></label>
-          <input type="text" placeholder="Enter email" id="email" name="email" required>
-
-          <label for="phone"><b>Phone</b></label>
-          <input type="text" placeholder="Enter phone" id="phone" name="phone" required>
-
-          <label for="description"><b>Description</b></label>
-          <input type="text" placeholder="" id="description" name="description" required>
-
-          <label for="address"><b>Address</b></label>
-          <input type="text" placeholder="Enter address" id="address" name="address" required>
-
-          <button type="submit" class="btn">Submit</button>
-          <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
+      <div id="id01" class="modal">
+        <span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close Modal">&times;</span>
+        <form class="modal-content" action="/templates/handleSubmit">
+          <div class="container">
+            <h1>Your Entry</h1>
+            <p>Submit or edit your entry here</p>
+            <p>If you already submitted an entry, it will display in the text boxes</p>
+            <hr>
+            <label for="netid"><b>netid</b></label>
+            <input type="text" placeholder="Enter netid" id="netid" name="netid" required>
+  
+            <label for="name"><b>Name</b></label>
+            <input type="text" placeholder="Enter name" id="name" name="name" required>
+  
+            <label for="email"><b>Email</b></label>
+            <input type="text" placeholder="Enter email" id="email" name="email" required>
+  
+            <label for="phone"><b>Phone</b></label>
+            <input type="text" placeholder="Enter phone" id="phone" name="phone" required>
+  
+            <label for="description"><b>Description</b></label>
+            <textarea type="textarea" placeholder="Whether for a roommate or a friend, tell us about yourself and what you're looking for" 
+            id="description" name="description" style="height:200px" required></textarea>
+  
+            <label for="address"><b>Address</b></label>
+            <input type="text" placeholder="Enter address" id="address" name="address" required>
+      
+            <button type="submit" class="btn">Submit</button>
+            <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
+            <a href="/templates/delete"><button type="button" class="btn delete">Delete Entry</button></a>
+          </div>
         </form>
       </div>
+      
 
 
       <script src=
@@ -73,12 +80,12 @@
         document.getElementsByName('phone')[0].placeholder= {{phone | tojson}};
         document.getElementsByName('description')[0].placeholder= {{description | tojson}};
         document.getElementsByName('address')[0].placeholder= {{address | tojson}};
-        document.getElementById("myForm").style.display = "block";
       }
+      document.getElementById('id01').style.display='block';
       }
 
       function closeForm() {
-        document.getElementById("myForm").style.display = "none";
+        document.getElementById("id01").style.display = "none";
       }
 
 
@@ -95,6 +102,7 @@
       google.maps.event.addDomListener(window, 'load', initialize);
       
       </script>
+
 
     </body>
 </html>
