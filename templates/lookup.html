@@ -3,21 +3,22 @@
   <head>
     <title> Princeton Connect</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="initial-scale=1.0">
     <meta charset="utf-8">
 
     <style>
       input[type=text], select {
-        width: 100%;
+        width: 120%;
         padding: 12px 20px;
         display: inline-block;
         border: 1px solid #ccc;
         border-radius: 4px;
         box-sizing: border-box;
+        position: relative;
       }
 
       input[type=submit] {
-        width: 100%;
+        width: 120%;
         background-color: #4CAF50;
         color: white;
         padding: 14px 20px;
@@ -30,7 +31,14 @@
         background-color: #45a049;
       }
 
-      </style>
+      h2 {
+        text-align: left;
+      }
+      
+
+
+    </style>
+      
   </head>
   <body>
       <div id = "header">
@@ -45,7 +53,7 @@
     <h2>Search fields</h2>
     <hr />
     <form action="/templates/lookup" method="get">
-      <table style="width:20%">
+      <table class="searchbox" style="width:40%">
         <tr>
           <td align = "right">
             <label for="netid">
@@ -106,16 +114,19 @@
     <hr />
 
     <style>
+    
       .content-table {
         border-collapse: collapse;
         margin: 25px 0;
         min-width: 400px
+        
       }
 
       .content-table thead tr {
         background-color: #ff5709;
         color: #ffffff;
         font-weight: bold;
+        position: relative;
       }
 
       .content-table th,
@@ -163,6 +174,43 @@
     </table>
 
     {% endif %}
+    
+    <div id="id01" class="modal">
+      <span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close Modal">&times;</span>
+      <form class="modal-content" action="/templates/handleSubmit">
+        <div class="container">
+          <h1>Your Entry</h1>
+          <p>Submit or edit your entry here</p>
+          <p>If you already submitted an entry, it will display in the text boxes</p>
+          <hr>
+          <label for="netid"><b>netid</b></label>
+          <input type="text" placeholder="Enter netid" id="netid" name="netid" required>
+
+          <label for="name"><b>Name</b></label>
+          <input type="text" placeholder="Enter name" id="name" name="name" required>
+
+          <label for="email"><b>Email</b></label>
+          <input type="text" placeholder="Enter email" id="email" name="email" required>
+
+          <label for="phone"><b>Phone</b></label>
+          <input type="text" placeholder="Enter phone" id="phone" name="phone" required>
+
+          <label for="description"><b>Description</b></label>
+          <textarea type="textarea" placeholder="Whether for a roommate or a friend, tell us about yourself and what you're looking for"
+          id="description" name="description" style="height:200px" required></textarea>
+
+          <label for="address"><b>Address</b></label>
+          <input type="text" placeholder="Enter address" id="address" name="address" required>
+
+          <button type="submit" class="btn">Submit</button>
+          <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
+          <a href="/templates/delete"><button type="button" class="btn delete">Delete Entry</button></a>
+        </div>
+      </form>
+    </div>
+    
+
+
     <hr />
   </body>
 </html>

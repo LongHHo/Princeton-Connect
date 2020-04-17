@@ -57,8 +57,9 @@ def home():
     address=userEntry.getAddress()
     
     # each field is part of the user entry so it displays in the submit form
+    markersData = getAll() #getting all the user info
     html = render_template('home.html', netid=netid, name=name, phone=phone, email=email, description=description,
-         address=address)
+         address=address, markersData=json.dumps(markersData))
 
 
     response = make_response(html)
@@ -89,7 +90,7 @@ def lookup():
         # maybe put a "hello username" at the top
         username = CASClient().authenticate()
 
-
+        # get search query
         netid = request.args.get('netid')
         name = request.args.get('name')
         email = request.args.get('email')
@@ -107,8 +108,11 @@ def lookup():
 
         userEntries = searchEntry(user)
 
+    
+
+
         html = render_template('lookup.html',
-            userEntries=userEntries)
+                userEntries=userEntries)
         response = make_response(html)
 
         return response
@@ -158,9 +162,9 @@ def handleSubmit():
     description=userEntry.getDescription(), 
     address=userEntry.getAddress()
 
-
+    markersData = getAll() #getting all the user info
     html = render_template('home.html', netid=netid, name=name, phone=phone, email=email, description=description,
-         address=address)
+         address=address, markersData=json.dumps(markersData))
     response = make_response(html)
 
     return response
@@ -176,9 +180,10 @@ def handleDelete():
 
     # entry won't exist so pass in empty strings
     # json doesn't do None
+    markersData=getAll()
     html = render_template('home.html', netid='', name='', 
     phone='', email='', description='',
-         address='')
+         address='', markersData=json.dumps(markersData))
     response = make_response(html)
 
     return response

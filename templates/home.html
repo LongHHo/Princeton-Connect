@@ -5,12 +5,13 @@
       <meta charset="utf-8">
       <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
       <meta name="viewport" content="width=device-width, initial-scale=1">
-      <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDQe5G3tqd5Vfwefn7w3Djrv1L1bmlKkTw&libraries=places, geometry"></script>
+      <!-- <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDQe5G3tqd5Vfwefn7w3Djrv1L1bmlKkTw&libraries=places, geometry"></script> -->
       <style>
         /* Set the size of the div element that contains the map */
         #map {
-          height: 100%;  /* The height is 400 pixels */
-          width: 100%;  /* The width is the width of the web page */
+          height: 100%;
+          width: 100%;  /* The height is 400 pixels */
+     /* The width is the width of the web page */
          }
       </style>
   </head>
@@ -70,47 +71,34 @@
         </form>
       </div>
 
-
+  
 
       <script src=
       "https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js">
             </script>
-      <script>
 
-
-      function openForm() {
-        if ( {{netid | tojson}} != "") {
-        document.getElementsByName('netid')[0].placeholder= {{netid | tojson}};
-        document.getElementsByName('name')[0].placeholder= {{name | tojson}};
-        document.getElementsByName('email')[0].placeholder= {{email | tojson}};
-        document.getElementsByName('phone')[0].placeholder= {{phone | tojson}};
-        document.getElementsByName('description')[0].placeholder= {{description | tojson}};
-        document.getElementsByName('address')[0].placeholder= {{address | tojson}};
-      }
-      document.getElementById('id01').style.display='block';
-      }
-
-      function closeForm() {
-        document.getElementById("id01").style.display = "none";
-      }
-
-
-
-      function initialize() {
-      var input = document.getElementById('address');
-      var autocomplete = new google.maps.places.Autocomplete(input);
-      // changes whenever user selects new address in drop down
-      google.maps.event.addListener(autocomplete, 'place_changed', function () {
-                  var place = autocomplete.getPlace();
-              });
-        }
-
-      google.maps.event.addDomListener(window, 'load', initialize);
-
-      </script>
 
       <div id="map"></div>
       <script>
+        function stringBuilder(list){
+          var st = "<p>" + "NETID: " + list[0] + "</p>" + "<p>" + "Name: " + list[1] + "</p>" + "<p>" + "Email: " + list[2] + "</p>" + "<p>" + "Phone: " + list[3] + "</p>" + "<p>" + "Description: " + list[4] + "</p>";
+          return st;
+        }
+        function addMarker(coordinates, map, info){
+          var marker = new google.maps.Marker({
+            position: coordinates,
+            map: map,
+            // add tiger icon
+          });
+  
+          var infowindow = new google.maps.InfoWindow({
+            content: info
+          });
+          marker.addListener('click', function() {
+            infowindow.open(map, marker);
+            });
+          console.log('success')
+        }
         function initMap() {
           // Create a new StyledMapType object, passing it an array of styles,
           // and the name to be displayed on the map type control.
@@ -276,26 +264,72 @@
               }
             ],
               {name: 'Styled Map'});
-
+  
           // Create a map object, and include the MapTypeId to add
           // to the map type control.
+          var data= {{ markersData|tojson }};
+          data = JSON.parse(data)
+  
           var map = new google.maps.Map(document.getElementById('map'), {
-            center: {lat: 40.343, lng: -74.655},
-            zoom: 15,
+            center: new google.maps.LatLng(40.349990 ,-74.658580),
+            zoom: 4,
             mapTypeControlOptions: {
               mapTypeIds: ['roadmap', 'satellite', 'hybrid', 'terrain',
                       'styled_map']
             }
           });
-
+          var info = ""
+          for (i = 0; i < data.length; i++) {
+  
+            if (data[i].length > 5){
+              info = stringBuilder(data[i]);
+              addMarker({lat: data[i][5], lng: data[i][6]}, map, info);
+  
+            }
+            }
           //Associate the styled map with the MapTypeId and set it to display.
           map.mapTypes.set('styled_map', styledMapType);
           map.setMapTypeId('styled_map');
         }
       </script>
-      <script async defer
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDQe5G3tqd5Vfwefn7w3Djrv1L1bmlKkTw&callback=initMap">
+      <script
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDQe5G3tqd5Vfwefn7w3Djrv1L1bmlKkTw&libraries=places, geometry&callback=initMap">
       </script>
+
+      <script>
+
+        function openForm() {
+          if ( {{netid | tojson}} != "") {
+          document.getElementsByName('netid')[0].placeholder= {{netid | tojson}};
+          document.getElementsByName('name')[0].placeholder= {{name | tojson}};
+          document.getElementsByName('email')[0].placeholder= {{email | tojson}};
+          document.getElementsByName('phone')[0].placeholder= {{phone | tojson}};
+          document.getElementsByName('description')[0].placeholder= {{description | tojson}};
+          document.getElementsByName('address')[0].placeholder= {{address | tojson}};
+        }
+        document.getElementById('id01').style.display='block';
+        }
+
+        function closeForm() {
+          document.getElementById("id01").style.display = "none";
+        }
+
+
+
+        function initialize() {
+        var input = document.getElementById('address');
+        var autocomplete = new google.maps.places.Autocomplete(input);
+        // changes whenever user selects new address in drop down
+        google.maps.event.addListener(autocomplete, 'place_changed', function () {
+                    var place = autocomplete.getPlace();
+                });
+          }
+
+        google.maps.event.addDomListener(window, 'load', initialize);
+
+        </script>
+
+      
 
     </body>
 </html>
