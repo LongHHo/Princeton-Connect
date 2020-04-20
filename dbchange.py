@@ -46,10 +46,12 @@ def change():
         cur = conn.cursor()
 
         change = """ALTER TABLE userInformation 
-            ALTER COLUMN description TYPE VARCHAR,
-            ALTER COLUMN address TYPE VARCHAR,
-            ALTER COLUMN name TYPE VARCHAR;
+            ALTER COLUMN city SET NOT NULL;
         """
+
+        # change = """UPDATE userInformation
+        # SET city = '';"""
+
 
         cur.execute(change)
         

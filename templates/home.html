@@ -31,6 +31,8 @@
 
       <div id = "content">
         <h3> Welcome to Princeton Connect!</h3>
+        <!-- feel free to move this or delete, just testing -->
+        <h4> Hello, {{netid}} </h4>
         <p> Princeton Connect helps students find roommates for summer travels. If this is your first time on the site, go ahead and
           make an entry by clicking the 'Submit Entry' button, where you will enter where you will be for the summer. You can also search
           for already existing entries by clicking the 'Entry Look-Up' button.
@@ -45,9 +47,6 @@
             <p>Submit or edit your entry here</p>
             <p>If you already submitted an entry, it will display in the text boxes</p>
             <hr>
-            <label for="netid"><b>netid</b></label>
-            <input type="text" placeholder="Enter netid" id="netid" name="netid" required>
-
             <label for="name"><b>Name</b></label>
             <input type="text" placeholder="Enter name" id="name" name="name" required>
 
@@ -60,6 +59,9 @@
             <label for="description"><b>Description</b></label>
             <textarea type="textarea" placeholder="Whether for a roommate or a friend, tell us about yourself and what you're looking for"
             id="description" name="description" style="height:200px" required></textarea>
+
+            <label for="city"><b>City</b></label>
+            <input type="text" placeholder="Enter what city you will be staying in" id="city" name="city" required>
 
             <label for="address"><b>Address</b></label>
             <input type="text" placeholder="Enter address" id="address" name="address" required>
@@ -81,7 +83,8 @@
       <div id="map"></div>
       <script>
         function stringBuilder(list){
-          var st = "<p>" + "NETID: " + list[0] + "</p>" + "<p>" + "Name: " + list[1] + "</p>" + "<p>" + "Email: " + list[2] + "</p>" + "<p>" + "Phone: " + list[3] + "</p>" + "<p>" + "Description: " + list[4] + "</p>";
+          var st = "<p>" + "NETID: " + list[0] + "</p>" + "<p>" + "Name: " + list[1] + "</p>" + "<p>" + "Email: " + list[2] + "</p>" + "<p>" + "Phone: " + 
+          list[3] + "</p>" + "<p>" + "Description: " + list[4] + "</p>";
           return st;
         }
         function addMarker(coordinates, map, info){
@@ -299,12 +302,12 @@
       <script>
 
         function openForm() {
-          if ( {{netid | tojson}} != "") {
-          document.getElementsByName('netid')[0].value= {{netid | tojson}};
+          if ( {{name | tojson}} != "") {
           document.getElementsByName('name')[0].value= {{name | tojson}};
           document.getElementsByName('email')[0].value= {{email | tojson}};
           document.getElementsByName('phone')[0].value= {{phone | tojson}};
           document.getElementsByName('description')[0].value= {{description | tojson}};
+          document.getElementsByName('city')[0].value= {{city | tojson}};
           document.getElementsByName('address')[0].value= {{address | tojson}};
         }
         document.getElementById('id01').style.display='block';

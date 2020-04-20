@@ -5,13 +5,14 @@ from sys import argv, stderr, exit
 
 class entryInfo (object):
 
-    def __init__(self, name= '', netid= '', email= '', phone= '', description= '', address= ''):
+    def __init__(self, name= '', netid= '', email= '', phone= '', description= '', address= '', city=''):
         self._name = name
         self._netid = netid
         self._email = email
         self._phone = phone
         self._description = description
         self._address = address
+        self._city = city
 
     def setName(self, name):
         if (name is None):
@@ -41,7 +42,12 @@ class entryInfo (object):
     def setAddress(self, address):
         if (address is None):
             address = ''
-        self._address = address  
+        self._address = address 
+
+    def setCity(self, city):
+        if (city is None):
+            city = ''
+        self._city = city  
     
     # get method returns raw string as is
     def getName(self): 
@@ -57,8 +63,11 @@ class entryInfo (object):
         return self._phone  
 
     def getDescription(self):
-        return self._description  
-    
+        return self._description
+
+    def getCity(self):
+        return self._city  
+
     def getAddress(self):
         return self._address 
 
@@ -104,6 +113,13 @@ class entryInfo (object):
           return '%'
       else:
         newString = '%' + self._address + '%'
+        return newString
+
+    def retCity(self): 
+      if (self._city == ''):
+          return '%'
+      else:
+        newString = '%' + self._city + '%'
         return newString
     
     # returns user Information as a complete string
