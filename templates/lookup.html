@@ -98,11 +98,11 @@
           </tr>
         <tr>
           <td align = "right">
-            <label for="Address">
-              <span>Address: </span>
+            <label for="City">
+              <span>City: </span>
             </label>
           </td>
-          <td><input type="text" id="address" name="address" /></td>
+          <td><input type="text" id="city" name="city" /></td>
         </tr>
 
         <tr>
@@ -153,7 +153,7 @@
           <th align  = "left">Email</th>
           <th align  = "left">Phone</th>
           <th align  = "left">Description</th>
-          <th align  = "left">Address</th>
+          <th align  = "left">City</th>
         </tr>
       </thead>
       <tbody>
@@ -167,7 +167,7 @@
           <td align  = "left">{{user.getEmail()}}</td>
           <td align  = "left">{{user.getPhone()}}</td>
           <td align  = "left">{{user.getDescription()}}</td>
-          <td align  = "left">{{user.getAddress()}}</td>
+          <td align  = "left">{{user.getCity()}}</td>
         </tr>
         {% endfor %}
       </tbody>

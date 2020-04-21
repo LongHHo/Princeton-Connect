@@ -97,12 +97,12 @@ def insertEntry(entryInfo):
         # create a cursor
         cur = conn.cursor()
 
-        insertUser = """INSERT INTO userInformation (netid, name, phone, email, description, address)
-               VALUES(%s, %s, %s, %s, %s, %s) 
+        insertUser = """INSERT INTO userInformation (netid, name, phone, email, description, address, city)
+               VALUES(%s, %s, %s, %s, %s, %s, %s) 
                ON CONFLICT (netid) 
                DO UPDATE SET
-               (name, phone, email, description, address) 
-                  = (EXCLUDED.name, EXCLUDED.phone, EXCLUDED.email, EXCLUDED.description, EXCLUDED.address);"""
+               (name, phone, email, description, address, city) 
+                  = (EXCLUDED.name, EXCLUDED.phone, EXCLUDED.email, EXCLUDED.description, EXCLUDED.address, EXCLUDED.city);"""
 
         insertCoordinates = """INSERT INTO coordinates (netid, address, latitude, longitude)
                VALUES(%s, %s, %s, %s) 
@@ -117,9 +117,10 @@ def insertEntry(entryInfo):
         email = entryInfo.getEmail()
         address = entryInfo.getAddress()
         description = entryInfo.getDescription()
+        city = entryInfo.getCity()
 
 
-        cur.execute(insertUser, (netid, name, phone, email, description, address))
+        cur.execute(insertUser, (netid, name, phone, email, description, address, city))
 
         print('before')
         coordinates = geocode(address)
@@ -173,7 +174,8 @@ def searchEntry(entry):
             userInformation.email LIKE %s AND
             userInformation.phone LIKE %s AND
             userInformation.description LIKE %s AND
-            userInformation.address LIKE %s;
+            userInformation.address LIKE %s AND
+            userInformation.city LIKE %s;
         """
 
 
@@ -184,11 +186,13 @@ def searchEntry(entry):
         email = entry.retEmail()
         address = entry.retAddress()
         description = entry.retDescription()
+        city = entry.retCity()
 
 
-        cur.execute(sql, (netid, name, email, phone, description, address))
+        cur.execute(sql, (netid, name, email, phone, description, address, city))
         row = cur.fetchone()
 
+        print(str(row))
         entries = []
         while row is not None:
             user = entryInfo.entryInfo()
@@ -198,10 +202,11 @@ def searchEntry(entry):
             user.setPhone(str(row[3]))
             user.setDescription(str(row[4]))
             user.setAddress(str(row[5]))
+            user.setCity(str(row[6]))
             entries.append(user)
             row = cur.fetchone()
 
-        print('success')
+
         # close the communication with the PostgreSQL
         cur.close()
         return entries
@@ -298,6 +303,7 @@ def getAll():
                 print('******')
                 sub.append(coordinates[0])
                 sub.append(coordinates[1])
+            sub.append(str(row[6]))
         
             entries.append(sub)
             sub = []

@@ -57,6 +57,7 @@ body {
 
 /* Button used to open the contact form - fixed at the bottom of the page */
 .nav button{
+  background-color: #333;
   color: white;
   display:inline-block;
   font-size: 17px;
