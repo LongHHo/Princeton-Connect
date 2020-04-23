@@ -122,12 +122,12 @@ def insertEntry(entryInfo):
                (name, phone, email, description, address, city) 
                   = (EXCLUDED.name, EXCLUDED.phone, EXCLUDED.email, EXCLUDED.description, EXCLUDED.address, EXCLUDED.city);"""
 
-        insertCoordinates = """INSERT INTO coordinates (netid, address, latitude, longitude)
-               VALUES(%s, %s, %s, %s) 
-               ON CONFLICT (netid) 
-               DO UPDATE SET
-               (address, latitude, longitude) 
-                  = (EXCLUDED.address, EXCLUDED.latitude, EXCLUDED.longitude);"""
+        # insertCoordinates = """INSERT INTO coordinates (netid, address, latitude, longitude)
+        #        VALUES(%s, %s, %s, %s) 
+        #        ON CONFLICT (netid) 
+        #        DO UPDATE SET
+        #        (address, latitude, longitude) 
+        #           = (EXCLUDED.address, EXCLUDED.latitude, EXCLUDED.longitude);"""
         # execute a statement
         name = entryInfo.getName()
         netid = entryInfo.getNetid()
@@ -140,17 +140,17 @@ def insertEntry(entryInfo):
 
         cur.execute(insertUser, (netid, name, phone, email, description, address, city))
 
-        print('before')
-        coordinates = geocode(address)
-        print('after')
+        # print('before')
+        # coordinates = geocode(address)
+        # print('after')
 
-        latitude = float(coordinates[0])
-        longitude = float(coordinates[1])
+        # latitude = float(coordinates[0])
+        # longitude = float(coordinates[1])
 
-        print(latitude)
-        print(longitude)
+        # print(latitude)
+        # print(longitude)
 
-        cur.execute(insertCoordinates, (netid, address, latitude, longitude))
+        # cur.execute(insertCoordinates, (netid, address, latitude, longitude))
 
 
         conn.commit()
