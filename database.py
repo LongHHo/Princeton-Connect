@@ -63,12 +63,11 @@ def deleteEntry(netid):
         params = config()
 
         # connect to the PostgreSQL server
-        print('Connecting to the PostgreSQL database...')
+        print('Deleting')
         conn = psycopg2.connect(**params)
 
         # create a cursor
         cur = conn.cursor()
-
         deleteUserInfo = """
             DELETE FROM userInformation WHERE netid = %s;
         """
@@ -77,10 +76,12 @@ def deleteEntry(netid):
         """
 
         cur.execute(deleteUserInfo, (netid,))
+        print('After')
         cur.execute(deleteCoordinates, (netid,))
         
 
         conn.commit()
+        print('Done')
         # close the communication with the PostgreSQL
         cur.close()
 
@@ -281,52 +282,52 @@ def displayRows():
 def getAll():
     """ Connect to the PostgreSQL database server """
     conn = None
-    try:
+    # try:
         # read connection parameters
-        params = config()
+    params = config()
 
-        # connect to the PostgreSQL server
-        print('Connecting to the PostgreSQL database...')
-        conn = psycopg2.connect(**params)
+    # connect to the PostgreSQL server
+    print('Connecting to the PostgreSQL database...')
+    conn = psycopg2.connect(**params)
 
-        # create a cursor
-        cur = conn.cursor()
+    # create a cursor
+    cur = conn.cursor()
 
-        sql = """
-            SELECT *
-            FROM userInformation
-        """
+    sql = """
+        SELECT *
+        FROM userInformation
+    """
 
 
-        cur.execute(sql)
+    cur.execute(sql)
+    row = cur.fetchone()
+
+    entries = []
+    sub = []
+    while row is not None:
+        sub.append(str(row[0]))
+        sub.append(str(row[1]))
+        sub.append(str(row[2]))
+        sub.append(str(row[3]))
+        sub.append(str(row[4]))
+        # change actual address to coordinates
+        coordinates = geocode(str(row[5]))
+        if (coordinates is not None):
+            print('******')
+            offcoordinates = coordinateOffset(coordinates[0], coordinates[1])
+            sub.append(offcoordinates[0])
+            sub.append(offcoordinates[1])
+        sub.append(str(row[6]))
+    
+        entries.append(sub)
+        sub = []
         row = cur.fetchone()
 
-        entries = []
-        sub = []
-        while row is not None:
-            sub.append(str(row[0]))
-            sub.append(str(row[1]))
-            sub.append(str(row[2]))
-            sub.append(str(row[3]))
-            sub.append(str(row[4]))
-            # change actual address to coordinates
-            coordinates = geocode(str(row[5]))
-            if (coordinates is not None):
-                print('******')
-                offcoordinates = coordinateOffset(coordinates[0], coordinates[1])
-                sub.append(offcoordinates[0])
-                sub.append(offcoordinates[1])
-            sub.append(str(row[6]))
-        
-            entries.append(sub)
-            sub = []
-            row = cur.fetchone()
-
-        # close the communication with the PostgreSQL
-        cur.close()
-        return entries
-    except (Exception, psycopg2.DatabaseError) as error:
-        print(error)
+    # close the communication with the PostgreSQL
+    cur.close()
+    return entries
+    # except (Exception, psycopg2.DatabaseError) as error:
+    #     print(error)
     
 
 def main(argv):

@@ -45,12 +45,16 @@ def change():
         # create a cursor
         cur = conn.cursor()
 
-        change = """ALTER DATABASE userInformation 
-            ALTER COLUMN city SET NOT NULL;
-        """
+        # change = """ALTER DATABASE userInformation 
+        #     ALTER COLUMN city SET NOT NULL;
+        # """
 
         # change = """UPDATE userInformation
         # SET city = '';"""
+
+        change = """
+            ALTER TABLE userInformation ADD CONSTRAINT UNIQUE netid;
+        """
 
 
         cur.execute(change)

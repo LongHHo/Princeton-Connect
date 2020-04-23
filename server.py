@@ -91,7 +91,7 @@ def home():
 @app.route('/templates/lookup', methods=['GET'])
 def lookup():
         # maybe put a "hello username" at the top
-        username = CASClient().authenticate()
+        username = CASClient().authenticate().strip('\n')
 
         # get search query of what user PUTS IN (not to be confused with user)
         netid = request.args.get('netid')
@@ -123,7 +123,7 @@ def lookup():
 @app.route('/templates/handleSubmit', methods=['GET'])
 def handleSubmit():
     
-    netid = CASClient().authenticate()
+    netid = CASClient().authenticate().strip('\n')
 
     # puts in fields based on submit form input
     name = request.args.get('name')
@@ -137,14 +137,11 @@ def handleSubmit():
     entry = entryInfo.entryInfo(name, netid, email, phone, description, address, city)
     insertEntry(entry)
     
-
-    # markersData = getAll()
-    # html = render_template('submit.html', markersData=json.dumps(markersData))
     
     
     # find entry of logged on user, put in entry   
     user = entryInfo.entryInfo()
-    user.setNetid(netid.strip('\n'))
+    user.setNetid(netid)
     
     entry = searchEntry(user)
     userEntry = entryInfo.entryInfo()
@@ -176,8 +173,7 @@ def handleDelete():
     
     # cas client appends a new line
     deleteEntry(netid.strip('\n'))
-    
-
+    print(netid)
     # entry won't exist so pass in empty strings
     # json doesn't do None
     markersData=getAll()
