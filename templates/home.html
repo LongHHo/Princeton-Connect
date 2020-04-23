@@ -3,6 +3,8 @@
   <head>
       <title> Princeton Connect</title>
       <meta charset="utf-8">
+      <!-- if two style sheets modify the same component, the last one takes precedence -->
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
       <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
       <meta name="viewport" content="width=device-width, initial-scale=1">
       <!-- <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDQe5G3tqd5Vfwefn7w3Djrv1L1bmlKkTw&libraries=places, geometry"></script> -->
@@ -16,17 +18,37 @@
       </style>
   </head>
   <body>
-      <div id = "header">
-          <h1>Princeton Connect</h1>
-      </div>
+      <nav class="navbar navbar-expand-lg navbar-dark bg-primary static-top">
+        <div class="container">
+          <a class="navbar-brand" href="/">
+                Princeton Connect
+              </a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+              </button>
+          <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav ml-auto">
+              <li class="nav-item active">
+                <a class="nav-link" href="/">Home
+                      <span class="sr-only">(current)</span>
+                    </a>
+              </li>
+              <li class="nav-item">
+                <a class = "nav-link" onclick="openForm()">Submit/Edit Your Entry</a>
+              </li>
+              <li class="nav-item">
+                <a class = "nav-link" href="/templates/lookup">Entry Look-Up</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+ 
 
-      <!-- Top navigation -->
-      <ul class="nav">
-        <!--<li><a href="/templates/submit">Submit Entry</a></li> -->
-        <li><button class = "open-button" onclick="openForm()">Submit/Edit Your Entry</button></li>
-        <li><a class = "active" href="/">Home</a></li>
-        <li><a href="/templates/lookup">Entry Look-Up</a></li>
-      </ul>
+      <!-- <div id = "header">
+          <h1>Princeton Connect</h1>
+      </div> -->
+
 
 
       <div id = "content">
@@ -39,14 +61,30 @@
         </p>
       </div>
 
-      <div id="id01" class="modal">
-        <span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close Modal">&times;</span>
+      <div id="id01" class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
         <form class="modal-content" action="/templates/handleSubmit">
-          <div class="container">
-            <h1>Your Entry</h1>
-            <p>Submit or edit your entry here</p>
-            <p>If you already submitted an entry, it will display in the text boxes</p>
-            <hr>
+          
+            <div class="modal-header">
+              <div class="container">
+              <div class="row">
+              <h1 class="modal-title">Your Entry</h1>
+              <span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close Modal">&times;</span>
+              </div>
+
+              <div class="row"> 
+              <h6>Submit or edit your entry here</h6>
+              </div>
+
+
+              <div class="row"> 
+              <p>If you already submitted an entry, it will display in the text boxes</p>
+            </div>
+
+            </div>
+            </div>
+            
+            <div class= "modal-body">
             <label for="name"><b>Name</b></label>
             <input type="text" placeholder="Enter name" id="name" name="name" required>
 
@@ -65,12 +103,15 @@
 
             <label for="address"><b>Address</b></label>
             <input type="text" placeholder="Enter address" id="address" name="address" required>
-
-            <button type="submit" class="btn">Submit</button>
-            <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
-            <a href="/templates/delete"><button type="button" class="btn delete">Delete Entry</button></a>
-          </div>
+            </div>
+           
+            <div class="modal-footer">
+              <button type="submit" class="btn submit">Submit</button>
+              <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
+              <a href="/templates/delete"><button type="button" class="btn delete">Delete Entry</button></a>
+            </div>
         </form>
+      </div>
       </div>
 
   
