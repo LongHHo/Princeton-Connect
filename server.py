@@ -183,7 +183,7 @@ def handleDelete():
     markersData=getAll()
     html = render_template('home.html', netid=netid, name='', 
     phone='', email='', description='',
-         address='', markersData=json.dumps(markersData))
+         address='', city='', markersData=json.dumps(markersData))
     response = make_response(html)
 
     return response
