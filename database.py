@@ -13,8 +13,14 @@ import math
 
 def coordinateOffset(latitude, longitude):
     radius = 6371000.0 #radius of earth 
+    sign = secrets.choice(range(0, 2)) #used to determine sign of the offset
     oLat = secrets.choice(range(3200, 8000)) #offset in metres (2 - 5 miles)
+    if (sign == 0):
+        oLat = -1 * oLat
+    sign = secrets.choice(range(0, 2)) #used to determine sign of the offset
     oLong = secrets.choice(range(3200, 8000)) #offset in metres (2 - 5 miles)
+     if (sign == 0):
+        oLong = -1 * oLong
     new_latitude  = latitude  + (oLat / radius) * (180 / math.pi)
     new_longitude = longitude + (oLong / radius) * (180 / math.pi) / math.cos(latitude * math.pi/180)
     coordinates = [new_latitude, new_longitude]
@@ -334,9 +340,7 @@ def main(argv):
     userTwo = entryInfo.entryInfo('Slim Jim', 'sjim', 'sjim@princeton.edu', '1234567', 'im a stick', '4000 Union Pacific Ave, Commerce, CA')
     deleteEntry('m')
     getAll()
-    test = coordinateOffset(40.348600, -74.659300)
-    print(test[0], test[1])
-    
+    print(secrets.choice(range(0, 2)))
 
 
 if __name__ == '__main__':
