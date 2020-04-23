@@ -6,8 +6,20 @@ import entryInfo
 import googlemaps
 from datetime import datetime
 import requests
+import secrets
+import math
 
 # gmaps = googlemaps.Client(key='AIzaSyDQe5G3tqd5Vfwefn7w3Djrv1L1bmlKkTw')
+
+def coordinateOffset(latitude, longitude):
+    radius = 6371000.0 #radius of earth 
+    oLat = secrets.choice(range(3200, 8000)) #offset in metres (2 - 5 miles)
+    oLong = secrets.choice(range(3200, 8000)) #offset in metres (2 - 5 miles)
+    new_latitude  = latitude  + (oLat / radius) * (180 / math.pi)
+    new_longitude = longitude + (oLong / radius) * (180 / math.pi) / math.cos(latitude * math.pi/180)
+    coordinates = [new_latitude, new_longitude]
+    return coordinates
+
 
 def config(filename='database.ini', section='postgresql'):
     # create a parser
@@ -301,8 +313,9 @@ def getAll():
             coordinates = geocode(str(row[5]))
             if (coordinates is not None):
                 print('******')
-                sub.append(coordinates[0])
-                sub.append(coordinates[1])
+                offcoordinates = coordinateOffset(coordinates[0], coordinates[1])
+                sub.append(offcoordinates[0])
+                sub.append(offcoordinates[1])
             sub.append(str(row[6]))
         
             entries.append(sub)
@@ -320,6 +333,9 @@ def main(argv):
     user = entryInfo.entryInfo('Long Ho', 'lhho', 'lhho@princeton.edu', '7142602003', 'just a cali boy looking for kangaroos', 'Churchill Ave, Hobart TAS 7005, Australia')
     userTwo = entryInfo.entryInfo('Slim Jim', 'sjim', 'sjim@princeton.edu', '1234567', 'im a stick', '4000 Union Pacific Ave, Commerce, CA')
     deleteEntry('m')
+    getAll()
+    test = coordinateOffset(40.348600, -74.659300)
+    print(test[0], test[1])
     
 
 
