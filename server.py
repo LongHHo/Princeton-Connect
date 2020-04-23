@@ -123,7 +123,7 @@ def lookup():
 @app.route('/templates/handleSubmit', methods=['GET'])
 def handleSubmit():
     
-    netid = CASClient().authenticate()
+    netid = CASClient().authenticate().strip('\n')
 
     # puts in fields based on submit form input
     name = request.args.get('name')
