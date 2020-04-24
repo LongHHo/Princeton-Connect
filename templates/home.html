@@ -85,7 +85,7 @@
                     </a>
               </li>
               <li class="nav-item">
-                <a class = "nav-link" onclick="openForm()">Submit/Edit Your Entry</a>
+                <a class = "nav-link" onclick="openForm()">Your Entry</a>
               </li>
               <li class="nav-item">
                 <a class = "nav-link" onclick="openNav()">Entry Look-Up</a>
@@ -114,7 +114,6 @@
       <div id="id01" class="modal" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
         <form class="modal-content" action="/templates/handleSubmit">
-          
             <div class="modal-header">
               <div class="container">
               <div class="row">
@@ -125,12 +124,9 @@
               <div class="row"> 
               <h6>Submit or edit your entry here</h6>
               </div>
-
-
               <div class="row"> 
               <p>If you already submitted an entry, it will display in the text boxes</p>
-            </div>
-
+             </div>
             </div>
             </div>
             
@@ -173,11 +169,15 @@
       <div id="map"></div>
 
       <script>
+      
+
         function stringBuilder(list){
           var st = "<p>" + "NETID: " + list[0] + "</p>" + "<p>" + "Name: " + list[1] + "</p>" + "<p>" + "Email: " + list[2] + "</p>" + "<p>" + "Phone: " + 
           list[3] + "</p>" + "<p>" + "Description: " + list[4] + "</p>";
           return st;
         }
+        var infowindow;
+
         function addMarker(coordinates, map, info){
           var marker = new google.maps.Marker({
             position: coordinates,
@@ -185,14 +185,17 @@
             // add tiger icon
           });
   
-          var infowindow = new google.maps.InfoWindow({
-            content: info
-          });
+          // var infowindow = new google.maps.InfoWindow({
+          //   content: info
+          // });
           marker.addListener('click', function() {
+            infowindow.setContent(info);
             infowindow.open(map, marker);
             });
           console.log('success')
         }
+
+        
         function initMap() {
           // Create a new StyledMapType object, passing it an array of styles,
           // and the name to be displayed on the map type control.
@@ -363,7 +366,9 @@
           // to the map type control.
           var data= {{ markersData|tojson }};
           data = JSON.parse(data)
-  
+
+          
+          infowindow = new google.maps.InfoWindow();
           var map = new google.maps.Map(document.getElementById('map'), {
             center: new google.maps.LatLng(40.349990 ,-74.658580),
             zoom: 4,
@@ -388,6 +393,9 @@
       </script>
       <script
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDQe5G3tqd5Vfwefn7w3Djrv1L1bmlKkTw&libraries=places, geometry&callback=initMap">
+
+
+
       </script>
 
       <script>

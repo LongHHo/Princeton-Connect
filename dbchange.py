@@ -45,8 +45,8 @@ def change():
         # create a cursor
         cur = conn.cursor()
 
-        change = """ALTER DATABASE userInformation 
-            ALTER COLUMN city SET NOT NULL;
+        change = """DELETE FROM userInformation 
+            WHERE netid = 'bgovil\n';
         """
 
         # change = """UPDATE userInformation
