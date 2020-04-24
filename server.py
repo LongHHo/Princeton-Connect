@@ -31,23 +31,23 @@ app.secret_key = b'\xcdt\x8dn\xe1\xbdW\x9d[}yJ\xfc\xa3~/'
 @app.route('/templates/home')
 def home():
     netid = CASClient().authenticate()
-    
-    
+
+
     # find particular entry of user
     user = entryInfo.entryInfo()
     # cas client appends a new line so get rid of it
     user.setNetid(netid.strip('\n'))
-    
+
     # search for user in database
     entry = searchEntry(user)
-    
+
 
     userEntry = entryInfo.entryInfo()
     if (len(entry) > 1):
         raise Exception('Only one entry per user')
     elif (len(entry) == 1):
         userEntry = entry[0]
-    
+
 
     # If userEntry exists puts in string elements of each field
     # If it doesn't each get statement is '' and we pass in '' for each name-value pair
@@ -56,9 +56,9 @@ def home():
     phone=userEntry.getPhone()
     email=userEntry.getEmail()
     description=userEntry.getDescription()
-    city=userEntry.getCity() 
+    city=userEntry.getCity()
     address=userEntry.getAddress()
-    
+
     # each field is part of the user entry so it displays in the submit form
     markersData = getAll() #getting all the user info
     html = render_template('home.html', netid=netid, name=name, phone=phone, email=email, description=description,
@@ -83,7 +83,7 @@ def home():
 #         return response
 #     except Exception as e:
 #         print(e, file=stderr)
-    
+
 
 #-----------------------------------------------------------------------
 
@@ -111,7 +111,7 @@ def lookup():
 
         userEntries = searchEntry(user)
 
-    
+
         html = render_template('lookup.html',
                 userEntries=userEntries)
         response = make_response(html)
@@ -122,7 +122,7 @@ def lookup():
 # handle after the submit button
 @app.route('/templates/handleSubmit', methods=['GET'])
 def handleSubmit():
-    
+
     netid = CASClient().authenticate().strip('\n')
 
     # puts in fields based on submit form input
@@ -133,33 +133,33 @@ def handleSubmit():
     city = request.args.get('city')
     address = request.args.get('address')
 
-    
+
     entry = entryInfo.entryInfo(name, netid, email, phone, description, address, city)
     insertEntry(entry)
-    
 
-    # markersData = getAll()
-    # html = render_template('submit.html', markersData=json.dumps(markersData))
-    
-    
-    # find entry of logged on user, put in entry   
+
+    #markersData = getAll()
+    #html = render_template('submit.html', markersData=json.dumps(markersData))
+
+
+    # find entry of logged on user, put in entry
     user = entryInfo.entryInfo()
     user.setNetid(netid.strip('\n'))
-    
+
     entry = searchEntry(user)
     userEntry = entryInfo.entryInfo()
     if (len(entry) > 1):
         raise Exception('Only one entry per user')
     elif (len(entry) == 1):
         userEntry = entry[0]
-    
+
     # If userEntry exists puts in string elements of each field
     # If it doesn't each get statement is '' and we pass in '' for each name-value pair
     name=userEntry.getName(),
     phone=userEntry.getPhone()
     email=userEntry.getEmail()
     description=userEntry.getDescription()
-    city=userEntry.getCity() 
+    city=userEntry.getCity()
     address=userEntry.getAddress()
 
     markersData = getAll() #getting all the user info
@@ -168,20 +168,20 @@ def handleSubmit():
     response = make_response(html)
 
     return response
-            
+
 @app.route('/templates/delete', methods=['GET'])
 def handleDelete():
-    
+
     netid = CASClient().authenticate()
-    
+
     # cas client appends a new line
     deleteEntry(netid.strip('\n'))
-    
+
 
     # entry won't exist so pass in empty strings
     # json doesn't do None
     markersData=getAll()
-    html = render_template('home.html', netid=netid, name='', 
+    html = render_template('home.html', netid=netid, name='',
     phone='', email='', description='',
          address='', city='', markersData=json.dumps(markersData))
     response = make_response(html)

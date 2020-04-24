@@ -46,7 +46,7 @@ body {
   font-size: 17px;
   display:inline;
 } */
-/* 
+/*
 .nav a{
   color: white;
   display:inline-block;
@@ -85,18 +85,18 @@ body {
   float: left;
 }
 .modal{
-  z-index: 1;   
+  z-index: 1;
 }
 .modal-backdrop{
-  z-index: 1;        
+  z-index: 1;
 }​
 
 /* Modal Content/Box */
 /* .modal-content {
   background-color: #fefefe;
-  margin: 5% auto 15% auto; 
+  margin: 5% auto 15% auto;
   border: 1px solid #888;
-  width: 80%; 
+  width: 80%;
 } */
 
 /* Style the horizontal ruler */
@@ -106,7 +106,7 @@ hr {
 }
 
 /* Full-width input fields */
-input[type=text], textarea {
+input, textarea {
   width: 100%;
   padding: 12px 20px;
   margin: 8px 0;
@@ -116,10 +116,31 @@ input[type=text], textarea {
 }
 
 /* Add a background color when the inputs get focus */
-input[type=text]:focus, textarea:focus {
+input:focus, textarea:focus {
   background-color: #ddd;
   outline: none;
 }
+
+
+input:invalid{
+    box-shadow: 0 0 5px 1px red;
+}
+
+.error {
+  width  : 100%;
+  padding: 0;
+
+  font-size: 80%;
+  color: white;
+  background-color: #900;
+  border-radius: 0 0 5px 5px;
+  box-sizing: border-box;
+}
+
+.error.active {
+  padding: 0.2em;
+}
+
 
 /* Set a style for the submit/login button */
 .modal-content .submit {
@@ -140,7 +161,7 @@ input[type=text]:focus, textarea:focus {
   opacity: 1;
 }
 
- 
+
 /* Add padding to container elements */
 /* .container {
   padding: 16px;
@@ -154,19 +175,15 @@ input[type=text]:focus, textarea:focus {
   font-size: 40px;
   font-weight: bold;
   color: #f1f1f1;
-} 
+}
 
 .close:hover,
 .close:focus {
   color: #f44336;
   cursor: pointer;
-} 
+}
 
 #content {
   text-align: center;
   padding: 10px;
 }
-
-
-
-

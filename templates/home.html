@@ -19,12 +19,63 @@
   </head>
   <body>
 
+
      <div id="mySidenav" class="sidenav">
-         <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-         <a href="#">About</a>
-         <a href="#">Services</a>
-         <a href="#">Clients</a>
-         <a href="#">Contact</a>
+
+       <form action="/templates/lookup" method="get">
+         <table class="searchbox" style="width:40%">
+           <tr>
+             <td align = "right">
+               <label for="name">
+                 <h4>Name: </h4>
+               </label>
+             </td>
+             <td><input type="text" id="name1" name="name1" /></td>
+           </tr>
+
+           <tr>
+             <td align = "right">
+               <label for="email">
+                 <h4>Email: </h4>
+               </label>
+             </td>
+             <td><input type="text" id="email1" name="email1" /></td>
+           </tr>
+           <tr>
+             <td align = "right">
+               <label for="phone">
+                 <h4>Phone: </h4>
+               </label>
+             </td>
+             <td><input type="text" id="phone1" name="phone1" /></td>
+           </tr>
+           <tr>
+               <td align = "right">
+                 <label for="description">
+                   <h4>Description: </h4>
+                 </label>
+               </td>
+               <td><input type="text" id="description1" name="description1" /></td>
+             </tr>
+           <tr>
+             <td align = "right">
+               <label for="City">
+                 <h4>City: </h4>
+               </label>
+             </td>
+             <td><input type="text" id="city1" name="city1" /></td>
+           </tr>
+
+           <tr>
+              <td></td>
+             <td><input type="submit" value="Submit2" /></td>
+           </tr>
+         </table>
+       </form>
+       <hr />
+
+
+
     </div>
 
      <style>
@@ -63,6 +114,10 @@
 
         #main {
           transition: margin-left .5s;
+        }
+
+        h4 {
+            color: white;
         }
 
      </style>
@@ -113,7 +168,7 @@
 
       <div id="id01" class="modal" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
-        <form class="modal-content" action="/templates/handleSubmit">
+        <form novalidate class="modal-content" action="/templates/handleSubmit">
             <div class="modal-header">
               <div class="container">
               <div class="row">
@@ -121,38 +176,44 @@
               <span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close Modal">&times;</span>
               </div>
 
-              <div class="row"> 
+              <div class="row">
               <h6>Submit or edit your entry here</h6>
               </div>
-              <div class="row"> 
+              <div class="row">
               <p>If you already submitted an entry, it will display in the text boxes</p>
              </div>
             </div>
             </div>
-            
+
             <div class= "modal-body">
             <label for="name"><b>Name</b></label>
             <input type="text" placeholder="Enter name" id="name" name="name" required>
+            <span class="errorname" aria-live="polite"></span>
 
             <label for="email"><b>Email</b></label>
-            <input type="text" placeholder="Enter email" id="email" name="email" required>
+            <input type="email" placeholder="Enter email" id="email" name="email" required>
+            <span class="erroremail" aria-live="polite"></span>
 
             <label for="phone"><b>Phone</b></label>
-            <input type="text" placeholder="Enter phone" id="phone" name="phone" required>
+            <input type="tel" placeholder="Enter phone" id="phone" name="phone" required>
+            <span class="errorphone" aria-live="polite"></span>
 
             <label for="description"><b>Description</b></label>
             <textarea type="textarea" placeholder="Whether for a roommate or a friend, tell us about yourself and what you're looking for"
             id="description" name="description" style="height:200px" required></textarea>
+            <span class="errordesc" aria-live="polite"></span>
 
             <label for="city"><b>City</b></label>
             <input type="text" placeholder="Enter what city you will be staying in" id="city" name="city" required>
+            <span class="errorcity" aria-live="polite"></span>
 
             <label for="address"><b>Address</b></label>
             <input type="text" placeholder="Enter address" id="address" name="address" required>
+            <span class="erroraddress" aria-live="polite"></span>
             </div>
-           
+
             <div class="modal-footer">
-              <button type="submit" class="btn submit">Submit</button>
+              <button type="submit" class="btn submit" onclick="validateForm()">Submit</button>
               <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
               <a href="/templates/delete"><button type="button" class="btn delete">Delete Entry</button></a>
             </div>
@@ -160,7 +221,7 @@
       </div>
       </div>
 
-  
+
     </div>
       <script src=
       "https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js">
@@ -169,10 +230,10 @@
       <div id="map"></div>
 
       <script>
-      
+
 
         function stringBuilder(list){
-          var st = "<p>" + "NETID: " + list[0] + "</p>" + "<p>" + "Name: " + list[1] + "</p>" + "<p>" + "Email: " + list[2] + "</p>" + "<p>" + "Phone: " + 
+          var st = "<p>" + "NETID: " + list[0] + "</p>" + "<p>" + "Name: " + list[1] + "</p>" + "<p>" + "Email: " + list[2] + "</p>" + "<p>" + "Phone: " +
           list[3] + "</p>" + "<p>" + "Description: " + list[4] + "</p>";
           return st;
         }
@@ -184,7 +245,7 @@
             map: map,
             // add tiger icon
           });
-  
+
           // var infowindow = new google.maps.InfoWindow({
           //   content: info
           // });
@@ -195,7 +256,7 @@
           console.log('success')
         }
 
-        
+
         function initMap() {
           // Create a new StyledMapType object, passing it an array of styles,
           // and the name to be displayed on the map type control.
@@ -361,13 +422,13 @@
               }
             ],
               {name: 'Styled Map'});
-  
+
           // Create a map object, and include the MapTypeId to add
           // to the map type control.
           var data= {{ markersData|tojson }};
           data = JSON.parse(data)
 
-          
+
           infowindow = new google.maps.InfoWindow();
           var map = new google.maps.Map(document.getElementById('map'), {
             center: new google.maps.LatLng(40.349990 ,-74.658580),
@@ -379,11 +440,11 @@
           });
           var info = ""
           for (i = 0; i < data.length; i++) {
-  
+
             if (data[i].length > 5){
               info = stringBuilder(data[i]);
               addMarker({lat: data[i][5], lng: data[i][6]}, map, info);
-  
+
             }
             }
           //Associate the styled map with the MapTypeId and set it to display.
@@ -412,11 +473,67 @@
         document.getElementById('id01').style.display='block';
         }
 
+
         function closeForm() {
           document.getElementById("id01").style.display = "none";
         }
 
+        function validateForm() {
+          /* const form = document.getElementById('id01'); */
+          var name = document.getElementById('name');
+          const email = document.getElementById('email');
+          var phone = document.getElementById('phone');
+          var description = document.getElementById('description');
+          var city = document.getElementById('city');
+          var address = document.getElementById('address');
+          const emailError = document.querySelector('#email + span.erroremail')
+          const phoneError = document.querySelector('#phone + span.errorphone')
+          const nameError = document.querySelector('#name + span.errorname')
+          const cityError = document.querySelector('#city + span.errorcity')
+          var letters = /^[A-Za-z]+$/;
 
+
+          if(!name.value.match(letters)){
+            nameError.textContent = 'Invalid or missing name!';
+            nameError.className = 'error active';
+          }
+
+          if(!city.value.match(letters)){
+            cityError.textContent = 'Invalid or missing city!';
+            cityError.className = 'error active';
+          }
+
+          if(!phone.validity.valid) {
+                showPhoneError();
+          }
+
+          if(!email.validity.valid) {
+                showEmailError();
+          }
+
+
+          function showEmailError() {
+            if(email.validity.valueMissing) {
+              emailError.textContent = 'You need to enter an e-mail address.';
+            } else if(email.validity.typeMismatch) {
+            emailError.textContent = 'Entered value needs to be an e-mail address.';
+            } else if(email.validity.tooShort) {
+            emailError.textContent = `Email should be at least ${ email.minLength } characters; you entered ${ email.value.length }.`;
+            }
+            emailError.className = 'error active';
+          }
+
+
+          function showPhoneError() {
+            if(phone.validity.valueMissing) {
+              phoneError.textContent = 'You need to enter an phone number.';
+            }
+            else if(phone.validity.typeMismatch) {
+              phoneError.textContent = 'Entered value needs to be a phone number.';
+            }
+              phoneError.className = 'error active';
+            }
+        }
 
         function initialize() {
         var input = document.getElementById('address');
@@ -431,10 +548,10 @@
 
         </script>
 
-      
+
         <script>
         function openNav() {
-          document.getElementById("mySidenav").style.width = "250px";
+          document.getElementById("mySidenav").style.width = "500px";
           document.getElementById("main").style.marginLeft = "250px";
         }
 
