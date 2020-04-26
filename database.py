@@ -6,8 +6,26 @@ import entryInfo
 import googlemaps
 from datetime import datetime
 import requests
+import secrets
+import math
 
 # gmaps = googlemaps.Client(key='AIzaSyDQe5G3tqd5Vfwefn7w3Djrv1L1bmlKkTw')
+
+def coordinateOffset(latitude, longitude):
+    radius = 6371000.0 #radius of earth 
+    sign = secrets.choice(range(0, 2)) #used to determine sign of the offset
+    oLat = secrets.choice(range(3200, 8000)) #offset in metres (2 - 5 miles)
+    if (sign == 0):
+        oLat = -1 * oLat
+    sign = secrets.choice(range(0, 2)) #used to determine sign of the offset
+    oLong = secrets.choice(range(3200, 8000)) #offset in metres (2 - 5 miles)
+    if (sign == 0):
+        oLong = -1 * oLong
+    new_latitude  = latitude  + (oLat / radius) * (180 / math.pi)
+    new_longitude = longitude + (oLong / radius) * (180 / math.pi) / math.cos(latitude * math.pi/180)
+    coordinates = [new_latitude, new_longitude]
+    return coordinates
+
 
 def config(filename='database.ini', section='postgresql'):
     # create a parser
@@ -97,19 +115,19 @@ def insertEntry(entryInfo):
         # create a cursor
         cur = conn.cursor()
 
-        insertUser = """INSERT INTO userInformation (netid, name, phone, email, description, address)
-               VALUES(%s, %s, %s, %s, %s, %s) 
+        insertUser = """INSERT INTO userInformation (netid, name, phone, email, description, address, city)
+               VALUES(%s, %s, %s, %s, %s, %s, %s) 
                ON CONFLICT (netid) 
                DO UPDATE SET
-               (name, phone, email, description, address) 
-                  = (EXCLUDED.name, EXCLUDED.phone, EXCLUDED.email, EXCLUDED.description, EXCLUDED.address);"""
+               (name, phone, email, description, address, city) 
+                  = (EXCLUDED.name, EXCLUDED.phone, EXCLUDED.email, EXCLUDED.description, EXCLUDED.address, EXCLUDED.city);"""
 
-        insertCoordinates = """INSERT INTO coordinates (netid, address, latitude, longitude)
-               VALUES(%s, %s, %s, %s) 
-               ON CONFLICT (netid) 
-               DO UPDATE SET
-               (address, latitude, longitude) 
-                  = (EXCLUDED.address, EXCLUDED.latitude, EXCLUDED.longitude);"""
+        # insertCoordinates = """INSERT INTO coordinates (netid, address, latitude, longitude)
+        #        VALUES(%s, %s, %s, %s) 
+        #        ON CONFLICT (netid) 
+        #        DO UPDATE SET
+        #        (address, latitude, longitude) 
+        #           = (EXCLUDED.address, EXCLUDED.latitude, EXCLUDED.longitude);"""
         # execute a statement
         name = entryInfo.getName()
         netid = entryInfo.getNetid()
@@ -117,21 +135,22 @@ def insertEntry(entryInfo):
         email = entryInfo.getEmail()
         address = entryInfo.getAddress()
         description = entryInfo.getDescription()
+        city = entryInfo.getCity()
 
 
-        cur.execute(insertUser, (netid, name, phone, email, description, address))
+        cur.execute(insertUser, (netid, name, phone, email, description, address, city))
 
-        print('before')
-        coordinates = geocode(address)
-        print('after')
+        # print('before')
+        # coordinates = geocode(address)
+        # print('after')
 
-        latitude = float(coordinates[0])
-        longitude = float(coordinates[1])
+        # latitude = float(coordinates[0])
+        # longitude = float(coordinates[1])
 
-        print(latitude)
-        print(longitude)
+        # print(latitude)
+        # print(longitude)
 
-        cur.execute(insertCoordinates, (netid, address, latitude, longitude))
+        # cur.execute(insertCoordinates, (netid, address, latitude, longitude))
 
 
         conn.commit()
@@ -173,7 +192,8 @@ def searchEntry(entry):
             userInformation.email LIKE %s AND
             userInformation.phone LIKE %s AND
             userInformation.description LIKE %s AND
-            userInformation.address LIKE %s;
+            userInformation.address LIKE %s AND
+            userInformation.city LIKE %s;
         """
 
 
@@ -184,11 +204,13 @@ def searchEntry(entry):
         email = entry.retEmail()
         address = entry.retAddress()
         description = entry.retDescription()
+        city = entry.retCity()
 
 
-        cur.execute(sql, (netid, name, email, phone, description, address))
+        cur.execute(sql, (netid, name, email, phone, description, address, city))
         row = cur.fetchone()
 
+        print(str(row))
         entries = []
         while row is not None:
             user = entryInfo.entryInfo()
@@ -198,10 +220,11 @@ def searchEntry(entry):
             user.setPhone(str(row[3]))
             user.setDescription(str(row[4]))
             user.setAddress(str(row[5]))
+            user.setCity(str(row[6]))
             entries.append(user)
             row = cur.fetchone()
 
-        print('success')
+
         # close the communication with the PostgreSQL
         cur.close()
         return entries
@@ -296,8 +319,10 @@ def getAll():
             coordinates = geocode(str(row[5]))
             if (coordinates is not None):
                 print('******')
-                sub.append(coordinates[0])
-                sub.append(coordinates[1])
+                offcoordinates = coordinateOffset(coordinates[0], coordinates[1])
+                sub.append(offcoordinates[0])
+                sub.append(offcoordinates[1])
+            sub.append(str(row[6]))
         
             entries.append(sub)
             sub = []
@@ -313,9 +338,9 @@ def getAll():
 def main(argv):
     user = entryInfo.entryInfo('Long Ho', 'lhho', 'lhho@princeton.edu', '7142602003', 'just a cali boy looking for kangaroos', 'Churchill Ave, Hobart TAS 7005, Australia')
     userTwo = entryInfo.entryInfo('Slim Jim', 'sjim', 'sjim@princeton.edu', '1234567', 'im a stick', '4000 Union Pacific Ave, Commerce, CA')
-    insertEntry(user)
-    insertEntry(userTwo)
-    
+    deleteEntry('m')
+    getAll()
+    print(secrets.choice(range(0, 2)))
 
 
 if __name__ == '__main__':
