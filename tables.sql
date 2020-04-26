@@ -1,10 +1,10 @@
 CREATE TABLE userInformation (
   netid varchar(20) NOT NULL,
-  name varchar(50) NOT NULL,
+  name varchar NOT NULL,
   email varchar(30), 
   phone int,
-  description varchar(300) NOT NULL,
-  address varchar(200) NOT NULL,
+  description varchar NOT NULL,
+  address varchar NOT NULL,
     PRIMARY KEY (netid)
 );
 
