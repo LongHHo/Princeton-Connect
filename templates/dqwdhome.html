@@ -24,15 +24,20 @@
       <nav class="navbar navbar-expand-lg navbar-dark bg-primary static-top">
         <div class="container">
           <a class="navbar-brand" href="/">
-            <img src="/static/connectlogo.png" height="45" class="d-inline-block align-top" alt="Princeton Connect">
+                Princeton Connect
               </a>
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
               </button>
           <div class="collapse navbar-collapse" id="navbarResponsive">
             <ul class="navbar-nav ml-auto">
+              <li class="nav-item active">
+                <a class="nav-link" href="/">Home
+                      <span class="sr-only">(current)</span>
+                    </a>
+              </li>
               <li class="nav-item">
-                <button class = "btn btn-primary" onclick="openForm()">Your Entry</button>
+                <a class = "nav-link" onclick="openForm()">Your Entry</a>
               </li>
 
             </ul>
@@ -66,7 +71,7 @@
       </style>
       <div id="id01" class="modal" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
-        <form name="submitForm" class="modal-content" action="/templates/handleSubmit" onsubmit="return validateForm()" method="POST">
+        <form novalidate class="modal-content" action="/templates/handleSubmit" method="POST">
             <div class="modal-header">
               <div class="container">
               <div class="row">
@@ -75,7 +80,7 @@
               </div>
 
               <div class="row">
-              <p>Submit or edit your entry here</p>
+              <h6>Submit or edit your entry here</h6>
               </div>
               <div class="row">
               <p>If you already submitted an entry, it will display in the text boxes</p>
@@ -84,34 +89,34 @@
             </div>
 
             <div class= "modal-body">
-            <label for="name"><b>Name*:</b></label>
-            <input type="text" placeholder="" id="name" name="name" required>
+            <label for="name"><b>Name:</b></label>
+            <input type="text" placeholder="Enter name" id="name" name="name" required>
             <span class="errorname" aria-live="polite"></span>
 
-            <label for="email"><b>Email*: </b></label>
-            <input type="email" placeholder="ex: bob@princeton.edu" id="email" name="email" required>
+            <label for="email"><b>Email: </b></label>
+            <input type="email" placeholder="Enter email" id="email" name="email" required>
             <span class="erroremail" aria-live="polite"></span>
 
             <label for="phone"><b>Phone: </b></label>
-            <input type="tel" placeholder="Format: 123-456-7890" id="phone" name="phone" pattern="([0-9]{3}-[0-9]{3}-[0-9]{4})|([0-9]{1}-[0-9]{3}-[0-9]{3}-[0-9]{4})" >
+            <input type="tel" placeholder="Enter phone" id="phone" name="phone" required>
             <span class="errorphone" aria-live="polite"></span>
             <p></p>
             <label for="description"><b>Description: </b></label>
             <textarea type="textarea" placeholder="Whether for a roommate or a friend, tell us about yourself and what you're looking for"
-            id="description" name="description" style="height:200px"></textarea>
+            id="description" name="description" style="height:200px" required></textarea>
             <span class="errordesc" aria-live="polite"></span>
 
-            <label for="city"><b>City*: </b></label>
+            <label for="city"><b>City: </b></label>
             <input type="text" placeholder="Enter what city you will be staying in" id="city" name="city" required>
             <span class="errorcity" aria-live="polite"></span>
 
             <label for="address"><b>Address: </b></label>
-            <input novalidate type="text" placeholder="Enter address" id="address" name="address">
+            <input type="text" placeholder="Enter address" id="address" name="address" required>
             <span class="erroraddress" aria-live="polite"></span>
             </div>
 
             <div class="modal-footer">
-              <button type="submit" class="btn submit">Submit</button>
+              <button type="submit" class="btn submit" onclick="validateForm()">Submit</button>
               <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
               <a href="/templates/delete"><button type="button" class="btn delete">Delete Entry</button></a>
             </div>
@@ -136,13 +141,11 @@
           return st;
         }
         var infowindow;
-        
 
         function addMarker(coordinates, map, info){
           var marker = new google.maps.Marker({
             position: coordinates,
             map: map,
-            icon: "/static/tigericon.png"
             // add tiger icon
           });
 
@@ -326,7 +329,7 @@
           // Create a map object, and include the MapTypeId to add
           // to the map type control.
           var data= {{ markersData|tojson }};
-          data = JSON.parse(data);
+          data = JSON.parse(data)
 
 
           infowindow = new google.maps.InfoWindow();
@@ -360,15 +363,15 @@
       <script>
 
         function openForm() {
-
+          
           document.getElementsByName('name')[0].value= {{name | tojson}};
           document.getElementsByName('email')[0].value= {{email | tojson}};
           document.getElementsByName('phone')[0].value= {{phone | tojson}};
           document.getElementsByName('description')[0].value= {{description | tojson}};
           document.getElementsByName('city')[0].value= {{city | tojson}};
           document.getElementsByName('address')[0].value= {{address | tojson}};
-        
-          document.getElementById('id01').style.display='block';
+      
+        document.getElementById('id01').style.display='block';
         }
 
 
@@ -378,32 +381,59 @@
 
         function validateForm() {
           /* const form = document.getElementById('id01'); */
-          var address = document.getElementsByName('address')[0];
-          const adrError = document.querySelector('#address + span.erroraddress');
+          var name = document.getElementById('name');
+          const email = document.getElementById('email');
+          var phone = document.getElementById('phone');
+          var description = document.getElementById('description');
+          var city = document.getElementById('city');
+          var address = document.getElementById('address');
+          const emailError = document.querySelector('#email + span.erroremail')
+          const phoneError = document.querySelector('#phone + span.errorphone')
+          const nameError = document.querySelector('#name + span.errorname')
+          const cityError = document.querySelector('#city + span.errorcity')
           var letters = /^[A-Za-z]+$/;
-          
-          if (address.value == ''){
-            return true;
+
+
+          if(!name.value.match(letters)){
+            nameError.textContent = 'Invalid or missing name!';
+            nameError.className = 'error active';
           }
-          var geocoder = new google.maps.Geocoder();
 
-
-          // Get geocoder instance
-          var geocoder = new google.maps.Geocoder();
-
-          // Geocode the address
-          geocoder.geocode({'address': address.value}, function(results, status){
-          if (status === google.maps.GeocoderStatus.OK && results.length > 0) {
-                alert('looks good');
-                return true;
-            // show an error if it's not
-          }else {
-              alert("Invalid address");
-              return false;
+          if(!city.value.match(letters)){
+            cityError.textContent = 'Invalid or missing city!';
+            cityError.className = 'error active';
           }
-            });
 
-          
+          if(!phone.validity.valid) {
+                showPhoneError();
+          }
+
+          if(!email.validity.valid) {
+                showEmailError();
+          }
+
+
+          function showEmailError() {
+            if(email.validity.valueMissing) {
+              emailError.textContent = 'You need to enter an e-mail address.';
+            } else if(email.validity.typeMismatch) {
+            emailError.textContent = 'Entered value needs to be an e-mail address.';
+            } else if(email.validity.tooShort) {
+            emailError.textContent = `Email should be at least ${ email.minLength } characters; you entered ${ email.value.length }.`;
+            }
+            emailError.className = 'error active';
+          }
+
+
+          function showPhoneError() {
+            if(phone.validity.valueMissing) {
+              phoneError.textContent = 'You need to enter an phone number.';
+            }
+            else if(phone.validity.typeMismatch) {
+              phoneError.textContent = 'Entered value needs to be a phone number.';
+            }
+              phoneError.className = 'error active';
+            }
         }
 
         function initialize() {

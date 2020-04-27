@@ -88,7 +88,7 @@ def home():
 #-----------------------------------------------------------------------
 
 # can only search for entries in database, not a function to insert
-@app.route('/templates/lookup', methods=['GET'])
+@app.route('/templates/lookup', methods=['POST'])
 def lookup():
         # maybe put a "hello username" at the top
         username = CASClient().authenticate()
@@ -119,19 +119,20 @@ def lookup():
 
 
 # handle after the submit button
-@app.route('/templates/handleSubmit', methods=['GET'])
+@app.route('/templates/handleSubmit', methods=['POST'])
 def handleSubmit():
     
-    netid = CASClient().authenticate()
+    netid = CASClient().authenticate().strip('\n')
 
     # puts in fields based on submit form input
-    name = request.args.get('name')
-    email = request.args.get('email')
-    phone = request.args.get('phone')
-    description = request.args.get('description')
-    city = request.args.get('city')
-    address = request.args.get('address')
+    name = str(request.form.get('name'))
+    email = str(request.form.get('email'))
+    phone = str(request.form.get('phone'))
+    description = str(request.form.get('description'))
+    city = str(request.form.get('city'))
+    address = str(request.form.get('address'))
 
+    print(city + "This is city")
     
     entry = entryInfo.entryInfo(name, netid, email, phone, description, address, city)
     insertEntry(entry)

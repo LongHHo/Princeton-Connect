@@ -237,52 +237,7 @@ def searchEntry(entry):
             print('Database connection closed.')
 
 
-# prints all rows in userInformation table
-def displayRows():
-    """ Connect to the PostgreSQL database server """
-    conn = None
-    try:
-        # read connection parameters
-        params = config()
 
-        # connect to the PostgreSQL server
-        print('Connecting to the PostgreSQL database...')
-        conn = psycopg2.connect(**params)
-
-        # create a cursor
-        cur = conn.cursor()
-
-   # execute a statement
-        cur.execute('SELECT * from userInformation;')
-
-
-        row = cur.fetchone()
-
-        while row is not None:
-            for item in row:
-                print(item + " ", end=' ')
-            print()
-            row = cur.fetchone()
-
-        cur.execute('SELECT * from coordinates;')
-
-        print('--Coordinates--')
-        row = cur.fetchone()
-
-        while row is not None:
-            for item in row:
-                print(str(item) + " ", end=' ')
-            print()
-            row = cur.fetchone()
-
-       # close the communication with the PostgreSQL
-        cur.close()
-    except (Exception, psycopg2.DatabaseError) as error:
-        print(error)
-    finally:
-        if conn is not None:
-            conn.close()
-            print('Database connection closed.')
 
 def getAll():
     """ Connect to the PostgreSQL database server """

@@ -12,6 +12,7 @@ body {
   margin: 0px;
   padding: 0px;
   font-family: Arial, Helvetica, sans-serif;
+  box-sizing: border-box;
 }
 
 #header {
@@ -25,7 +26,7 @@ body {
     padding: 0;
 }
 
-/* Add a black background color to the top navigation */
+/* Add a black background color to the top navigation
 .nav {
   margin-top:0;
   padding: 0;
@@ -33,39 +34,141 @@ body {
   overflow: hidden;
   text-align: center;
   height: 40px;
-  width: 2560px;
+  width: 100%;
 }
 
+
 /* Style the links inside the navigation bar */
-.nav li {
+/* .nav li {
   color: #f2f2f2;
   text-align: center;
   text-decoration: none;
   font-size: 17px;
   display:inline;
-}
-
+} */
+/* 
 .nav a{
   color: white;
   display:inline-block;
   padding: 10px;
   text-decoration: none;
 
-}
+} */
+
+/* Button used to open the contact form - fixed at the bottom of the page */
+/* .nav button{
+  background-color: #333;
+  color: white;
+  display:inline-block;
+  font-size: 17px;
+  text-decoration: none;
+} */
 
 /* Change the color of links on hover */
-.nav a:hover {
+/* .nav a:hover {
   background-color: #ddd;
   color: black;
-}
+} */
 
 /* Add a color to the active/current link */
-.nav a.active {
+/* .nav a.active {
   background-color: #4CAF50;
   color: white;
+} */ */
+
+/* The Modal (background) */
+.pac-container {
+  background-color: #FFF;
+  z-index: 20;
+  position: fixed;
+  display: inline-block;
+  float: left;
 }
+.modal{
+  z-index: 1;   
+}
+.modal-backdrop{
+  z-index: 1;        
+}​
+
+/* Modal Content/Box */
+/* .modal-content {
+  background-color: #fefefe;
+  margin: 5% auto 15% auto; 
+  border: 1px solid #888;
+  width: 80%; 
+} */
+
+
+
+/* Style the horizontal ruler */
+hr {
+  border: 1px solid #f1f1f1;
+  margin-bottom: 25px;
+}
+
+/* Full-width input fields */
+input[type=text], textarea {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+
+/* Add a background color when the inputs get focus */
+input[type=text]:focus, textarea:focus {
+  background-color: #ddd;
+  outline: none;
+}
+
+/* Set a style for the submit/login button */
+.modal-content .submit {
+  background-color: #4CAF50;
+}
+
+/* Add a red background color to the cancel button */
+.modal-content .cancel {
+  background-color: orange;
+}
+
+.modal-content .delete {
+  background-color: red;
+}
+
+/* Add some hover effects to buttons */
+.modal-content .btn:hover, .open-button:hover {
+  opacity: 1;
+}
+
+ 
+/* Add padding to container elements */
+/* .container {
+  padding: 16px;
+} */
+
+  /* The Close Button (x) */
+.close {
+  position: absolute;
+  right: 35px;
+  top: 15px;
+  font-size: 40px;
+  font-weight: bold;
+  color: #f1f1f1;
+} 
+
+.close:hover,
+.close:focus {
+  color: #f44336;
+  cursor: pointer;
+} 
 
 #content {
   text-align: center;
   padding: 10px;
 }
+
+
+
+
