@@ -68,7 +68,14 @@ def change():
 
 
 def main(argv):
-    change()
+    users = ['hi', 'hi', 'hi', 
+    'efw', 'efw']
+
+    for user in users:
+        print(user)
+        print(users.index(user))
+
+
 
 
 if __name__ == '__main__':

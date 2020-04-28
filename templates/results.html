@@ -16,7 +16,8 @@
             {% else: %} {% for user in
             userEntries: %}
             <tr>
-            <td align  = "left">{{user.getNetid()}}</td>
+            <td align  = "left"><button onclick='displayResults({{user.getNetid() | tojson}}, {{user.getName() | tojson}}, {{user.getEmail() | tojson}}, {{user.getPhone() | tojson}}, {{user.getDescription() | tojson}},{{user.getCity() | tojson}}); return false'>
+             {{user.getNetid()}}</button></td>
             <td align  = "left">{{user.getName()}}</td>
             <td align  = "left">{{user.getEmail()}}</td>
             <td align  = "left">{{user.getPhone()}}</td>
@@ -28,3 +29,8 @@
         </table>
         {% endif %}
 </body>
+
+
+
+
+

@@ -31,6 +31,11 @@
               </button>
           <div class="collapse navbar-collapse" id="navbarResponsive">
             <ul class="navbar-nav ml-auto">
+              <li class="nav-item active">
+                <a class="nav-link" href="/">Home
+                      <span class="sr-only">(current)</span>
+                    </a>
+              </li>              
               <li class="nav-item">
                 <button class = "btn btn-primary" onclick="openForm()">Your Entry</button>
               </li>
@@ -127,8 +132,9 @@
 
       <div id="map"></div>
 
-      <script>
 
+      <script>
+      
 
         function stringBuilder(list){
           var st = "<p>" + "NETID: " + list[0] + "</p>" + "<p>" + "Name: " + list[1] + "</p>" + "<p>" + "Email: " + list[2] + "</p>" + "<p>" + "Phone: " +
@@ -136,13 +142,14 @@
           return st;
         }
         var infowindow;
-        
 
-        function addMarker(coordinates, map, info){
+
+
+        function addMarker(coordinates, map, info, image){
           var marker = new google.maps.Marker({
             position: coordinates,
             map: map,
-            icon: "/static/tigericon.png"
+            icon: image
             // add tiger icon
           });
 
@@ -320,6 +327,7 @@
                   }
                 ]
               }
+
             ],
               {name: 'Styled Map'});
 
@@ -339,11 +347,19 @@
             }
           });
           var info = ""
+          var image = {
+          url: '/static/babytigericon.png',
+          scaledSize: new google.maps.Size(32,28),
+          // The origin for this image is (0, 0).
+          origin: new google.maps.Point(0, 0),
+          // The anchor for this image is the base of the tiger at (10, 32).
+          anchor: new google.maps.Point(10, 32)
+           };
           for (i = 0; i < data.length; i++) {
 
             if (data[i].length > 5){
               info = stringBuilder(data[i]);
-              addMarker({lat: data[i][5], lng: data[i][6]}, map, info);
+              addMarker({lat: data[i][5], lng: data[i][6]}, map, info, image);
 
             }
             }
@@ -371,6 +387,21 @@
           document.getElementById('id01').style.display='block';
         }
 
+        function displayResults(userNetid, userName, userEmail, userPhone, userDescr, userCity) {
+          alert('hallelujah');
+          console.log(userNetid);
+          console.log(userName);
+          console.log(userEmail);
+          console.log(userPhone);
+          console.log(userDescr);
+          console.log(userCity);
+
+
+        }
+        
+
+
+         
 
         function closeForm() {
           document.getElementById("id01").style.display = "none";
@@ -448,76 +479,6 @@
       <div class="container">
         <p id="ResultsArea"></p>
      </div>
-<!--      
-    <style>
-    
-      .content-table {
-        border-collapse: collapse;
-        margin: 25px 0;
-        min-width: 400px
-        
-      }
-
-      .content-table thead tr {
-        background-color: #ff5709;
-        color: #ffffff;
-        font-weight: bold;
-        position: relative;
-      }
-
-      .content-table th,
-      .content-table td {
-        padding: 12px 15px;
-        font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
-      }
-
-      .content-table tbody tr {
-        border-bottom: 1px solid #dddddd;
-      }
-
-      .content-table tbody tr:nth-of-type(even) {
-        background-color: #f3f3f3;
-      }
-
-
-    </style>
-
-    <table class="content-table">
-      <thead>
-        <tr>
-          <th align  = "left">NetID</th>
-          <th align  = "left">Name</th>
-          <th align  = "left">Email</th>
-          <th align  = "left">Phone</th>
-          <th align  = "left">Description</th>
-          <th align  = "left">City</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% if userEntries|length == 0: %}
-          (None)
-        {% else: %} {% for user in
-        userEntries: %}
-        <tr>
-          <td align  = "left">{{user.getNetid()}}</td>
-          <td align  = "left">{{user.getName()}}</td>
-          <td align  = "left">{{user.getEmail()}}</td>
-          <td align  = "left">{{user.getPhone()}}</td>
-          <td align  = "left">{{user.getDescription()}}</td>
-          <td align  = "left">{{user.getCity()}}</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-
-    {% endif %} -->
-    </form>
-
-
-			</div> <!-- cd-panel__content -->
-		</div> <!-- cd-panel__container -->
-  </div> <!-- cd-panel -->
-
 
 
   <script>
