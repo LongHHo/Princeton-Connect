@@ -16,7 +16,7 @@
             {% else: %} {% for user in
             userEntries: %}
             <tr>
-            <td align  = "left"><button onclick='displayResults({{user.getNetid() | tojson}}, {{user.getName() | tojson}}, {{user.getEmail() | tojson}}, {{user.getPhone() | tojson}}, {{user.getDescription() | tojson}},{{user.getCity() | tojson}}); return false'>
+            <td align  = "left"><button class="btn btn-secondary" onclick='displayResults({{user.getNetid() | tojson}}, {{user.getName() | tojson}}, {{user.getEmail() | tojson}}, {{user.getPhone() | tojson}}, {{user.getDescription() | tojson}},{{user.getCity() | tojson}}); return false'>
              {{user.getNetid()}}</button></td>
             <td align  = "left">{{user.getName()}}</td>
             <td align  = "left">{{user.getEmail()}}</td>

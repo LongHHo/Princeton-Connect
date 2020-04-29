@@ -122,6 +122,31 @@
             </div>
         </form>
       </div>
+
+      <!-- Modal -->
+      <div id="entryModal" class="modal" role="dialog">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+
+          <!-- Modal content-->
+          <div class="modal-content">
+            <div class="modal-header">
+              <span onclick="closeEntry()" class="close" title="Close Modal">&times;</span>
+              <h4 id=entryNetid class="modal-header"></h4>
+            </div>
+            <div class="modal-body">
+              <p id="entryName"></p>
+              <p id="entryEmail"></p>
+              <p id="entryPhone"></p>
+              <p id="entryCity"></p>
+              <p id="entryDescription"></p>
+              <p></p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" onclick="closeEntry()">Close</button>
+            </div>
+          </div>
+
+        </div>
       </div>
 
 
@@ -373,6 +398,11 @@
 
       </script>
 
+      <!-- Remember to include jQuery :) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
+
+<!-- jQuery Modal -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
       <script>
 
         function openForm() {
@@ -384,27 +414,32 @@
           document.getElementsByName('city')[0].value= {{city | tojson}};
           document.getElementsByName('address')[0].value= {{address | tojson}};
         
-          document.getElementById('id01').style.display='block';
+          $('#id01').modal('show');
+
         }
 
         function displayResults(userNetid, userName, userEmail, userPhone, userDescr, userCity) {
-          alert('hallelujah');
-          console.log(userNetid);
-          console.log(userName);
-          console.log(userEmail);
-          console.log(userPhone);
-          console.log(userDescr);
-          console.log(userCity);
+          document.getElementById("entryNetid").innerHTML = userNetid;
+          document.getElementById("entryName").innerHTML = userName;
+          document.getElementById("entryPhone").innerHTML = userPhone;
+          document.getElementById("entryEmail").innerHTML = userEmail;
+          document.getElementById("entryDescription").innerHTML = userDescr;
+          document.getElementById("entryCity").innerHTML = userCity;
+
+
+          $('#entryModal').modal('toggle');
 
 
         }
-        
-
-
          
 
         function closeForm() {
           document.getElementById("id01").style.display = "none";
+        }
+
+        function closeEntry(){
+          document.getElementById("entryModal").style.display = "none";
+
         }
 
         function validateForm() {
@@ -455,7 +490,7 @@
   
   <div class="cd-panel cd-panel--from-right js-cd-panel-main">
 		<header class="cd-panel__header">
-			<h1>Title Goes Here</h1>
+			<h1>Entry Look Up</h1>
 			<a href="#0" class="cd-panel__close js-cd-close">Close</a>
 		</header>
 
