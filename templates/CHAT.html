@@ -73,8 +73,9 @@ div.ContactContainer{
 
 <div id="NewMessage">
          <form method="post">
-            <input type="text" placeholder="NetID" name="NetID" id="netid"></input>
-            <datalist id="userData"></datalist>
+            <input type="text" placeholder="NetID" name="NetID" id="netid" onkeyup="available_users()"" list="userData"></input>
+            <datalist id="userData">
+            </datalist>
             <p></p>
             <textarea name="message" placeholder="message"> </textarea> 
             <input type="submit" value="send" name="Send">
@@ -116,6 +117,7 @@ div.ContactContainer{
 
 function handleResponse(response)
   {
+
     $('#userData').html(response); // change id 
   
   }

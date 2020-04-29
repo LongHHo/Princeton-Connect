@@ -6,7 +6,7 @@
 #-----------------------------------------------------------------------
 
 from sys import argv
-from database import searchEntry, insertEntry, getAll, deleteEntry
+from database import searchEntry, insertEntry, getAll, deleteEntry, insertUser, checkNetid
 from sys import argv, stderr, exit
 from flask import Flask, request, make_response, redirect, url_for
 from flask import render_template, session
@@ -31,7 +31,7 @@ app.secret_key = b'\xcdt\x8dn\xe1\xbdW\x9d[}yJ\xfc\xa3~/'
 @app.route('/templates/home')
 def home():
     netid = CASClient().authenticate()
-    
+    insertUser(netid)
     
     # find particular entry of user
     user = entryInfo.entryInfo()
@@ -187,6 +187,36 @@ def handleDelete():
     response = make_response(html)
 
     return response
+
+
+@app.route('/chat')
+def chat():
+    html = render_template('chat.html')
+    response = make_response(html)
+    return response
+
+
+@app.route('/checkUser', methods=['GET'])
+def checkUser():
+    netid = request.args.get('netid')
+    row = checkNetid(netid)
+    print('checking user')
+
+
+
+    html = ''
+
+   
+
+    for data in row:
+        html += ('<option>'+ data + '<option/>')
+    
+
+    response = make_response(html)
+        
+
+    return response
+
 
 
 #-----------------------------------------------------------------------

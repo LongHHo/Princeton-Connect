@@ -101,6 +101,41 @@ def deleteEntry(netid):
 # inserts userEntry into database
 # entryInfo is an entryInfo object
 # if entryInfo already exists in database, then updates it
+
+def insertUser(netid):
+    """ Connect to the PostgreSQL database server """
+    conn = None
+    try:
+        # read connection parameters
+        params = config()
+
+        # connect to the PostgreSQL server
+        print('Connecting to the PostgreSQL database...')
+        conn = psycopg2.connect(**params)
+
+        # create a cursor
+        cur = conn.cursor()
+
+        insertUser = """INSERT INTO users (netid)
+               VALUES(%s) 
+               ON CONFLICT DO NOTHING;"""
+
+
+        cur.execute(insertUser, (netid,))
+        conn.commit()
+        print('success')
+        print('inserted', netid)
+        # close the communication with the PostgreSQL
+        cur.close()
+
+    except (Exception, psycopg2.DatabaseError) as error:
+        print(error)
+    finally:
+        if conn is not None:
+            conn.close()
+            print('Database connection closed.')
+
+
 def insertEntry(entryInfo):
     """ Connect to the PostgreSQL database server """
     conn = None
@@ -288,14 +323,47 @@ def getAll():
         return entries
     except (Exception, psycopg2.DatabaseError) as error:
         print(error)
+
+
+def checkNetid(netid):
+    query = """
+            SELECT *
+            FROM users
+            WHERE users.netid LIKE %s;
+            """
+
+    conn = None
+    try:
+        # read connection parameters
+        params = config()
+        user = netid + '%'
+
+        # connect to the PostgreSQL server
+        print('Connecting to the PostgreSQL database...')
+        conn = psycopg2.connect(**params)
+
+        # create a cursor
+        cur = conn.cursor()
+        cur.execute(query, (user,))
+        row = cur.fetchone()
+        cur.close()
+        return row
+    except (Exception, psycopg2.DatabaseError) as error:
+        print(error)
+
+
+
+
     
 
 def main(argv):
     user = entryInfo.entryInfo('Long Ho', 'lhho', 'lhho@princeton.edu', '7142602003', 'just a cali boy looking for kangaroos', 'Churchill Ave, Hobart TAS 7005, Australia')
     userTwo = entryInfo.entryInfo('Slim Jim', 'sjim', 'sjim@princeton.edu', '1234567', 'im a stick', '4000 Union Pacific Ave, Commerce, CA')
-    deleteEntry('m')
+    deleteEntry('jaitegs')
     getAll()
     print(secrets.choice(range(0, 2)))
+    print('*************************')
+    print(checkNetid('jaitegs'))
 
 
 if __name__ == '__main__':
