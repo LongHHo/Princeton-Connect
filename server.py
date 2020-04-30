@@ -34,7 +34,7 @@ def home():
    
     netid = CASClient().authenticate()
     print(netid)
-    insertUser(netid.strip('\n'))
+    insertUser(netid.strip())
     
     # find particular entry of user
     user = entryInfo.entryInfo()
@@ -217,12 +217,8 @@ def checkUser():
         for data in row:
             html += ('<option value ="'+ data + '">')
     
-    print(html)
-    response = make_response(html)
-        
 
-    return response
-
+    return html
 
 @app.route('/getMessages', methods=['GET'])
 def getMsgs():

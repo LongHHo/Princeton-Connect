@@ -82,6 +82,7 @@ div.ContactContainer{
 
 
 <div id="NewMessage">
+
    
             <input type="text" placeholder="NetID" name="NetID" id="netid" list="userData" oninput="available_users()"></input>
 
@@ -89,7 +90,7 @@ div.ContactContainer{
             </datalist>
             <p></p>
 
-            <textarea name="message" placeholder="message" id="message"> </textarea> 
+            <textarea name="message" placeholder="message" id="message" oninput="checkStatus()"></textarea> 
             
             <button onclick="send_message();document.getElementById('NewMessage').style.display='none';" id="sendNewMessage"> send </button> 
          
@@ -126,27 +127,40 @@ div.ContactContainer{
   
   <script>
 
+
+
+function checkStatus(){
+   console.log('checkingstatus');
+   console.log(document.getElementById('message').value);
+   
+   button = document.getElementById('sendNewMessage');
+   val = document.getElementById('netid').value; 
+   obj = $("#userData").find("option[value='" + val + "']");
+
+   if(document.getElementById('message').value != "" && obj  != null ) {
+      if(obj.length > 0){
+      button.disabled = false;
+      }
+   }
+}
+
 function setup()
   {
    getContacts();
+   button = document.getElementById('sendNewMessage');
+   button.disabled = true;
+   checkStatus()
+
   }
 
 
 function handleResponse(response)
   {
    button = document.getElementById('sendNewMessage');
-   text = document.getElementById('netid').value; 
+   console.log(response);
   
-    $('#userData').html(response); // change id 
-    //var obj = $("#userData").find("option[value='" + text + "']");
-    //if(obj != null && obj.length > 0){
-      //button.disabled = false;
-    //}
-
-   //else{
-      //button.disabled = true;
-   //}
-    
+    $('#userData').html(response); // change id
+    checkStatus() ;
   
   }
 
