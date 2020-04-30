@@ -33,6 +33,7 @@ app.secret_key = b'\xcdt\x8dn\xe1\xbdW\x9d[}yJ\xfc\xa3~/'
 def home():
    
     netid = CASClient().authenticate()
+    print(netid)
     insertUser(netid.strip('\n'))
     
     # find particular entry of user
