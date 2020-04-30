@@ -16,3 +16,12 @@ CREATE TABLE coordinates (
     PRIMARY KEY (netid)
 );
 
+
+
+CREATE TABLE msg_id_timestamp (
+  id serial not null,
+  sender varchar(20) NOT NULL
+  reciever varchar(20) NOT NULL
+  timestamp timestamp default current_timestamp
+);
+
