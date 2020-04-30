@@ -2,24 +2,35 @@
 <html>
    <head>
       <title>Chat</title>
+      <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" type="text/css" rel="stylesheet">
    </head>
    <style>
-   div.left{
+
+   body {
+     width: 100%;
+   }
+
+   .container {
+      width: 100%;
+      height: 100%;
+   }
+   /* div.left{
       position:relative; 
       float: left;
-      width: 300px;
+      width: 50%;
       height: 900px;
-     
       overflow: auto;
 }
 
 div.right{
       position:relative; 
       float: right;
-      width: 800px;
+      width: 100%;
       height: 900px;
       overflow: auto;
-}
+} */
 div.names{
    border: solid;
    background-color: lightblue;
@@ -47,7 +58,7 @@ textarea{
 }
 div.MessagesContainer{
    overflow: auto;
-   height:70%;
+   height:100%;
    width:100%;
 
 }
@@ -69,16 +80,145 @@ div.ContactContainer{
    width:600px;
    z-index: 1000;
    background-color: white;
+   
+}
 
+/* .container{max-width:1170px; margin:auto;} */
 
+.received_msg {
+  display: inline-block;
+  padding: 0 0 0 10px;
+  vertical-align: top;
+  width: 92%;
+ }
+ .received_withd_msg p {
+  background: #ebebeb none repeat scroll 0 0;
+  border-radius: 3px;
+  color: #646464;
+  font-size: 14px;
+  margin: 0;
+  padding: 5px 10px 5px 12px;
+  width: 100%;
+  word-wrap: break-word;
+}
+.time_date {
+  color: #747474;
+  display: block;
+  font-size: 12px;
+  margin: 8px 0 0;
+}
+.received_withd_msg { width: 57%;}
+.mesgs {
+  float: left;
+  padding: 30px 15px 0 25px;
+  width: 100%;
+}
+
+ .sent_msg p {
+  background: #05728f none repeat scroll 0 0;
+  border-radius: 3px;
+  font-size: 14px;
+  margin: 0; color:#fff;
+  padding: 5px 10px 5px 12px;
+  width:100%;
+  word-wrap: break-word;
+}
+.outgoing_msg{ overflow:hidden; margin:26px 0 26px;}
+.sent_msg {
+  float: right;
+  width: 46%;
+}
+.input_msg_write input {
+  background: rgba(0, 0, 0, 0) none repeat scroll 0 0;
+  border: medium none;
+  color: #4c4c4c;
+  font-size: 15px;
+  min-height: 48px;
+  width: 100%;
+}
+.messaging { padding: 0 0 0 0;}
+.msg_history {
+  height: 420px;
+  overflow-y: auto;
+  border-style: groove;
+}
+
+.inbox_people {
+  background: #f8f8f8 none repeat scroll 0 0;
+  float: left;
+  overflow: hidden;
+  width: 100%; border-right:1px solid #c4c4c4;
 }
 
 
+
+.inbox_msg {
+  border: 1px solid #c4c4c4;
+  clear: both;
+  overflow: hidden;
+}
+
+.top_spac{ margin: 20px 0 0;}
+
+
+.recent_heading {float: left; width:40%;}
+
+.headind_srch{ padding:10px 29px 10px 20px; overflow:hidden; border-bottom:1px solid #c4c4c4;}
+
+.recent_heading h4 {
+  color: #05728f;
+  font-size: 21px;
+  margin: auto;
+}
+
+
+.chat_ib .names{ font-size:15px; color:#464646; margin:0 0 8px 0;}
+
+.chat_ib {
+  float: left;
+  padding: 0 0 0 15px;
+  width: 88%;
+}
+
+.chat_people{ overflow:hidden; clear:both;}
+.chat_list {
+  border-bottom: 1px solid #c4c4c4;
+  margin: 0;
+  padding: 18px 16px 10px;
+}
+.inbox_chat { height: 550px; overflow-y: scroll;}
 
 
    </style>
   
    <body>
+      <nav class="navbar navbar-expand-lg navbar-dark bg-primary static-top">
+         <div class="container">
+           <a class="navbar-brand" href="/">
+             <img src="/static/connectlogo.png" height="45" class="d-inline-block align-top" alt="Princeton Connect">
+               </a>
+           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                 <span class="navbar-toggler-icon"></span>
+               </button>
+           <div class="collapse navbar-collapse" id="navbarResponsive">
+             <ul class="navbar-nav ml-auto">
+               <li class="nav-item">
+                 <a class="nav-link" href="/">Home
+                       <span class="sr-only">(current)</span>
+                     </a>
+               </li>
+               
+               <li class="nav-item active">
+                 <a  class="nav-link" href = "/chat">Chat<span class="sr-only">(current)</span></a>
+               </li>              
+               <!-- <li class="nav-item">
+                 <button class ="nav-link btn btn-p" onclick="openForm()">Your Entry</button>
+               </li> -->
+ 
+             </ul>
+           </div>
+         </div>
+       </nav>
 
 
 <div id="NewMessage">
@@ -98,28 +238,45 @@ div.ContactContainer{
             <button align="center">Cancel</button>
          </div>
       </div>
-   <div class="left">
-      <h3>People</h3>
-         <div onclick="document.getElementById('NewMessage').style.display='block'">
-               <button align="center">New Message</button>
+
+
+
+<div class="container">
+  <div class="row">
+     <div class="col-sm-3">
+          <div class="left">
+
+      <!-- People Directory -->
+      <div class="inbox_people">
+         <div class="headind_srch">
+           <div class="recent_heading">
+             <h4>People</h4>
+           </div>
+         </div>
+         <div class="msg_btn" onclick="document.getElementById('NewMessage').style.display='block'">
+               <button class="btn btn-secondary" align="center">New Message</button>
             </div>
-      
-      <div class="ContactContainer" id ="cc">
-      
+        <div class="inbox_chat">
+        <div class="ContactContainer" id ="cc"></div>
+        </div>
+     </div>
+   </div>  
+   </div>
+  
+   <div class="col-sm-9">
+      <div class="right">
+         <h3 class="text-center">Messages</h3> 
+       <div class="mesgs">
+       <div class="msg_history">
+       <div class="MessagesContainer" id="mc">Click on another user under "People" to show messages.
+       </div>
+       </div>
+      </div>
+      <!-- <textarea class="textType" placeholder="Message"></textarea> -->
+   </div>
+    </div>
    </div>
 </div>
-
-   <div class="right"> 
-         <h3>Messages</h3>
-      <div class="MessagesContainer" id="mc">
-            
-      </div>
-     
-      <textarea class="textType" placeholder="Message"></textarea>
-
-
-   
-   </div>
 
    <script src=
       "https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js">
@@ -205,7 +362,6 @@ let request = null;
     );
 
      
-
   }
 
   
@@ -235,10 +391,15 @@ let request = null;
 
    data = '';
 
-   for(i = 0; i < contacts.length; i++ ){
 
+   for(i = 0; i < contacts.length; i++ ){
+      data+="<div class=\"chat_list\">"
+      data+="<div class=\"chat_people\">"
+      data+= "<div class=\"chat_ib\">"
       data = data + '<div class="names" id=' +  JSON.stringify(contacts[i]) + ' onclick= "getMessages(' + '\'' + contacts[i] + '\'' + ')" >' + contacts[i] + '</div>';
-                                                                                                                    
+      data += "</div>\
+              </div>\
+            </div>"                                                                           
       }
 
       $('#cc').html(data);
@@ -248,12 +409,6 @@ let request = null;
          data = data + '<div class="names" id=' +  JSON.stringify(contacts[i]) + '>' + contacts[i] + '</div>';
          
          }
-
-
-   
-
-
-
 
   }
 
@@ -267,11 +422,24 @@ data = ''
 for (i = 0; i < messages[1].length; i++){
 
    if(messages[1][i][0] == id){
-      data = data + '<div class="messageSend">' + messages[1][i][1] +  '</div>'; 
+      data+="<div class=\"outgoing_msg\">"
+      data+="<div class=\"sent_msg\">"
+      data+="<p>" + messages[1][i][1] + "</p>"
+      data+= "</div>\
+            </div>"
+      // data = data + '<div class="messageSend">' + messages[1][i][1] +  '</div>'; 
       }
 
    else{
-      data = data + '<div class="messageRecieve">' + messages[1][i][1] +  '</div>'; 
+      data+="<div class=\"incoming_msg\">"
+      data+="<div class=\"received_msg\">"
+      data+="<div class=\"received_withd_msg\">"
+      data+="<p>You</p>"  
+      data+="<p>" + messages[1][i][1] + "</p>"
+      data += "</div>\
+              </div>\
+          </div>"
+      // data = data + '<div class="messageRecieve">' + messages[1][i][1] +  '</div>'; 
    }
 
 }
@@ -279,11 +447,9 @@ for (i = 0; i < messages[1].length; i++){
 $('#mc').html(data);
 
 
-
-
 }
 
-  $('document').ready(setup);
+$('document').ready(setup);
   
   
   </script>

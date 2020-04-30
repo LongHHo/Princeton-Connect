@@ -421,10 +421,6 @@ def getContacts(netid):
             
             row = cur.fetchone()
 
-
-
-
-    
         # close the communication with the PostgreSQL
         cur.close()
         return contacts 
@@ -455,9 +451,7 @@ def getMessages(netid, contact):
                         FROM msg_id_timestamp
                         WHERE (sender = %s AND reciever = %s)
                         OR (sender = %s AND reciever = %s)
-                        ORDER BY timestamp
-    
-                        
+                        ORDER BY timestamp                        
                         """
 
 
