@@ -7,7 +7,6 @@
       <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
       <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
       <meta name="viewport" content="width=device-width, initial-scale=1">
-      <!-- <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDQe5G3tqd5Vfwefn7w3Djrv1L1bmlKkTw&libraries=places, geometry"></script> -->
       <style>
         /* Set the size of the div element that contains the map */
         body, html, #map {
@@ -35,15 +34,14 @@
                 <a class="nav-link" href="/">Home
                       <span class="sr-only">(current)</span>
                     </a>
-              </li>              
-              <li class="nav-item">
-                <button class = "btn btn-primary" onclick="openForm()">Your Entry</button>
               </li>
-
+              
               <li class="nav-item">
-                  <a  href = "/chat"/>Chat</a>
-                </li>
-
+                <a  class="nav-link" href = "/chat">Chat<span class="sr-only">(current)</span></a>
+              </li>              
+              <!-- <li class="nav-item">
+                <button class ="nav-link btn btn-p" onclick="openForm()">Your Entry</button>
+              </li> -->
 
             </ul>
           </div>
@@ -65,6 +63,7 @@
           for already existing entries by clicking the 'Entry Look-Up' button.
         </p>
         <a href="#0" class="cd-btn js-cd-panel-trigger" data-panel="main">Entry Look-Up</a>
+        <button class ="cd-btn js-cd-panel-trigger" onclick="openForm()">Your Entry</button>
       </div>
       <style>
         .modal-content{
@@ -76,7 +75,7 @@
       </style>
       <div id="id01" class="modal" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
-        <form id="submitForm" name="submitForm" class="modal-content" action="/templates/handleSubmit" onsubmit="return(validateForm())"method="POST">
+        <form id="submitForm" name="submitForm" class="modal-content" action="/templates/handleSubmit" method="POST">
             <div class="modal-header">
               <div class="container">
               <div class="row">
@@ -408,6 +407,8 @@
 
 <!-- jQuery Modal -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
+
+
       <script>
 
         function openForm() {
@@ -451,12 +452,11 @@
         //   event.preventDefault()
         //  );
 
-        function callback() {
-           
-          
 
-        }
 
+        // this is meant to validate the address
+        // my problem is that geocode is making an asynchronous call so this function finishes before
+        // geocode is even done. how do i make the function wait for geocode?
         function validateForm() {
           /* const form = document.getElementById('id01'); */
           var address = document.getElementsByName('address')[0];
@@ -475,18 +475,19 @@
           var checker = true;
           results = geocoder.geocode({'address': address.value}, function(results, status, checker){
           if (status === google.maps.GeocoderStatus.OK && results.length > 0) {
-                return true;
+                
                 alert('looks good');
+                return true;
             // show an error if it's not
           }else {
-              return false;
+
               alert("Invalid addresssss");
-              
+              return false;
+      
           }
-            });
-
-
+            }); 
         }
+        
 
         function initialize() {
         var input = document.getElementById('address');

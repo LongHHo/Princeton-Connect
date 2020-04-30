@@ -233,7 +233,6 @@ def getMsgs():
     data = [netid, messages]
     allData = json.dumps(data)
 
-
     return allData
     
 
