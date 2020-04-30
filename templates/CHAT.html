@@ -137,17 +137,15 @@ function handleResponse(response)
    button = document.getElementById('sendNewMessage');
    text = document.getElementById('netid').value; 
   
-   //if (response == '') button.disabled = true 
-   //else button.disabled = false;
     $('#userData').html(response); // change id 
-    var obj = $("#userData").find("option[value='" + text + "']");
-    if(obj != null && obj.length > 0){
-      button.disabled = false;
-    }
+    //var obj = $("#userData").find("option[value='" + text + "']");
+    //if(obj != null && obj.length > 0){
+      //button.disabled = false;
+    //}
 
-   else{
-      button.disabled = true;
-   }
+   //else{
+      //button.disabled = true;
+   //}
     
   
   }
