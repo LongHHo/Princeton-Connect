@@ -348,6 +348,7 @@ def checkNetid(netid):
         cur.execute(query, (user,))
         row = cur.fetchone()
         cur.close()
+        print(row, '***************')
         return row
     except (Exception, psycopg2.DatabaseError) as error:
         print(error)

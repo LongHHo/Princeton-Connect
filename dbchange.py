@@ -46,7 +46,8 @@ def change():
         cur = conn.cursor()
 
         change = """
-    
+        DELETE FROM msg_id_timestamp
+        
         """
 
         # change = """UPDATE userInformation
@@ -70,6 +71,9 @@ def change():
 def main(argv):
     users = ['hi', 'hi', 'hi', 
     'efw', 'efw']
+    
+    
+   
     
 
     
