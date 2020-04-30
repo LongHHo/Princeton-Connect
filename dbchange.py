@@ -45,8 +45,8 @@ def change():
         # create a cursor
         cur = conn.cursor()
 
-        change = """ALTER DATABASE userInformation 
-            ALTER COLUMN city SET NOT NULL;
+        change = """
+    
         """
 
         # change = """UPDATE userInformation
@@ -70,6 +70,9 @@ def change():
 def main(argv):
     users = ['hi', 'hi', 'hi', 
     'efw', 'efw']
+    
+
+    
 
     for user in users:
         print(user)

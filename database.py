@@ -8,6 +8,7 @@ from datetime import datetime
 import requests
 import secrets
 import math
+import time 
 
 # gmaps = googlemaps.Client(key='AIzaSyDQe5G3tqd5Vfwefn7w3Djrv1L1bmlKkTw')
 
@@ -116,12 +117,12 @@ def insertUser(netid):
         # create a cursor
         cur = conn.cursor()
 
-        insertUser = """INSERT INTO users (netid)
+        User = """INSERT INTO users (netid)
                VALUES(%s) 
                ON CONFLICT DO NOTHING;"""
 
 
-        cur.execute(insertUser, (netid,))
+        cur.execute(User, (netid,))
         conn.commit()
         print('success')
         print('inserted', netid)
@@ -352,19 +353,149 @@ def checkNetid(netid):
         print(error)
 
 
+def sendMessage(sender, reciever, message):
+    """ Connect to the PostgreSQL database server """
+    print('sending message')
+    conn = None
+    try:
+        # read connection parameters
+        params = config()
+
+        # connect to the PostgreSQL server
+        print('Connecting to the PostgreSQL database...')
+        conn = psycopg2.connect(**params)
+
+        # create a cursor
+        cur = conn.cursor()
+
+        insertUser = """INSERT INTO msg_id_timestamp (msg, reciever, sender)
+               VALUES(%s, %s, %s) 
+               ON CONFLICT DO NOTHING;"""
+
+
+        cur.execute(insertUser, (message, reciever, sender))
+        conn.commit()
+        print('success')
+        print('inserted')
+        # close the communication with the PostgreSQL
+        cur.close()
+
+    except (Exception, psycopg2.DatabaseError) as error:
+        print(error)
+    finally:
+        if conn is not None:
+            conn.close()
+            print('Database connection closed.')
+
+def getContacts(netid):
+    conn = None
+    try:
+        # read connection parameters
+        params = config()
+
+        # connect to the PostgreSQL server
+        print('Connecting to the PostgreSQL database...')
+        conn = psycopg2.connect(**params)
+
+        # create a cursor
+        cur = conn.cursor()
+
+        getContacts = """SELECT * 
+                        FROM msg_id_timestamp
+                        WHERE sender = %s OR reciever = %s
+                        ORDER BY timestamp DESC;"""
+
+
+        cur.execute(getContacts, (netid, netid))
+
+        row = cur.fetchone()
+        contacts = []
+
+        while row is not None:
+            if (row[1] != netid and row[1] not in contacts):
+                contacts.append(row[1])
+            
+            if (row[2] != netid and row[2] not in contacts):
+                contacts.append(row[2])
+            
+            row = cur.fetchone()
+
+
+
+
+    
+        # close the communication with the PostgreSQL
+        cur.close()
+        return contacts 
+
+    except (Exception, psycopg2.DatabaseError) as error:
+        print(error)
+    finally:
+        if conn is not None:
+            conn.close()
+            print('Database connection closed.')
+
+
+
+def getMessages(netid, contact):
+    conn = None
+    try:
+        # read connection parameters
+        params = config()
+
+        # connect to the PostgreSQL server
+        print('Connecting to the PostgreSQL database...')
+        conn = psycopg2.connect(**params)
+
+        # create a cursor
+        cur = conn.cursor()
+
+        getMessages = """SELECT * 
+                        FROM msg_id_timestamp
+                        WHERE (sender = %s AND reciever = %s)
+                        OR (sender = %s AND reciever = %s)
+                        ORDER BY timestamp
+    
+                        
+                        """
+
+
+        cur.execute(getMessages, (netid, contact, contact, netid))
+
+        row = cur.fetchone()
+        messages = []
+
+        while row is not None:
+            msg = []
+            msg.append(row[1])
+            msg.append(row[3])
+            
+            messages.append(msg)
+            row = cur.fetchone()
+
+        # close the communication with the PostgreSQL
+        cur.close()
+        return messages
+
+    except (Exception, psycopg2.DatabaseError) as error:
+        print(error)
+    finally:
+        if conn is not None:
+            conn.close()
+            print('Database connection closed.')
+
+
+
 
 
     
 
 def main(argv):
+    
     user = entryInfo.entryInfo('Long Ho', 'lhho', 'lhho@princeton.edu', '7142602003', 'just a cali boy looking for kangaroos', 'Churchill Ave, Hobart TAS 7005, Australia')
     userTwo = entryInfo.entryInfo('Slim Jim', 'sjim', 'sjim@princeton.edu', '1234567', 'im a stick', '4000 Union Pacific Ave, Commerce, CA')
-    deleteEntry('jaitegs')
-    getAll()
-    print(secrets.choice(range(0, 2)))
-    print('*************************')
-    print(checkNetid('jaitegs'))
-
+    print(getMessages('jaitegs', 'billy'))
+   
 
 if __name__ == '__main__':
     main(argv)

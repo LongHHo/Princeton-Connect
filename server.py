@@ -6,9 +6,9 @@
 #-----------------------------------------------------------------------
 
 from sys import argv
-from database import searchEntry, insertEntry, getAll, deleteEntry, insertUser, checkNetid
+from database import searchEntry, insertEntry, getAll, deleteEntry, insertUser, checkNetid, sendMessage, getContacts, getMessages
 from sys import argv, stderr, exit
-from flask import Flask, request, make_response, redirect, url_for
+from flask import Flask, request, make_response, redirect, url_for, Response
 from flask import render_template, session
 import entryInfo
 import json
@@ -27,11 +27,13 @@ app.secret_key = b'\xcdt\x8dn\xe1\xbdW\x9d[}yJ\xfc\xa3~/'
 # interface to search for entries
 #-----------------------------------------------------------------------
 
+
 @app.route('/')
 @app.route('/templates/home')
 def home():
+   
     netid = CASClient().authenticate()
-    insertUser(netid)
+    insertUser(netid.strip('\n'))
     
     # find particular entry of user
     user = entryInfo.entryInfo()
@@ -189,9 +191,11 @@ def handleDelete():
     return response
 
 
-@app.route('/chat')
+@app.route('/chat', methods=['GET'])
 def chat():
-    html = render_template('chat.html')
+    netid = CASClient().authenticate()
+    contacts = getContacts(netid.strip('\n'))
+    html = render_template('chat.html', contactsData=json.dumps(contacts))
     response = make_response(html)
     return response
 
@@ -200,6 +204,7 @@ def chat():
 def checkUser():
     netid = request.args.get('netid')
     row = checkNetid(netid)
+  
     print('checking user')
 
 
@@ -207,15 +212,45 @@ def checkUser():
     html = ''
 
    
-
-    for data in row:
-        html += ('<option>'+ data + '<option/>')
+    if row is not None:
+        for data in row:
+            html += ('<option value ="'+ data + '">')
     
-
+    print(html)
     response = make_response(html)
         
 
     return response
+
+
+@app.route('/getMessages', methods=['GET'])
+def getMsgs():
+    contact = request.args.get('contact')
+    netid = CASClient().authenticate()
+    netid = netid.strip('\n')
+    messages = getMessages(netid, contact)
+
+    data = [netid, messages]
+    allData = json.dumps(data)
+
+
+    return allData
+    
+
+
+@app.route('/sendMessage', methods=['GET'])
+def sendMsg():
+    netid = CASClient().authenticate()
+    netid = netid.strip('\n')
+    print('sending message')
+    message = request.args.get('message')
+    print(message)
+    reciever = request.args.get('reciever')
+    sender = netid
+    sendMessage(sender, reciever, message)
+    statuscode = Response(status=201)
+    return statuscode
+
 
 
 
