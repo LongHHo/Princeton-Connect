@@ -286,7 +286,7 @@ h4 {
           </div>
 
           <div class="modal-footer">
-           <button type="submit" class="btn submit" onclick="send_message();document.getElementById('NewMessage').style.display='none';" id="sendNewMessage" align="left"> send </button>
+           <button type="submit" class="btn submit" onclick="send_new_message();document.getElementById('NewMessage').style.display='none';" id="sendNewMessage" align="left"> send </button>
            <button type="button" class="btn cancel" onclick="document.getElementById('NewMessage').style.display='none'" align="right"> Cancel</button>
          </div>
        </div>
@@ -333,10 +333,13 @@ h4 {
        <div class="msg_history">
        <div class="MessagesContainer" id="mc">Click on another user under "People" to show messages.
        </div>
+
        </div>
       </div>
       <!-- <textarea class="textType" placeholder="Message"></textarea> -->
    </div>
+   <textarea id="in_chat_message"></textarea>
+   <button id="send_message_in_chat">send</button>
     </div>
    </div>
 </div>
@@ -408,13 +411,20 @@ let request = null;
 
   }
 
+  function send_new_message(){
+    console.log('sending new message')
+    var reciever = document.getElementById('netid').value;
+    reciever = encodeURIComponent(reciever);
+    var message = document.getElementById('message').value;
+    message = encodeURIComponent(message);
+    send_message(reciever, message);
 
-  function send_message(){
-     var reciever = document.getElementById('netid').value;
-     reciever = encodeURIComponent(reciever);
-     var message = document.getElementById('message').value;
-     message = encodeURIComponent(message);
 
+  }
+
+
+  function send_message(reciever, message){
+    
      let url = "/sendMessage?reciever=" + reciever + "&message=" + message
 
      r = $.ajax(
@@ -427,10 +437,34 @@ let request = null;
 
   }
 
+  function send_message_in_chat(reciever){
+    console.log('sending message in chat to' + reciever);
+    var rec = encodeURIComponent(reciever);
+    var message = document.getElementById('in_chat_message').value;
+    message = encodeURIComponent(message);
+    console.log(message);
+    send_message(rec, message);
+    setTimeout( function(){
+      getMessages(reciever)}, 1000);
+
+    
+
+
+  }
+
 
 
   function getMessages(contact){
+    console.log('getting messages')
      cntct =  encodeURIComponent(contact);
+     var arg = contact; 
+     $("#send_message_in_chat").off();
+     $("#send_message_in_chat").on("click",  function(){
+   send_message_in_chat(arg)} ); 
+     //document.getElementById("send_message_in_chat").addEventListener("click", function(){
+   //send_message_in_chat(arg)});
+      
+
      let url = "/getMessages?contact=" + cntct
 
      r = $.ajax(
@@ -449,6 +483,7 @@ let request = null;
   function getContacts(){
 
    var contacts = {{ contactsData|tojson }};
+   console.log(contacts);
 
    contacts = JSON.parse(contacts);
 
@@ -480,7 +515,7 @@ function handleMessages(messagesData){
 
 var messages = JSON.parse(messagesData);
 var id = messages[0];
-
+console.log('yolo')
 data = ''
 for (i = 0; i < messages[1].length; i++){
 
