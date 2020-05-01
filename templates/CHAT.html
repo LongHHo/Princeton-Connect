@@ -5,6 +5,7 @@
       <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" type="text/css" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
    </head>
    <style>
 
@@ -17,7 +18,7 @@
       height: 100%;
    }
    /* div.left{
-      position:relative; 
+      position:relative;
       float: left;
       width: 50%;
       height: 900px;
@@ -25,27 +26,30 @@
 }
 
 div.right{
-      position:relative; 
+      position:relative;
       float: right;
       width: 100%;
       height: 900px;
       overflow: auto;
 } */
 div.names{
-   border: solid;
+   /* border: solid; */
+   outline: 2px solid gray;
    background-color: lightblue;
-   margin: 4px;
+   margin: 10px;
+   outline-offset: 15px;
+   align: center;
 }
 
 div.messageSend{
-   border: solid; 
+   border: solid;
    margin: 8px;
    width: 200px;
    background-color: lightgoldenrodyellow;
 }
 
 div.messageRecieve{
-   border: solid; 
+   border: solid;
    margin: 8px;
    width: 200px;
    background-color: lightcoral;
@@ -53,8 +57,8 @@ div.messageRecieve{
 
 
 textarea{
-    
-   width:350px; 
+
+   width:350px;
 }
 div.MessagesContainer{
    overflow: auto;
@@ -71,7 +75,7 @@ div.ContactContainer{
 }
 
 
-#NewMessage{
+/* #NewMessage{
 
    box-shadow:2px 10px 30px;
    position: fixed;
@@ -80,7 +84,7 @@ div.ContactContainer{
    width:600px;
    z-index: 1000;
    background-color: white;
-   
+
 }
 
 /* .container{max-width:1170px; margin:auto;} */
@@ -144,9 +148,10 @@ div.ContactContainer{
 }
 
 .inbox_people {
-  background: #f8f8f8 none repeat scroll 0 0;
+  background: lightblue none repeat scroll 0 0;
   float: left;
   overflow: hidden;
+  height: 535px;
   width: 100%; border-right:1px solid #c4c4c4;
 }
 
@@ -172,7 +177,7 @@ div.ContactContainer{
 }
 
 
-.chat_ib .names{ font-size:15px; color:#464646; margin:0 0 8px 0;}
+.chat_ib .names{ font-size:15px; color:#464646; margin:0 0 8px 0; }
 
 .chat_ib {
   float: left;
@@ -182,15 +187,28 @@ div.ContactContainer{
 
 .chat_people{ overflow:hidden; clear:both;}
 .chat_list {
-  border-bottom: 1px solid #c4c4c4;
+  border-bottom: 2px solid gray;
+  border-right: 2px solid gray;
+  border-left: 2px solid gray;
   margin: 0;
   padding: 18px 16px 10px;
 }
 .inbox_chat { height: 550px; overflow-y: scroll;}
 
+/*body {
+  
+  background: #E8E8E8;
+}
+
+*/
+h4 {
+    color: white;
+}
 
    </style>
-  
+
+
+
    <body>
       <nav class="navbar navbar-expand-lg navbar-dark bg-primary static-top">
          <div class="container">
@@ -207,37 +225,74 @@ div.ContactContainer{
                        <span class="sr-only">(current)</span>
                      </a>
                </li>
-               
+
                <li class="nav-item active">
                  <a  class="nav-link" href = "/chat">Chat<span class="sr-only">(current)</span></a>
-               </li>              
+               </li>
                <!-- <li class="nav-item">
                  <button class ="nav-link btn btn-p" onclick="openForm()">Your Entry</button>
                </li> -->
- 
+
              </ul>
            </div>
          </div>
        </nav>
 
+       <style>
+         .modal-content{
+           background-color: #424f5c;
+         }
+         .btn{
+           font-size: inherit;
+         }
 
-<div id="NewMessage">
+         .modal-title{
+            color: #dbe2e9;
 
-   
+         }
+       </style>
+
+
+<div id="NewMessage" class="modal" tabindex="-1" role="dialog">
+      <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class = "modal-header">
+              <div class = "container">
+              <div class = "row">
+
+              <h1 class="modal-title">Send Message</h1>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span onclick="document.getElementById('NewMessage').style.display='none'" class="close" title="Close Modal">&times;</span>
+              </button>
+              </div>
+            </div>
+          </div>
+          <div class="modal-body">
             <input type="text" placeholder="NetID" name="NetID" id="netid" list="userData" oninput="available_users()"></input>
 
             <datalist id="userData">
             </datalist>
             <p></p>
 
-            <textarea name="message" placeholder="message" id="message" oninput="checkStatus()"></textarea> 
-            
-            <button onclick="send_message();document.getElementById('NewMessage').style.display='none';" id="sendNewMessage"> send </button> 
-         
-         <div onclick="document.getElementById('NewMessage').style.display='none'">
-            <button align="center">Cancel</button>
+            <textarea name="message" placeholder="message" id="message" oninput="checkStatus()"></textarea>
+
+            <style>
+
+            .message {
+              width: 100%;
+            }
+            </style>
+
+          </div>
+
+          <div class="modal-footer">
+           <button type="submit" class="btn submit" onclick="send_message();document.getElementById('NewMessage').style.display='none';" id="sendNewMessage" align="left"> send </button>
+           <button type="button" class="btn cancel" onclick="document.getElementById('NewMessage').style.display='none'" align="right"> Cancel</button>
          </div>
+       </div>
       </div>
+    </div>
+</div>
 
 
 
@@ -250,22 +305,30 @@ div.ContactContainer{
       <div class="inbox_people">
          <div class="headind_srch">
            <div class="recent_heading">
-             <h4>People</h4>
+             <h4><strong>People</strong></h4>
            </div>
          </div>
          <div class="msg_btn" onclick="document.getElementById('NewMessage').style.display='block'">
-               <button class="btn btn-secondary" align="center">New Message</button>
-            </div>
+               <button class="btn btn-secondary btn-lg" align="center">New Message</button>
+          </div>
+          <style>
+          .btn-secondary {
+
+            width: 100%;
+          }
+
+          </style>
         <div class="inbox_chat">
         <div class="ContactContainer" id ="cc"></div>
         </div>
      </div>
-   </div>  
    </div>
-  
+   </div>
+
    <div class="col-sm-9">
       <div class="right">
-         <h3 class="text-center">Messages</h3> 
+        <br> </br>
+        <h3 class="text-center">Messages</h3>
        <div class="mesgs">
        <div class="msg_history">
        <div class="MessagesContainer" id="mc">Click on another user under "People" to show messages.
@@ -281,7 +344,7 @@ div.ContactContainer{
    <script src=
       "https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js">
     </script>
-  
+
   <script>
 
 
@@ -289,9 +352,9 @@ div.ContactContainer{
 function checkStatus(){
    console.log('checkingstatus');
    console.log(document.getElementById('message').value);
-   
+
    button = document.getElementById('sendNewMessage');
-   val = document.getElementById('netid').value; 
+   val = document.getElementById('netid').value;
    obj = $("#userData").find("option[value='" + val + "']");
 
    if(document.getElementById('message').value != "" && obj  != null ) {
@@ -315,20 +378,20 @@ function handleResponse(response)
   {
    button = document.getElementById('sendNewMessage');
    console.log(response);
-  
+
     $('#userData').html(response); // change id
     checkStatus() ;
-  
+
   }
 
 
 let request = null;
   function available_users(){
-   
+
    var netid = document.getElementById('netid').value;
-   netid = encodeURIComponent(netid); 
+   netid = encodeURIComponent(netid);
    let url = "/checkUser?netid=" + netid
-    
+
     if (request != null){
       request.abort();
     }
@@ -348,9 +411,9 @@ let request = null;
 
   function send_message(){
      var reciever = document.getElementById('netid').value;
-     reciever = encodeURIComponent(reciever); 
+     reciever = encodeURIComponent(reciever);
      var message = document.getElementById('message').value;
-     message = encodeURIComponent(message); 
+     message = encodeURIComponent(message);
 
      let url = "/sendMessage?reciever=" + reciever + "&message=" + message
 
@@ -361,14 +424,14 @@ let request = null;
       }
     );
 
-     
+
   }
 
-  
+
 
   function getMessages(contact){
      cntct =  encodeURIComponent(contact);
-     let url = "/getMessages?contact=" + cntct 
+     let url = "/getMessages?contact=" + cntct
 
      r = $.ajax(
       {
@@ -378,7 +441,7 @@ let request = null;
       }
     );
 
-     
+
 
 
   }
@@ -396,10 +459,10 @@ let request = null;
       data+="<div class=\"chat_list\">"
       data+="<div class=\"chat_people\">"
       data+= "<div class=\"chat_ib\">"
-      data = data + '<div class="names" id=' +  JSON.stringify(contacts[i]) + ' onclick= "getMessages(' + '\'' + contacts[i] + '\'' + ')" >' + contacts[i] + '</div>';
+      data = data + '<button class="names btn-primary" id=' +  JSON.stringify(contacts[i]) + ' onclick= "getMessages(' + '\'' + contacts[i] + '\'' + ')" >' + '<h4>' + contacts[i] + '</h4> </div>';
       data += "</div>\
               </div>\
-            </div>"                                                                           
+            </div>"
       }
 
       $('#cc').html(data);
@@ -407,7 +470,7 @@ let request = null;
    for(i = 0; i < contacts.length; i++ ){
 
          data = data + '<div class="names" id=' +  JSON.stringify(contacts[i]) + '>' + contacts[i] + '</div>';
-         
+
          }
 
   }
@@ -427,19 +490,18 @@ for (i = 0; i < messages[1].length; i++){
       data+="<p>" + messages[1][i][1] + "</p>"
       data+= "</div>\
             </div>"
-      // data = data + '<div class="messageSend">' + messages[1][i][1] +  '</div>'; 
+      // data = data + '<div class="messageSend">' + messages[1][i][1] +  '</div>';
       }
 
    else{
       data+="<div class=\"incoming_msg\">"
       data+="<div class=\"received_msg\">"
       data+="<div class=\"received_withd_msg\">"
-      data+="<p>You</p>"  
       data+="<p>" + messages[1][i][1] + "</p>"
       data += "</div>\
               </div>\
           </div>"
-      // data = data + '<div class="messageRecieve">' + messages[1][i][1] +  '</div>'; 
+      // data = data + '<div class="messageRecieve">' + messages[1][i][1] +  '</div>';
    }
 
 }
@@ -450,15 +512,17 @@ $('#mc').html(data);
 }
 
 $('document').ready(setup);
-  
-  
+
+
   </script>
- 
 
 
-         
-      
-      
-      
+
+
+
+
+
    </body>
+
+
 </html>
