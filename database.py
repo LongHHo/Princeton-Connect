@@ -223,13 +223,13 @@ def searchEntry(entry):
         sql = """
             SELECT *
             FROM userInformation
-            WHERE userInformation.netid LIKE %s AND
-            userInformation.name LIKE %s AND
-            userInformation.email LIKE %s AND
-            userInformation.phone LIKE %s AND
-            userInformation.description LIKE %s AND
-            userInformation.address LIKE %s AND
-            userInformation.city LIKE %s;
+            WHERE userInformation.netid ILIKE %s AND
+            userInformation.name ILIKE %s AND
+            userInformation.email ILIKE %s AND
+            userInformation.phone ILIKE %s AND
+            userInformation.description ILIKE %s AND
+            userInformation.address ILIKE %s AND
+            userInformation.city ILIKE %s;
         """
 
 
