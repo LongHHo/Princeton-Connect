@@ -15,11 +15,11 @@ import time
 def coordinateOffset(latitude, longitude):
     radius = 6371000.0 #radius of earth 
     sign = secrets.choice(range(0, 2)) #used to determine sign of the offset
-    oLat = secrets.choice(range(3200, 8000)) #offset in metres (2 - 5 miles)
+    oLat = secrets.choice(range(400, 1600)) #offset in metres (0.25 - 1 miles)
     if (sign == 0):
         oLat = -1 * oLat
     sign = secrets.choice(range(0, 2)) #used to determine sign of the offset
-    oLong = secrets.choice(range(3200, 8000)) #offset in metres (2 - 5 miles)
+    oLong = secrets.choice(range(400, 1600)) #offset in metres (0.25 - 1 miles)
     if (sign == 0):
         oLong = -1 * oLong
     new_latitude  = latitude  + (oLat / radius) * (180 / math.pi)
@@ -223,13 +223,13 @@ def searchEntry(entry):
         sql = """
             SELECT *
             FROM userInformation
-            WHERE userInformation.netid LIKE %s AND
-            userInformation.name LIKE %s AND
-            userInformation.email LIKE %s AND
-            userInformation.phone LIKE %s AND
-            userInformation.description LIKE %s AND
-            userInformation.address LIKE %s AND
-            userInformation.city LIKE %s;
+            WHERE userInformation.netid ILIKE %s AND
+            userInformation.name ILIKE %s AND
+            userInformation.email ILIKE %s AND
+            userInformation.phone ILIKE %s AND
+            userInformation.description ILIKE %s AND
+            userInformation.address ILIKE %s AND
+            userInformation.city ILIKE %s;
         """
 
 

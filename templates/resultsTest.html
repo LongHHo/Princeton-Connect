@@ -71,11 +71,11 @@ function displayTable(userName, userDescr, userCity) {
           document.getElementById("entryCity").innerHTML = userCity;
         }
 
-
 </script>
 
 <body>
     <table class="content-table">
+    <a href="#" data-toggle="tooltip" data-placement="top" title="Click on an entry to reveal more information">
         <thead>
             <tr>
             <th align  = "left">NetID</th>
@@ -84,25 +84,49 @@ function displayTable(userName, userDescr, userCity) {
             <th align  = "left">City</th>
             </tr>
         </thead>
-        
-
+    </a>
         <tbody>
             {% if userEntries|length == 0: %}
             (None)
             {% else: %} {% for user in
             userEntries: %}
 
+            <script>displayTable({{user.getName() | tojson}}, {{user.getDescription() | tojson}},{{user.getCity() | tojson}}); return false</script>
+
             <tr class='clickable-row' onclick='displayResults({{user.getNetid() | tojson}}, {{user.getName() | tojson}}, {{user.getEmail() | tojson}}, {{user.getPhone() | tojson}}, {{user.getDescription() | tojson}},{{user.getCity() | tojson}}); return false'>                >
-            <td align  = "left"> {{user.getNetid()}}</td>
+            <td align  = "left"><button class="btn btn-secondary" onclick='displayResults({{user.getNetid() | tojson}}, {{user.getName() | tojson}}, {{user.getEmail() | tojson}}, {{user.getPhone() | tojson}}, {{user.getDescription() | tojson}},{{user.getCity() | tojson}}); return false'>
+             {{user.getNetid()}}</button></td>
             <td align  = "left">{{user.getName()}}</td>
             <td align  = "left">{{user.getDescription()}}</td>
             <td align  = "left">{{user.getCity()}}</td>
             </tr>
             {% endfor %}
         </tbody>
+
+        <!--         <tbody>
+            {% if userEntries|length == 0: %}
+            (None)
+            {% else: %} {% for user in
+            userEntries: %}
+
+            <script>displayTable({{user.getName() | tojson}}, {{user.getDescription() | tojson}},{{user.getCity() | tojson}}); return false</script>
+
+            <tr class='clickable-row' onclick='displayResults({{user.getNetid() | tojson}}, {{user.getName() | tojson}}, {{user.getEmail() | tojson}}, {{user.getPhone() | tojson}}, {{user.getDescription() | tojson}},{{user.getCity() | tojson}}); return false'>                >
+            <td align  = "left"><button class="btn btn-secondary" onclick='displayResults({{user.getNetid() | tojson}}, {{user.getName() | tojson}}, {{user.getEmail() | tojson}}, {{user.getPhone() | tojson}}, {{user.getDescription() | tojson}},{{user.getCity() | tojson}}); return false'>
+             {{user.getNetid()}}</button></td>
+            <td align  = "left"><p id="entryName1"></p></td>
+            <td align  = "left"><p id="entryDescription1"></p></td>
+            <td align  = "left"><p id="entryCity1"></p>></td>
+            </tr>
+            {% endfor %}
+        </tbody> -->
         </table>
         {% endif %}
 
         <h2>&nbsp;&nbsp; &nbsp;&nbsp;</h2>
 </body>
+
+
+
+
 
