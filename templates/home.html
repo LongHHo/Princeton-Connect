@@ -16,7 +16,7 @@
          }
       </style>
   </head>
-  <body>
+  <body onLoad="document.getElementById('name1').focus(); getResults()">
 
 
     <main class="cd-main-content">
@@ -63,7 +63,7 @@
           for already existing entries by clicking the 'Entry Look-Up' button.
         </p>
         <a href="#0" class="cd-btn js-cd-panel-trigger" data-panel="main">Entry Look-Up</a>
-        <button class ="cd-btn js-cd-panel-trigger" onclick="openForm()">Your Entry</button>
+        <a href="#1" class ="cd-btn js-cd-panel-trigger" data-panel="left" onclick="openForm()">Your Entry</a>
       </div>
       <style>
         .modal-content{
@@ -73,87 +73,7 @@
           font-size: inherit;
         }
       </style>
-      <div id="id01" class="modal" tabindex="-1" role="dialog">
-        <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
-        <form id="submitForm" name="submitForm" class="modal-content" action="/templates/handleSubmit" method="POST">
-            <div class="modal-header">
-              <div class="container">
-              <div class="row">
-              <h1 class="modal-title">Your Entry</h1>
-              <span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close Modal">&times;</span>
-              </div>
-
-              <div class="row">
-              <p>Submit or edit your entry here</p>
-              </div>
-              <div class="row">
-              <p>If you already submitted an entry, it will display in the text boxes</p>
-             </div>
-            </div>
-            </div>
-
-            <div class= "modal-body">
-            <label for="name"><b>Name*:</b></label>
-            <input type="text" placeholder="" id="name" name="name" required>
-            <span class="errorname" aria-live="polite"></span>
-
-            <label for="email"><b>Email*: </b></label>
-            <input type="email" placeholder="ex: bob@princeton.edu" id="email" name="email" required>
-            <span class="erroremail" aria-live="polite"></span>
-
-            <label for="phone"><b>Phone: </b></label>
-            <input type="tel" placeholder="Format: 123-456-7890" id="phone" name="phone" pattern="([0-9]{3}-[0-9]{3}-[0-9]{4})|([0-9]{1}-[0-9]{3}-[0-9]{3}-[0-9]{4})|([0-9]{10})" >
-            <span class="errorphone" aria-live="polite"></span>
-            <p></p>
-            <label for="description"><b>Description: </b></label>
-            <textarea type="textarea" placeholder="Whether for a roommate or a friend, tell us about yourself and what you're looking for"
-            id="description" name="description" style="height:200px"></textarea>
-            <span class="errordesc" aria-live="polite"></span>
-
-            <label for="city"><b>City*: </b></label>
-            <input type="text" placeholder="Enter what city you will be staying in" id="city" name="city" required>
-            <span class="errorcity" aria-live="polite"></span>
-
-            <label for="address"><b>Address: </b></label>
-            <input novalidate type="text" placeholder="Enter address" id="address" name="address">
-            <span class="erroraddress" aria-live="polite"></span>
-            </div>
-
-            <div class="modal-footer">
-              <button type="submit" class="btn submit">Submit</button>
-              <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
-              <a href="/templates/delete"><button type="button" class="btn delete">Delete Entry</button></a>
-            </div>
-        </form>
-      </div>
-
-      <!-- Modal -->
-      <div id="entryModal" class="modal" role="dialog">
-        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-
-          <!-- Modal content-->
-          <div class="modal-content">
-            <div class="modal-header">
-              <span onclick="closeEntry()" class="close" title="Close Modal">&times;</span>
-              <h4 id=entryNetid class="modal-header"></h4>
-            </div>
-            <div class="modal-body">
-              <p id="entryName"></p>
-              <p id="entryEmail"></p>
-              <p id="entryPhone"></p>
-              <p id="entryCity"></p>
-              <p id="entryDescription"></p>
-              <p></p>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-default" onclick="closeEntry()">Close</button>
-            </div>
-          </div>
-
-        </div>
-      </div>
-
-
+      
     </main>
       <script src=
       "https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js">
@@ -395,6 +315,9 @@
           //Associate the styled map with the MapTypeId and set it to display.
           map.mapTypes.set('styled_map', styledMapType);
           map.setMapTypeId('styled_map');
+          google.maps.event.addListener(map, "click", function(event) {
+            infowindow.close();
+          });
         }
       </script>
       <script
@@ -504,6 +427,92 @@
 
 
   </body>
+
+  <div class="cd-panel cd-panel--from-left js-cd-panel-left">
+    <header class="cd-panel__header">
+      <h1>Your Entry</h1>
+      <a href="#1" class="cd-panel__close js-cd-close">Close</a>
+    </header>
+    <div  class="cd-panel__container">
+      <div class="cd-panel__content"></div>
+        <form id="submitForm" name="submitForm" class="modal-content" action="/templates/handleSubmit" method="POST">
+          <div class="modal-header">
+            <div class="container">
+              <div class="row">
+              <h1 class="modal-title">&nbsp;&nbsp;&nbsp;&nbsp;</h1>
+              <span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close Modal">&times;</span>
+              </div>
+
+              <div class="row">
+              <p>Submit or edit your entry here</p>
+              </div>
+              <div class="row">
+              <p>If you already submitted an entry, it will display in the text boxes</p>
+              </div>
+            </div>
+            </div>
+
+        <div class= "modal-body">
+        <label for="name"><b>Name*:</b></label>
+        <input type="text" placeholder="" id="name" name="name" required>
+        <span class="errorname" aria-live="polite"></span>
+
+        <label for="email"><b>Email*: </b></label>
+        <input type="email" placeholder="ex: bob@princeton.edu" id="email" name="email" required>
+        <span class="erroremail" aria-live="polite"></span>
+
+        <label for="phone"><b>Phone: </b></label>
+        <input type="tel" placeholder="Format: 123-456-7890" id="phone" name="phone" pattern="([0-9]{3}-[0-9]{3}-[0-9]{4})|([0-9]{1}-[0-9]{3}-[0-9]{3}-[0-9]{4})|([0-9]{10})" >
+        <span class="errorphone" aria-live="polite"></span>
+        <p></p>
+        <label for="description"><b>Description: </b></label>
+        <textarea type="textarea" placeholder="Whether for a roommate or a friend, tell us about yourself and what you're looking for"
+        id="description" name="description" style="height:200px"></textarea>
+        <span class="errordesc" aria-live="polite"></span>
+
+        <label for="city"><b>City*: </b></label>
+        <input type="text" placeholder="Enter what city you will be staying in" id="city" name="city" required>
+        <span class="errorcity" aria-live="polite"></span>
+
+        <label for="address"><b>Address: </b></label>
+        <input novalidate type="text" placeholder="Enter address" id="address" name="address">
+        <span class="erroraddress" aria-live="polite"></span>
+        </div>
+
+        <div class="modal-footer">
+          <button type="submit" class="btn submit">Submit</button>
+          <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
+          <a href="/templates/delete"><button type="button" class="btn delete">Delete Entry</button></a>
+        </div>
+    </form>
+
+  <!-- Modal -->
+  <div id="entryModal" class="modal" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <span onclick="closeEntry()" class="close" title="Close Modal">&times;</span>
+          <h4 id=entryNetid class="modal-header"></h4>
+        </div>
+        <div class="modal-body">
+          <p id="entryName"></p>
+          <p id="entryEmail"></p>
+          <p id="entryPhone"></p>
+          <p id="entryCity"></p>
+          <p id="entryDescription"></p>
+          <p></p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" onclick="closeEntry()">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
   
   <div class="cd-panel cd-panel--from-right js-cd-panel-main">
 		<header class="cd-panel__header">
@@ -516,15 +525,31 @@
        <form>
         <table class="searchbox">
           <tr>
+            <td align = "left">
+            <label for="name">
+              <h2>&nbsp;&nbsp; &nbsp;&nbsp; Name: </h2>
+            </label>
+          </td>
             <td><input type="text" placholder="Name" id="name1" name="name1" oninput="getResults()"/></td>
           </tr>
+
           <tr>
+            <td align = "left">
+              <label for="description">
+                <h2>&nbsp;&nbsp; &nbsp;&nbsp; Description: &nbsp;&nbsp;</h2>
+              </label>
+            </td>
               <td><input type="text" placeholder="Description" id="description1" name="description1" oninput="getResults()"/></td>
-            </tr>
-          <tr>
-            <td><input type="text" placeholder="City" id="city1" name="city1" oninput="getResults()"/></td>
           </tr>
 
+          <tr>
+          <td align = "left">
+            <label for="City">
+              <h2>&nbsp;&nbsp; &nbsp;&nbsp; City: </h2>
+            </label>
+          </td>            
+            <td><input type="text" placeholder="City" id="city1" name="city1" oninput="getResults()"/></td>
+          </tr>
         </table>
     
         
@@ -867,7 +892,7 @@ Slide In Panel - by CodyHouse.co
 }
 
 .cd-panel__close:hover::before, .cd-panel__close:hover::after {
-  background-color: #ffffff;
+  background-color: #000000;
   -webkit-transition: -webkit-transform 0.3s;
   transition: -webkit-transform 0.3s;
   transition: transform 0.3s;
@@ -945,7 +970,7 @@ Slide In Panel - by CodyHouse.co
   width: 90%;
   height: 100%;
   top: 0;
-  background: #dbe2e9;
+  background: #424f5c;
   z-index: 1;
   -webkit-transition: -webkit-transform 0.3s 0.3s;
   transition: -webkit-transform 0.3s 0.3s;
@@ -986,11 +1011,11 @@ Slide In Panel - by CodyHouse.co
 
 .cd-panel__content {
   position: absolute;
-  top: 0;
+  top: 60px;
   left: 0;
   width: 100%;
   height: 100%;
-  padding: 70px 5%;
+  background-color: #424f5c;
   overflow: auto;
   /* smooth scrolling on touch devices */
   -webkit-overflow-scrolling: touch;
@@ -1000,6 +1025,10 @@ Slide In Panel - by CodyHouse.co
   font-size: 1.4rem;
   color: #424f5c;
   line-height: 1.4;
+  margin-top: 1rem;
+}
+
+.cd-panel__content h2 {
   margin-top: 1rem;
 }
 
