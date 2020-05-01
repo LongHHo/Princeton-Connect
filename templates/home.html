@@ -37,10 +37,10 @@
                       <span class="sr-only">(current)</span>
                     </a>
               </li>
-              
+
               <li class="nav-item">
                 <a  class="nav-link" href = "/chat">Chat<span class="sr-only">(current)</span></a>
-              </li>              
+              </li>
               <!-- <li class="nav-item">
                 <button class ="nav-link btn btn-p" onclick="openForm()">Your Entry</button>
               </li> -->
@@ -83,7 +83,7 @@
 
 
       <script>
-      
+
 
         function stringBuilder(list){
           var st = "<div class=\"informWindow\"><p>" + "NETID: " + list[0] + "</p>" + "<p>" + "Name: " + list[1] + "</p>" + "<p>" + "Email: " + list[2] + "</p>" + "<p>" + "Phone: " +
@@ -392,7 +392,7 @@
           var address = document.getElementsByName('address')[0];
           const adrError = document.querySelector('#address + span.erroraddress');
           var letters = /^[A-Za-z]+$/;
-          
+
           if (address.value == ''){
              callback(true);
           }
@@ -401,7 +401,7 @@
           var geocoder = new google.maps.Geocoder();
 
           // Geocode the address
-          
+
           var checker = true;
           results = geocoder.geocode({'address': address.value}, function check(results, status){
           if (status === google.maps.GeocoderStatus.OK && results.length > 0) {
@@ -412,9 +412,9 @@
 
               alert("Invalid addresssss");
               return false;
-      
+
           }
-            }); 
+            });
         }
         
       
@@ -555,8 +555,8 @@
             <td><input type="text" placeholder="City" id="city1" name="city1" oninput="getResults()"/></td>
           </tr>
         </table>
-    
-        
+
+
       <div class="container">
         <p id="ResultsArea"></p>
      </div>
@@ -710,7 +710,7 @@
 
   </script> <!-- Resource JavaScript -->
   <style>
-    /* -------------------------------- 
+    /* --------------------------------
 
 Primary style
 
@@ -736,7 +736,7 @@ a {
   text-decoration: none;
 }
 
-/* -------------------------------- 
+/* --------------------------------
 
 Slide In Panel - by CodyHouse.co
 
