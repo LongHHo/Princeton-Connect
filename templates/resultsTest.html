@@ -75,6 +75,7 @@ function displayTable(userName, userDescr, userCity) {
 
 <body>
     <table class="content-table">
+    <a href="#" data-toggle="tooltip" data-placement="top" title="Click on an entry to reveal more information">
         <thead>
             <tr>
             <th align  = "left">NetID</th>
@@ -83,6 +84,7 @@ function displayTable(userName, userDescr, userCity) {
             <th align  = "left">City</th>
             </tr>
         </thead>
+    </a>
         <tbody>
             {% if userEntries|length == 0: %}
             (None)

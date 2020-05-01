@@ -6,6 +6,8 @@
       <!-- if two style sheets modify the same component, the last one takes precedence -->
       <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
       <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
       <meta name="viewport" content="width=device-width, initial-scale=1">
       <style>
         /* Set the size of the div element that contains the map */
@@ -59,11 +61,11 @@
         <!-- feel free to move this or delete, just testing -->
         <h4> Hello, {{netid}} </h4>
         <p> Princeton Connect helps students find roommates for summer travels. If this is your first time on the site, go ahead and
-          make an entry by clicking the 'Submit Entry' button, where you will enter where you will be for the summer. You can also search
+          make an entry by clicking the 'Your Entry' button, where you will enter where you will be for the summer. You can also search
           for already existing entries by clicking the 'Entry Look-Up' button.
         </p>
-        <a href="#0" class="cd-btn js-cd-panel-trigger" data-panel="main">Entry Look-Up</a>
         <a href="#1" class ="cd-btn js-cd-panel-trigger" data-panel="left" onclick="openForm()">Your Entry</a>
+        <a href="#0" class="cd-btn js-cd-panel-trigger" data-panel="main">Entry Look-Up</a>
       </div>
       <style>
         .modal-content{
@@ -75,9 +77,7 @@
       </style>
       
     </main>
-      <script src=
-      "https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js">
-            </script>
+
 
       <div id="map"></div>
 
@@ -86,8 +86,8 @@
       
 
         function stringBuilder(list){
-          var st = "<p>" + "NETID: " + list[0] + "</p>" + "<p>" + "Name: " + list[1] + "</p>" + "<p>" + "Email: " + list[2] + "</p>" + "<p>" + "Phone: " +
-          list[3] + "</p>" + "<p>" + "Description: " + list[4] + "</p>";
+          var st = "<div class=\"informWindow\"><p>" + "NETID: " + list[0] + "</p>" + "<p>" + "Name: " + list[1] + "</p>" + "<p>" + "Email: " + list[2] + "</p>" + "<p>" + "Phone: " +
+          list[3] + "</p>" + "<p>" + "Description: " + list[4] + "</p> </div>";
           return st;
         }
         var infowindow;
@@ -314,13 +314,28 @@
             }
           //Associate the styled map with the MapTypeId and set it to display.
           map.mapTypes.set('styled_map', styledMapType);
-          map.setMapTypeId('styled_map');
+          map.setMapTypeId('roadmap');
+          map.setOptions({minZoom: 3});
           google.maps.event.addListener(map, "click", function(event) {
             infowindow.close();
           });
+
+
+          function initialize() {
+        var input = document.getElementById('address');
+        var autocomplete = new google.maps.places.Autocomplete(input);
+        // changes whenever user selects new address in drop down
+        google.maps.event.addListener(autocomplete, 'place_changed', function () {
+                    var place = autocomplete.getPlace();
+                });
+          }
+
+        google.maps.event.addDomListener(window, 'load', initialize);
+
+
         }
       </script>
-      <script
+      <script async defer
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDQe5G3tqd5Vfwefn7w3Djrv1L1bmlKkTw&libraries=places, geometry&callback=initMap">
 
       </script>
@@ -334,6 +349,7 @@
 
       <script>
 
+
         function openForm() {
 
           document.getElementsByName('name')[0].value= {{name | tojson}};
@@ -342,8 +358,7 @@
           document.getElementsByName('description')[0].value= {{description | tojson}};
           document.getElementsByName('city')[0].value= {{city | tojson}};
           document.getElementsByName('address')[0].value= {{address | tojson}};
-        
-          $('#id01').modal('show');
+          // $('#id01').modal('show');
 
         }
 
@@ -354,17 +369,9 @@
           document.getElementById("entryEmail").innerHTML = userEmail;
           document.getElementById("entryDescription").innerHTML = userDescr;
           document.getElementById("entryCity").innerHTML = userCity;
-
-
           $('#entryModal').modal('toggle');
-
-
         }
-         
 
-        function closeForm() {
-          document.getElementById("id01").style.display = "none";
-        }
 
         function closeEntry(){
           document.getElementById("entryModal").style.display = "none";
@@ -387,7 +394,7 @@
           var letters = /^[A-Za-z]+$/;
           
           if (address.value == ''){
-            return true;
+             callback(true);
           }
 
           // Get geocoder instance
@@ -396,10 +403,9 @@
           // Geocode the address
           
           var checker = true;
-          results = geocoder.geocode({'address': address.value}, function(results, status, checker){
+          results = geocoder.geocode({'address': address.value}, function check(results, status){
           if (status === google.maps.GeocoderStatus.OK && results.length > 0) {
                 
-                alert('looks good');
                 return true;
             // show an error if it's not
           }else {
@@ -411,38 +417,22 @@
             }); 
         }
         
-
-        function initialize() {
-        var input = document.getElementById('address');
-        var autocomplete = new google.maps.places.Autocomplete(input);
-        // changes whenever user selects new address in drop down
-        google.maps.event.addListener(autocomplete, 'place_changed', function () {
-                    var place = autocomplete.getPlace();
-                });
-          }
-
-        google.maps.event.addDomListener(window, 'load', initialize);
-
+      
         </script>
 
 
-  </body>
+
 
   <div class="cd-panel cd-panel--from-left js-cd-panel-left">
     <header class="cd-panel__header">
       <h1>Your Entry</h1>
       <a href="#1" class="cd-panel__close js-cd-close">Close</a>
     </header>
-    <div  class="cd-panel__container">
-      <div class="cd-panel__content"></div>
-        <form id="submitForm" name="submitForm" class="modal-content" action="/templates/handleSubmit" method="POST">
+    <div class="cd-panel__container">
+        <div class="modal dialog modal-dialog-scrollable">
+        <form id="submitForm" name="submitForm" class="modal-content" action="/templates/handleSubmit" onsubmit="return(validateForm())"  method="POST">
           <div class="modal-header">
             <div class="container">
-              <div class="row">
-              <h1 class="modal-title">&nbsp;&nbsp;&nbsp;&nbsp;</h1>
-              <span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close Modal">&times;</span>
-              </div>
-
               <div class="row">
               <p>Submit or edit your entry here</p>
               </div>
@@ -450,7 +440,8 @@
               <p>If you already submitted an entry, it will display in the text boxes</p>
               </div>
             </div>
-            </div>
+          </div>
+    
 
         <div class= "modal-body">
         <label for="name"><b>Name*:</b></label>
@@ -481,30 +472,42 @@
 
         <div class="modal-footer">
           <button type="submit" class="btn submit">Submit</button>
-          <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
+          <button href="#1" type="button" class="btn cancel js-cd-close">Close</a>
           <a href="/templates/delete"><button type="button" class="btn delete">Delete Entry</button></a>
         </div>
     </form>
+  </div>
+</div>
+</div>
+<!-- <a href="#1" class="cd-panel__close js-cd-close">Close</a> -->
+
 
   <!-- Modal -->
   <div id="entryModal" class="modal" role="dialog">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
 
-      <!-- Modal content-->
+      <!-- Modal content Shows the Information for each student-->
       <div class="modal-content">
-        <div class="modal-header">
+        <div id="entryHeader" class="modal-header">
           <span onclick="closeEntry()" class="close" title="Close Modal">&times;</span>
-          <h4 id=entryNetid class="modal-header"></h4>
+
+          <h2 id="entryNetid" class="modal-header"></h2>
         </div>
-        <div class="modal-body">
+        <div id="entryBody" class="modal-body">
+        <label for="entryName"><b>Name: </b></label>
           <p id="entryName"></p>
+        <label for="entryEmail"><b>Email: </b></label>
           <p id="entryEmail"></p>
+        <label for="entryPhone"><b>Phone: </b></label>
           <p id="entryPhone"></p>
+        <label for="entryCity"><b>City: </b></label>
           <p id="entryCity"></p>
+        <label for="entryDescription"><b>Description: </b></label>
           <p id="entryDescription"></p>
+        <a href = "/chat">Click here to send a message</a>
           <p></p>
         </div>
-        <div class="modal-footer">
+        <div id="entryFooter" class="modal-footer">
           <button type="button" class="btn btn-default" onclick="closeEntry()">Close</button>
         </div>
       </div>
@@ -516,12 +519,13 @@
   
   <div class="cd-panel cd-panel--from-right js-cd-panel-main">
 		<header class="cd-panel__header">
-			<h1>Entry Look Up</h1>
+      <h1><a href="#" title="Header" data-toggle="popover" data-placement="left" data-content="Search for and then click on an entry to reveal more information">
+        Entry Look Up</a></h1>
 			<a href="#0" class="cd-panel__close js-cd-close">Close</a>
 		</header>
 
 		<div class="cd-panel__container">
-			<div class="cd-panel__content">
+			<div id="searchArea" class="cd-panel__content">
        <form>
         <table class="searchbox">
           <tr>
@@ -530,7 +534,7 @@
               <h2>&nbsp;&nbsp; &nbsp;&nbsp; Name: </h2>
             </label>
           </td>
-            <td><input type="text" placholder="Name" id="name1" name="name1" oninput="getResults()"/></td>
+            <td><input type="text" placeholder="Name" id="name1" name="name1" oninput="getResults()"/></td>
           </tr>
 
           <tr>
@@ -556,9 +560,17 @@
       <div class="container">
         <p id="ResultsArea"></p>
      </div>
+    </div>
+  </div>
+</div>
+
 
 
   <script>
+                
+        $(document).ready(function(){
+          $('[data-toggle="popover"]').popover();
+        });
 
     var request = null;
 
@@ -836,6 +848,51 @@ Slide In Panel - by CodyHouse.co
           transform: translateY(0px);
 }
 
+.modal{
+  height: 90%;
+}
+
+#entryBody {
+  background-image: url(/static/princeton.png);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+
+}
+
+
+#entryBody p {
+   color: white;
+}
+#entryBody label {
+   color: rgb(248, 189, 80);
+}
+
+#entryFooter {
+  background-image: linear-gradient(-90deg, orange,black);
+}
+
+#entryHeader {
+  background-image: linear-gradient(90deg, orange,black);
+}
+
+#entryHeader h2{
+   color: white; 
+}
+
+.informWindow p{
+   color: black;
+}
+
+/* #searchArea {
+  background-image: linear-gradient(45deg, orange,black);
+} */
+
+
+
+
+
+
 @media only screen and (min-width: 768px) {
   .cd-panel__header {
     width: 70%;
@@ -969,7 +1026,7 @@ Slide In Panel - by CodyHouse.co
   position: fixed;
   width: 90%;
   height: 100%;
-  top: 0;
+  top: 60px;
   background: #424f5c;
   z-index: 1;
   -webkit-transition: -webkit-transform 0.3s 0.3s;
@@ -1011,12 +1068,12 @@ Slide In Panel - by CodyHouse.co
 
 .cd-panel__content {
   position: absolute;
-  top: 60px;
+  top: 0;
   left: 0;
   width: 100%;
   height: 100%;
   background-color: #424f5c;
-  overflow: auto;
+  overflow:scroll;
   /* smooth scrolling on touch devices */
   -webkit-overflow-scrolling: touch;
 }
@@ -1044,6 +1101,7 @@ Slide In Panel - by CodyHouse.co
 }
 
   </style>
+    </body>
 </html>
 
 </html>

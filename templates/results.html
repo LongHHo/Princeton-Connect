@@ -71,6 +71,7 @@ function displayTable(userName, userDescr, userCity) {
           document.getElementById("entryCity").innerHTML = userCity;
         }
 
+
 </script>
 
 <body>
@@ -83,6 +84,8 @@ function displayTable(userName, userDescr, userCity) {
             <th align  = "left">City</th>
             </tr>
         </thead>
+        
+
         <tbody>
             {% if userEntries|length == 0: %}
             (None)
@@ -90,8 +93,7 @@ function displayTable(userName, userDescr, userCity) {
             userEntries: %}
 
             <tr class='clickable-row' onclick='displayResults({{user.getNetid() | tojson}}, {{user.getName() | tojson}}, {{user.getEmail() | tojson}}, {{user.getPhone() | tojson}}, {{user.getDescription() | tojson}},{{user.getCity() | tojson}}); return false'>                >
-            <td align  = "left"><button class="btn btn-secondary" onclick='displayResults({{user.getNetid() | tojson}}, {{user.getName() | tojson}}, {{user.getEmail() | tojson}}, {{user.getPhone() | tojson}}, {{user.getDescription() | tojson}},{{user.getCity() | tojson}}); return false'>
-             {{user.getNetid()}}</button></td>
+            <td align  = "left"> {{user.getNetid()}}</td>
             <td align  = "left">{{user.getName()}}</td>
             <td align  = "left">{{user.getDescription()}}</td>
             <td align  = "left">{{user.getCity()}}</td>

@@ -76,13 +76,20 @@ body {
   color: white;
 } */ */
 
+.modal dialog modal-dialog-scrollable{
+overflow: auto;
+max-height: 400px;
+
+}
+
+
 /* The Modal (background) */
 .pac-container {
   background-color: #FFF;
   z-index: 20;
   position: fixed;
   display: inline-block;
-  float: left;
+  /* float: left; */
 }
 .modal{
   z-index: 1;   
@@ -104,7 +111,7 @@ body {
 /* Style the horizontal ruler */
 hr {
   border: 1px solid #f1f1f1;
-  margin-bottom: 25px;
+  /* margin-bottom: 25px; */
 }
 
 /* Full-width input fields */
@@ -163,6 +170,7 @@ input[type=text]:focus, textarea:focus {
   color: #f44336;
   cursor: pointer;
 } 
+
 
 #content {
   text-align: center;
