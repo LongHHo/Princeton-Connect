@@ -15,19 +15,11 @@ import time
 def coordinateOffset(latitude, longitude):
     radius = 6371000.0 #radius of earth 
     sign = secrets.choice(range(0, 2)) #used to determine sign of the offset
-<<<<<<< HEAD
-    oLat = secrets.choice(range(400, 1600)) #offset in metres (0.25 - 1 miles)
-    if (sign == 0):
-        oLat = -1 * oLat
-    sign = secrets.choice(range(0, 2)) #used to determine sign of the offset
-    oLong = secrets.choice(range(400, 1600)) #offset in metres (0.25 - 1 miles)
-=======
     oLat = secrets.choice(range(500, 1200)) #offset in metres (700m - 1 mile)
     if (sign == 0):
         oLat = -1 * oLat
     sign = secrets.choice(range(0, 2)) #used to determine sign of the offset
     oLong = secrets.choice(range(500, 1200)) #offset in metres (700m - 1 mile)
->>>>>>> 6f5f797e1340debab867e00c7c60eb357bef420f
     if (sign == 0):
         oLong = -1 * oLong
     new_latitude  = latitude  + (oLat / radius) * (180 / math.pi)

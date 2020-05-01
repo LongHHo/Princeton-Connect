@@ -192,11 +192,11 @@ def handleDelete():
     return response
 
 
-@app.route('/chat', methods=['GET'])
+@app.route('/templates/chat', methods=['GET'])
 def chat():
     netid = CASClient().authenticate()
     contacts = getContacts(netid.strip('\n'))
-    html = render_template('chat.html', contactsData=json.dumps(contacts))
+    html = render_template('CHAT.html', contactsData=json.dumps(contacts))
     response = make_response(html)
     return response
 
