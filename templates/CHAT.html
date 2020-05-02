@@ -67,6 +67,14 @@ div.MessagesContainer{
 
 }
 
+.names.active {
+
+background-color: black;
+
+}
+
+
+
 div.ContactContainer{
    overflow: auto;
    height:90%;
@@ -351,6 +359,10 @@ h4 {
   <script>
 
 
+status = 0; 
+contactSelected = ''; 
+
+
 
 function checkStatus(){
    console.log('checkingstatus');
@@ -372,9 +384,32 @@ function setup()
    getContacts();
    button = document.getElementById('sendNewMessage');
    button.disabled = true;
-   checkStatus()
+   checkStatus();
+   
 
   }
+
+function addColor(){
+if(status == 1){
+  console.log("adding color");
+
+  $('#' + contactSelected).addClass('active');
+
+}
+  
+}
+
+function changeColor(arg){
+  console.log('changing color');
+  var x = "#" + arg; 
+  $('.names.active').removeClass('active'); 
+  $(x).addClass('active'); 
+  status = 1; 
+  contactSelected = arg; 
+
+
+  
+}
 
 
 function handleResponse(response)
@@ -414,12 +449,37 @@ let request = null;
   function send_new_message(){
     console.log('sending new message')
     var reciever = document.getElementById('netid').value;
-    reciever = encodeURIComponent(reciever);
+    rec = encodeURIComponent(reciever);
     var message = document.getElementById('message').value;
     message = encodeURIComponent(message);
-    send_message(reciever, message);
+    send_message(rec, message);
+    setTimeout( function(){
+    getContacts()}, 200);
+    status = 1; 
+    contactSelected = rec;
+    setTimeout(function(){
+      addColor()}, 1000);
+      setTimeout( function(){
+    getMessages(reciever)}, 1000);
+  
+ 
+    
 
 
+
+  }
+
+  function refresh(){
+    console.log('refresh');
+    if(status == 1){
+      setTimeout( function(){
+      getMessages(contactSelected); setTimeout( function(){
+      getContacts();setTimeout(function(){
+      addColor()}, 1010); }, 1000)}, 500);
+}
+  else {
+    getContacts();
+  }
   }
 
 
@@ -442,10 +502,16 @@ let request = null;
     var rec = encodeURIComponent(reciever);
     var message = document.getElementById('in_chat_message').value;
     message = encodeURIComponent(message);
-    console.log(message);
+    document.getElementById('in_chat_message').value="";
     send_message(rec, message);
+    status = 1; 
+    contactSelected = reciever;
     setTimeout( function(){
-      getMessages(reciever)}, 1000);
+      getMessages(reciever); setTimeout( function(){
+      getContacts();setTimeout(function(){
+      addColor()}, 1010); }, 1000)}, 500);
+
+
 
     
 
@@ -480,33 +546,46 @@ let request = null;
 
   }
 
-  function getContacts(){
+  function handleContacts(cntcts){
+     var contacts = JSON.parse(cntcts);
 
-   var contacts = {{ contactsData|tojson }};
-   console.log(contacts);
-
-   contacts = JSON.parse(contacts);
-
-   data = '';
+     data = '';
 
 
-   for(i = 0; i < contacts.length; i++ ){
-      data+="<div class=\"chat_list\">"
-      data+="<div class=\"chat_people\">"
-      data+= "<div class=\"chat_ib\">"
-      data = data + '<button class="names btn-primary" id=' +  JSON.stringify(contacts[i]) + ' onclick= "getMessages(' + '\'' + contacts[i] + '\'' + ')" >' + '<h4>' + contacts[i] + '</h4> </div>';
-      data += "</div>\
-              </div>\
-            </div>"
+for(i = 0; i < contacts.length; i++ ){
+   data+="<div class=\"chat_list\">"
+   data+="<div class=\"chat_people\">"
+   data+= "<div class=\"chat_ib\">"
+   data = data + '<button class="names"  id=' +  JSON.stringify(contacts[i]) + ' onclick= "getMessages('+ '\''+  contacts[i] + '\''+ '); changeColor(' + '\'' + contacts[i] + '\'' + ');'  + '" >' + '<h4>' + contacts[i] + '</h4> </div>';
+   data += "</div>\
+           </div>\
+         </div>"
+   }
+
+   $('#cc').html(data);
+
+for(i = 0; i < contacts.length; i++ ){
+
+      data = data + '<div class="names" id=' +  JSON.stringify(contacts[i]) + '>' + contacts[i] + '</div>';
+
       }
 
-      $('#cc').html(data);
 
-   for(i = 0; i < contacts.length; i++ ){
+  }
 
-         data = data + '<div class="names" id=' +  JSON.stringify(contacts[i]) + '>' + contacts[i] + '</div>';
+  function getContacts(){
 
-         }
+    url = "/getContacts"
+
+    r = $.ajax(
+      {
+        type: "GET",
+        url: url,
+        success: handleContacts
+      }
+    );
+
+  
 
   }
 
@@ -547,6 +626,8 @@ $('#mc').html(data);
 }
 
 $('document').ready(setup);
+
+setInterval(function(){ refresh()}, 10000);
 
 
   </script>
