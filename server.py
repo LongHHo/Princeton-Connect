@@ -29,6 +29,16 @@ app.secret_key = b'\xcdt\x8dn\xe1\xbdW\x9d[}yJ\xfc\xa3~/'
 
 
 @app.route('/')
+def login():
+
+    html = render_template('login.html')
+
+    response = make_response(html)
+    return response
+
+
+
+
 @app.route('/templates/home')
 def home():
    
