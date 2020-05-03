@@ -140,66 +140,48 @@ def insertUser(netid):
 def insertEntry(entryInfo):
     """ Connect to the PostgreSQL database server """
     conn = None
-    try:
-        # read connection parameters
-        params = config()
 
-        # connect to the PostgreSQL server
-        print('Connecting to the PostgreSQL database...')
-        conn = psycopg2.connect(**params)
+    # read connection parameters
+    params = config()
 
-        # create a cursor
-        cur = conn.cursor()
+    # connect to the PostgreSQL server
+    print('Connecting to the PostgreSQL database...')
+    conn = psycopg2.connect(**params)
 
-        insertUser = """INSERT INTO userInformation (netid, name, phone, email, description, address, city)
-               VALUES(%s, %s, %s, %s, %s, %s, %s) 
-               ON CONFLICT (netid) 
-               DO UPDATE SET
-               (name, phone, email, description, address, city) 
-                  = (EXCLUDED.name, EXCLUDED.phone, EXCLUDED.email, EXCLUDED.description, EXCLUDED.address, EXCLUDED.city);"""
+    # create a cursor
+    cur = conn.cursor()
 
-        # insertCoordinates = """INSERT INTO coordinates (netid, address, latitude, longitude)
-        #        VALUES(%s, %s, %s, %s) 
-        #        ON CONFLICT (netid) 
-        #        DO UPDATE SET
-        #        (address, latitude, longitude) 
-        #           = (EXCLUDED.address, EXCLUDED.latitude, EXCLUDED.longitude);"""
-        # execute a statement
-        name = entryInfo.getName()
-        netid = entryInfo.getNetid()
-        phone = entryInfo.getPhone()
-        email = entryInfo.getEmail()
-        address = entryInfo.getAddress()
-        description = entryInfo.getDescription()
-        city = entryInfo.getCity()
+    insertUser = """INSERT INTO userInformation (netid, name, phone, email, description, address, city, latitude, longitude)
+            VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s) 
+            ON CONFLICT (netid) 
+            DO UPDATE SET
+            (name, phone, email, description, address, city, latitude, longitude) 
+                = (EXCLUDED.name, EXCLUDED.phone, EXCLUDED.email, EXCLUDED.description, EXCLUDED.address, EXCLUDED.city, 
+                EXCLUDED.latitude, EXCLUDED.longitude);"""
 
+    name = entryInfo.getName()
+    netid = entryInfo.getNetid()
+    phone = entryInfo.getPhone()
+    email = entryInfo.getEmail()
+    address = entryInfo.getAddress()
+    description = entryInfo.getDescription()
+    city = entryInfo.getCity()
 
-        cur.execute(insertUser, (netid, name, phone, email, description, address, city))
+    coordinates = geocode(str(address))
+    latitude = None
+    longitude = None
+    if (coordinates is not None):
+        offcoordinates = coordinateOffset(coordinates[0], coordinates[1])
+        latitude = float(offcoordinates[0])
+        longitude = float(offcoordinates[1])
 
-        # print('before')
-        # coordinates = geocode(address)
-        # print('after')
+    cur.execute(insertUser, (netid, name, phone, email, description, address, city, latitude, longitude))
 
-        # latitude = float(coordinates[0])
-        # longitude = float(coordinates[1])
-
-        # print(latitude)
-        # print(longitude)
-
-        # cur.execute(insertCoordinates, (netid, address, latitude, longitude))
-
-
-        conn.commit()
-        print('success')
-        # close the communication with the PostgreSQL
-        cur.close()
-
-    except (Exception, psycopg2.DatabaseError) as error:
-        print(error)
-    finally:
-        if conn is not None:
-            conn.close()
-            print('Database connection closed.')
+    conn.commit()
+    conn.close()
+    print('success')
+    print('Database connection closed.')
+    # close the communication with the PostgreSQL
 
 
 
@@ -300,21 +282,18 @@ def getAll():
 
         entries = []
         sub = []
+        # Entries with an address will have 7 fields, entries without will have 5
         while row is not None:
             sub.append(str(row[0]))
             sub.append(str(row[1]))
             sub.append(str(row[2]))
             sub.append(str(row[3]))
             sub.append(str(row[4]))
-            # change actual address to coordinates
-            coordinates = geocode(str(row[5]))
-            if (coordinates is not None):
-                print('******')
-                offcoordinates = coordinateOffset(coordinates[0], coordinates[1])
-                sub.append(offcoordinates[0])
-                sub.append(offcoordinates[1])
+            if ((row[7] is not None) and (row[8] is not None)):
+                # append addresses if not null
+                sub.append(row[7])
+                sub.append(row[8])
             sub.append(str(row[6]))
-        
             entries.append(sub)
             sub = []
             row = cur.fetchone()
@@ -619,10 +598,26 @@ def main(argv):
     
 
     
+<<<<<<< HEAD
 
 
     
 
+=======
+    user = entryInfo.entryInfo('Long Ho', 'lhho', 'lhho@princeton.edu', '7142602003', 'just a cali boy looking for kangaroos', 'Churchill Ave, Hobart TAS 7005, Australia')
+    userTwo = entryInfo.entryInfo('Slim Jim', 'sjim', 'sjim@princeton.edu', '1234567', 'im a stick', '4000 Union Pacific Ave, Commerce, CA')
+    # print(40.348600, -74.659300)
+
+
+    # for i in range (0, 248):
+    #     coordinates = coordinateOffset(40.348600, -74.659300)
+    #     print(coordinates[0], coordinates[1])
+    longHo = entryInfo.entryInfo()
+    longHo.setNetid('lhho')
+    longHo.setAddress('10201 Malinda Ln, Garden Grove, CA')
+    longHo.setAddress('efwfew')
+    insertEntry(longHo)
+>>>>>>> d8e49e4fe27006138dc095e75929e2ebc53ba855
 
    
 
