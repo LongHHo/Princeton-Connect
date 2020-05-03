@@ -598,26 +598,10 @@ def main(argv):
     
 
     
-<<<<<<< HEAD
 
 
     
 
-=======
-    user = entryInfo.entryInfo('Long Ho', 'lhho', 'lhho@princeton.edu', '7142602003', 'just a cali boy looking for kangaroos', 'Churchill Ave, Hobart TAS 7005, Australia')
-    userTwo = entryInfo.entryInfo('Slim Jim', 'sjim', 'sjim@princeton.edu', '1234567', 'im a stick', '4000 Union Pacific Ave, Commerce, CA')
-    # print(40.348600, -74.659300)
-
-
-    # for i in range (0, 248):
-    #     coordinates = coordinateOffset(40.348600, -74.659300)
-    #     print(coordinates[0], coordinates[1])
-    longHo = entryInfo.entryInfo()
-    longHo.setNetid('lhho')
-    longHo.setAddress('10201 Malinda Ln, Garden Grove, CA')
-    longHo.setAddress('efwfew')
-    insertEntry(longHo)
->>>>>>> d8e49e4fe27006138dc095e75929e2ebc53ba855
 
    
 
