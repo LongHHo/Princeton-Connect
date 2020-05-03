@@ -19,6 +19,16 @@
         .bg-primary {
           background-color: #000000!important;
         }
+
+        .badge{
+          position: absolute;
+          top: 4px;
+          right: 140px;
+          padding: 5px 10px;
+          border-radius: 50%;
+          background-color: red;
+          color: white;
+          }
       </style>
   </head>
   <body onLoad="document.getElementById('name1').focus(); getResults()">
@@ -42,7 +52,8 @@
               </li>
 
               <li class="nav-item">
-                <a  class="nav-link" href = "/templates/chat">Chat<span class="sr-only">(current)</span></a>
+                <a  class="nav-link" href = "/templates/chat">Messages<span class="sr-only">(current)</span></a>
+                <span class="badge"></span>
               </li>
               <!-- <li class="nav-item">
                 <button class ="nav-link btn btn-p" onclick="openForm()">Your Entry</button>
@@ -612,6 +623,24 @@
           }
        }
        return req;
+    }
+
+    function handleN(result){
+      $('.badge').html(result);
+
+
+    }
+    getNotifications();
+    setInterval(function(){ getNotifications()}, 10000);
+    function getNotifications(){
+      url = '/getNotifications'
+      r = $.ajax(
+      {
+        type: "GET",
+        url: url,
+        success: handleN
+      }
+    );
     }
 
     function processReadyStateChange()
