@@ -254,6 +254,45 @@ def searchEntry(entry):
             conn.close()
             print('Database connection closed.')
 
+def searchName(netid):
+    """ Connect to the PostgreSQL database server """
+    conn = None
+    try:
+        # read connection parameters
+        params = config()
+
+        conn = psycopg2.connect(**params)
+
+        # create a cursor
+        cur = conn.cursor()
+
+        sql = """
+            SELECT name
+            FROM userInformation
+            WHERE userInformation.netid ILIKE %s;
+        """
+
+
+        cur.execute(sql, (netid,))
+        row = cur.fetchone()
+
+        name = netid
+
+        if row is not None:
+            name = str(row[0])
+
+
+        # close the communication with the PostgreSQL
+        cur.close()
+        return name
+
+    except (Exception, psycopg2.DatabaseError) as error:
+        print(error)
+    finally:
+        if conn is not None:
+            conn.close()
+            print('Database connection closed.')
+
 
 
 
@@ -594,6 +633,7 @@ def main(argv):
 
     for i in range (0, 4):
         sendMessage('longgg', 'jaitegs', 'hello ')
+    deleteEntry('lhho')
 
     
 

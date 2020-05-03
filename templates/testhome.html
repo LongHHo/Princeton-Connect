@@ -363,13 +363,16 @@
 
 
         function openForm() {
+
+          alert('HELLO');
+
           document.getElementsByName('name')[0].value= {{name | tojson}};
           document.getElementsByName('email')[0].value= {{email | tojson}};
           document.getElementsByName('phone')[0].value= {{phone | tojson}};
           document.getElementsByName('description')[0].value= {{description | tojson}};
           document.getElementsByName('city')[0].value= {{city | tojson}};
           document.getElementsByName('address')[0].value= {{address | tojson}};
-          // $('#id01').modal('show');
+          $('#id01').modal('show');
 
         }
 
@@ -389,56 +392,57 @@
 
         }
 
-        // document.getElementById("submitForm").addEventListener("submit", function(event){
-        //   event.preventDefault()
-        //  );
-
+        async function checkForm() {
+           var checker = await validateForm();
+           if (checker !== google.maps.GeocoderStatus.OK){
+              alert('hooray');
+              event.preventDefault();
+           }
+           else {
+             alert('bloody hell');
+             return;
+           }
+        }
 
 
         // this is meant to validate the address
         // my problem is that geocode is making an asynchronous call so this function finishes before
         // geocode is even done. how do i make the function wait for geocode?
-        function validateForm(form) {
+        function validateForm() {
           /* const form = document.getElementById('id01'); */
           var address = document.getElementsByName('address')[0];
           const adrError = document.querySelector('#address + span.erroraddress');
           var letters = /^[A-Za-z]+$/;
 
           if (address.value == ''){
-            form.submit();
+             
+             event.preventDefault();
           }
 
           // Get geocoder instance
       
-
-
-          myPromise = new Promise(function(resolve, reject) {
+          return new Promise(function(resolve, reject) {
           var statusCheck;
           var geocoder = new google.maps.Geocoder();
           results = geocoder.geocode({'address': address.value}, function check(results, status){
-            if (status === google.maps.GeocoderStatus.OK) {
-              resolve('fine');
-            } else {
-              reject('error');
-            }
+            resolve(status)
             
           })
               });
           
-   
+          // myPromise
+          //   .then(function whenOk(response) {
+          //     alert('whyyyy');
+          //     console.log(response);
 
-          myPromise
-            .then(function whenOk(response) {
-              form.submit();
-              console.log(response);
-
-            })
-            .catch(function notOk(err) {
-              alert('INVALID ADDRESS!');
-              console.error(err);
+          //   })
+          //   .catch(function notOk(err) {
+          //     event.preventDefault();
+          //     alert('what hap');
+          //     console.error(err);
     
-            })
-
+          //   })
+           
         }
 
         
@@ -456,7 +460,7 @@
     </header>
     <div class="cd-panel__container">
         <div class="modal dialog modal-dialog-scrollable">
-        <form id="submitForm" name="submitForm" class="modal-content" action="/templates/handleSubmit" onsubmit="validateForm(this); return false"  method="POST">
+        <form id="submitForm" name="submitForm" class="modal-content" action="/templates/handleSubmit" onsubmit="validateForm();return false"  method="POST">
           <div class="modal-header">
             <div class="container">
               <div class="row">

@@ -17,6 +17,8 @@
       width: 100%;
       height: 100%;
    }
+
+
    /* div.left{
       position:relative;
       float: left;
@@ -56,10 +58,6 @@ div.messageRecieve{
 }
 
 
-textarea{
-
-   width:350px;
-}
 div.MessagesContainer{
    overflow: auto;
    height:100%;
@@ -71,19 +69,31 @@ div.MessagesContainer{
 
 background-color: black;
 
+word-wrap:break-word;
+display: inline;
+overflow: visible;
+
+
+
+
 }
 
 .names{
 
 background-color: rgb(255, 153, 0) ;
+word-wrap:break-word;
+display: inline;
+overflow: visible;
+
+
 
 }
 
 
 
 div.ContactContainer{
-   overflow: auto;
-   height:90%;
+   overflow: scroll;
+   height: 450px;
    width:100%;
 
 }
@@ -117,6 +127,14 @@ div.ContactContainer{
   margin: 0;
   padding: 5px 10px 5px 12px;
   width: 100%;
+  word-wrap: break-word;
+}
+
+.received_withd_msg h6 {
+  color: #646464;
+  font-size: 10px;
+  padding-left: 12px;
+  margin: 0;
   word-wrap: break-word;
 }
 .time_date {
@@ -159,6 +177,8 @@ div.ContactContainer{
   height: 420px;
   overflow-y: auto;
   border-style: groove;
+
+  
 }
 
 .inbox_people {
@@ -175,6 +195,17 @@ div.ContactContainer{
   border: 1px solid #c4c4c4;
   clear: both;
   overflow: hidden;
+}
+
+.sendResponse {
+   padding-left: inherit;
+   margin-left: 25px;
+  
+}
+
+#send_message_in_chat{
+   margin-top: 44px;
+
 }
 
 .top_spac{ margin: 20px 0 0;}
@@ -207,7 +238,7 @@ div.ContactContainer{
   margin: 0;
   padding: 18px 16px 10px;
 }
-.inbox_chat { height: 100%; overflow-y: auto;}
+.inbox_chat { height: 450px; overflow-y: auto;}
 
 /*body {
   
@@ -215,9 +246,16 @@ div.ContactContainer{
 }
 
 */
-h4 {
+.names h4 {
     color: white;
+font-size: 15px;
+
 }
+
+
+.bg-primary {
+          background-color: #000000!important;
+        }
 
    </style>
 
@@ -241,11 +279,11 @@ h4 {
                </li>
 
                <li class="nav-item active">
-                 <a  class="nav-link" href = "/templates/chat">Chat<span class="sr-only">(current)</span></a>
+                 <a  class="nav-link" href = "/templates/chat">Messages<span class="sr-only">(current)</span></a>
                </li>
-               <!-- <li class="nav-item">
-                 <button class ="nav-link btn btn-p" onclick="openForm()">Your Entry</button>
-               </li> -->
+               <li class="nav-item">
+                <a class="nav-link" href="/logout">Logout</a>
+              </li>
 
              </ul>
            </div>
@@ -352,8 +390,16 @@ h4 {
       </div>
       <!-- <textarea class="textType" placeholder="Message"></textarea> -->
    </div>
-   <textarea id="in_chat_message"></textarea>
-   <button id="send_message_in_chat">send</button>
+   <div class="container sendResponse">
+   <div class="row">
+    <div class="col-sm-10">
+   <textarea cols="5" id="in_chat_message"></textarea>
+  </div>
+  <div class="col-sm-2">
+   <button class="btn btn-primary" id="send_message_in_chat">Reply</button>
+  </div>
+  </div>
+  </div>
     </div>
    </div>
 </div>
@@ -363,6 +409,11 @@ h4 {
     </script>
 
   <script>
+
+
+
+
+
 
 
 status = 0; 
@@ -397,13 +448,17 @@ function setup()
 
 
 function changeColor(arg){
+    // scroll all the way down as well
+  var element = document.getElementById('mc');
+  element.scrollTop = element.scrollHeight;
+
+
   console.log('changing color');
   var x = "#" + arg; 
   $('.names.active').removeClass('active'); 
   $(x).addClass('active'); 
   status = 1; 
   contactSelected = arg; 
-
 
   
 }
@@ -498,17 +553,14 @@ let request = null;
       getMessages(reciever); setTimeout( function(){
       getContacts();}, 500)}, 200);
 
-
-
-    
-
-
   }
 
 
 
 
+
   function getMessages(contact){
+
     console.log('getting messages')
      cntct =  encodeURIComponent(contact);
      var arg = contact; 
@@ -541,7 +593,6 @@ let request = null;
 
 
 
-
 for(i = 0; i < contacts.length; i++ ){
    data+="<div class=\"chat_list\">"
    data+="<div class=\"chat_people\">"
@@ -550,10 +601,11 @@ for(i = 0; i < contacts.length; i++ ){
    console.log(contactSelected);
    console.log(status);
    if(status == 1 && contacts[i] == contactSelected){
-     cl = 'names active';
+     cl = 'btn names active';
    }
-   else cl = 'names'; 
-   data = data + '<button class=' + JSON.stringify(cl) +  ' id=' +  JSON.stringify(contacts[i]) + ' onclick= "getMessages('+ '\''+  contacts[i] + '\''+ '); changeColor(' + '\'' + contacts[i] + '\'' + ');'  + '" >' + '<h4>' + contacts[i] + '</h4> </div>';
+   else cl = 'btn names'; 
+   data = data + '<button class=' + JSON.stringify(cl) +  ' id=' +  JSON.stringify(contacts[i]) + ' onclick= "getMessages('+ '\''+  contacts[i] + '\''+ '); changeColor(' + '\'' + contacts[i] + '\'' + '); scrollDown()'  + '" >' + 
+    '<h4 class="personContact">' + contacts[i] + '</h4> </div>';
    data += "</div>\
            </div>\
          </div>"
@@ -586,11 +638,20 @@ for(i = 0; i < contacts.length; i++ ){
 
   }
 
+var checker = false;
+function scrollDown() {
+  checker = false;
+}
+
 function handleMessages(messagesData){
 
 
 var messages = JSON.parse(messagesData);
+
+
+
 var id = messages[0];
+var sender = messages[2];
 console.log('yolo')
 data = ''
 for (i = 0; i < messages[1].length; i++){
@@ -608,6 +669,7 @@ for (i = 0; i < messages[1].length; i++){
       data+="<div class=\"incoming_msg\">"
       data+="<div class=\"received_msg\">"
       data+="<div class=\"received_withd_msg\">"
+      data+="<h6 class=\"msgSender\">" + sender + ": </h6>"
       data+="<p>" + messages[1][i][1] + "</p>"
       data += "</div>\
               </div>\
@@ -618,6 +680,13 @@ for (i = 0; i < messages[1].length; i++){
 }
 $('#mc').empty();
 $('#mc').html(data);
+
+  if (checker == false) {
+   var element = document.getElementById('mc');
+   element.scrollTop = element.scrollHeight;
+   checker = true;
+  }
+ 
 
 
 }

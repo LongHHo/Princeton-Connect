@@ -6,7 +6,7 @@
 #-----------------------------------------------------------------------
 
 from sys import argv
-from database import searchEntry, insertEntry, getAll, deleteEntry, insertUser, checkNetid, sendMessage, getContacts, getMessages, getNotification, getNotificationDetails
+from database import searchEntry, insertEntry, getAll, deleteEntry, insertUser, checkNetid, sendMessage, getContacts, getMessages, getNotification, getNotificationDetails, searchName
 from sys import argv, stderr, exit
 from flask import Flask, request, make_response, redirect, url_for, Response
 from flask import render_template, session
@@ -36,6 +36,14 @@ def login():
     response = make_response(html)
     return response
 
+@app.route('/logout')
+def logout():
+
+    casClient = CASClient()
+    casClient.authenticate()
+    casClient.logout()
+    
+
 
 
 
@@ -54,8 +62,6 @@ def home():
     # search for user in database
     entry = searchEntry(user)
 
-   
-    
 
     userEntry = entryInfo.entryInfo()
     if (len(entry) > 1):
@@ -170,14 +176,16 @@ def handleSubmit():
     
     # If userEntry exists puts in string elements of each field
     # If it doesn't each get statement is '' and we pass in '' for each name-value pair
-    name=userEntry.getName(),
+    name=userEntry.getName()
     phone=userEntry.getPhone()
     email=userEntry.getEmail()
     description=userEntry.getDescription()
     city=userEntry.getCity() 
     address=userEntry.getAddress()
 
+
     markersData = getAll() #getting all the user info
+    print(name + "this for the submit")
     html = render_template('home.html', netid=netid, name=name, phone=phone, email=email, description=description,
          address=address, city=city, markersData=json.dumps(markersData))
     response = make_response(html)
@@ -261,7 +269,10 @@ def getMsgs():
     netid = netid.strip('\n')
     messages = getMessages(netid, contact)
 
-    data = [netid, messages]
+    senderName = searchName(contact)
+
+
+    data = [netid, messages, senderName]
     allData = json.dumps(data)
 
 

@@ -92,6 +92,15 @@ class CASClient:
         abort(redirect(login_url))
         print("At end of authenticate")
 
+    def logout(self):
+            
+        # Delete the user's username from the session.
+        session.pop('username')
+        
+        # Redirect the browser to the logout page.
+        logout_url = self.cas_url + 'logout'
+        abort(redirect(logout_url))
+
 #-----------------------------------------------------------------------
 
 def main():
