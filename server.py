@@ -6,7 +6,7 @@
 #-----------------------------------------------------------------------
 
 from sys import argv
-from database import searchEntry, insertEntry, getAll, deleteEntry, insertUser, checkNetid, sendMessage, getContacts, getMessages
+from database import searchEntry, insertEntry, getAll, deleteEntry, insertUser, checkNetid, sendMessage, getContacts, getMessages, getNotification, getNotificationDetails
 from sys import argv, stderr, exit
 from flask import Flask, request, make_response, redirect, url_for, Response
 from flask import render_template, session
@@ -43,6 +43,8 @@ def home():
     
     # search for user in database
     entry = searchEntry(user)
+
+   
     
 
     userEntry = entryInfo.entryInfo()
@@ -194,7 +196,10 @@ def handleDelete():
 
 @app.route('/templates/chat', methods=['GET'])
 def chat():
-    html = render_template('CHAT.html')
+    netid = CASClient().authenticate()
+    netid = netid.strip()
+    details = getNotificationDetails(netid)
+    html = render_template('CHAT.html', message=details)
     response = make_response(html)
     return response
 
@@ -226,6 +231,17 @@ def checkUser():
         
 
     return response
+
+
+@app.route('/getNotifications', methods=['GET'])
+def notif():
+
+    netid = CASClient().authenticate()
+    netid = netid.strip()
+    n = getNotification(netid)
+    ndata = json.dumps(n)
+    return ndata
+
 
 
 @app.route('/getMessages', methods=['GET'])

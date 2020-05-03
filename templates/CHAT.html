@@ -345,7 +345,7 @@ h4 {
         <h3 class="text-center">Messages</h3>
        <div class="mesgs">
        <div class="msg_history">
-       <div class="MessagesContainer" id="mc">Click on another user under "People" to show messages.
+       <div class="MessagesContainer" style="white-space: pre-wrap;" id="mc">{{message}}
        </div>
 
        </div>
@@ -616,7 +616,7 @@ for (i = 0; i < messages[1].length; i++){
    }
 
 }
-
+$('#mc').empty();
 $('#mc').html(data);
 
 

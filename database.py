@@ -355,29 +355,27 @@ def checkNetid(netid):
 
 
 def sendMessage(sender, reciever, message):
-    """ Connect to the PostgreSQL database server """
-    print('sending message')
+    
     conn = None
     try:
         # read connection parameters
         params = config()
 
         # connect to the PostgreSQL server
-        print('Connecting to the PostgreSQL database...')
+       
         conn = psycopg2.connect(**params)
 
         # create a cursor
         cur = conn.cursor()
 
-        insertUser = """INSERT INTO msg_id_timestamp (msg, reciever, sender)
-               VALUES(%s, %s, %s) 
+        insertUser = """INSERT INTO msg_id_timestamp (msg, reciever, sender, rd)
+               VALUES(%s, %s, %s, %s) 
                ON CONFLICT DO NOTHING;"""
 
 
-        cur.execute(insertUser, (message, reciever, sender))
+        cur.execute(insertUser, (message, reciever, sender, 1))
         conn.commit()
-        print('success')
-        print('inserted')
+       
         # close the communication with the PostgreSQL
         cur.close()
 
@@ -386,8 +384,7 @@ def sendMessage(sender, reciever, message):
     finally:
         if conn is not None:
             conn.close()
-            print('Database connection closed.')
-
+            
 def getContacts(netid):
     conn = None
     try:
@@ -457,6 +454,13 @@ def getMessages(netid, contact):
 
         cur.execute(getMessages, (netid, contact, contact, netid))
 
+        markMessagesAsRead = """
+                        UPDATE msg_id_timestamp
+                        SET rd=0
+                        WHERE sender = %s AND reciever = %s;
+                        COMMIT;              
+                        """
+
         row = cur.fetchone()
         messages = []
 
@@ -470,6 +474,10 @@ def getMessages(netid, contact):
 
         # close the communication with the PostgreSQL
         cur.close()
+
+        cur2 = conn.cursor()
+        cur2.execute(markMessagesAsRead, (contact, netid))
+        cur2.close()
         return messages
 
     except (Exception, psycopg2.DatabaseError) as error:
@@ -481,20 +489,140 @@ def getMessages(netid, contact):
 
 
 
+def getNotification(netid):
+    "SELECT COUNT(*) FROM users WHERE name = @Name"
+    conn = None
+    try:
+        # read connection parameters
+        params = config()
+
+        # connect to the PostgreSQL server
+        print('Connecting to the PostgreSQL database...')
+        conn = psycopg2.connect(**params)
+
+        # create a cursor
+        cur = conn.cursor()
+
+        getNotification = """SELECT COUNT(*) 
+                        FROM msg_id_timestamp
+                        WHERE reciever = %s AND rd=1;                   
+                        """
+
+
+        cur.execute(getNotification, (netid,))
+
+        row = cur.fetchone()
+        
+
+        # close the communication with the PostgreSQL
+        cur.close()
+        return row[0]
+
+    except (Exception, psycopg2.DatabaseError) as error:
+        print(error)
+    finally:
+        if conn is not None:
+            conn.close()
+            print('Database connection closed.')
+
+
+def getNotificationDetails(netid):
+    conn = None
+    try:
+        # read connection parameters
+        params = config()
+
+        # connect to the PostgreSQL server
+        print('Connecting to the PostgreSQL database...')
+        conn = psycopg2.connect(**params)
+
+        # create a cursor
+        cur = conn.cursor()
+
+        getContacts = """SELECT * 
+                        FROM msg_id_timestamp
+                        WHERE reciever = %s AND rd=1
+                        ORDER BY timestamp DESC;"""
+
+
+        cur.execute(getContacts, (netid,))
+
+        row = cur.fetchone()
+        details = []
+
+        getMessagesFromContact= """ 
+        SELECT COUNT(*) 
+        FROM msg_id_timestamp
+        WHERE (sender = %s AND reciever = %s) AND rd=1;                   
+        """
+
+        while row is not None:
+            if (row[1] not in details):
+                details.append(row[1])
+                cur2 = conn.cursor()
+                cur2.execute(getMessagesFromContact, (row[1], netid))
+                details.append(cur2.fetchone()[0])
+                cur2.close()
+                
+            
+            row = cur.fetchone()
+
+
+        # close the communication with the PostgreSQL
+        cur.close()
+        x = getNotification(netid)
+        detailsf = 'Welcome! You have '
+        if (x == 1):
+            detailsf = detailsf +  str(x) + ' new message: \n'
+        else:
+            detailsf = detailsf +  str(x) + ' new messages: \n'
+        
+        length = len(details)
+        for i in range(0, length, 2):
+            s = ''
+            s = s + str(details[i+1]) + '   '
+            if(details[i + 1] == 1):
+                s = s + 'New message from   ' + details[i]
+            else:
+                s = s + 'New messages from  ' + details[i]
+            s = s + '\n'
+            detailsf = detailsf + s
+
+
+            
+
+        return detailsf 
+
+    except (Exception, psycopg2.DatabaseError) as error:
+        print(error)
+    finally:
+        if conn is not None:
+            conn.close()
+            print('Database connection closed.')
 
 
     
 
 def main(argv):
+    # for i in range (0, 10):
+    #     sendMessage('dora', 'jaitegs', 'hello ')
+
+    # for i in range (0, 2):
+    #     sendMessage('lola', 'jaitegs', 'hello ')
+
+    # for i in range (0, 7):
+    #     sendMessage('blake', 'jaitegs', 'hello ')
+
+    for i in range (0, 4):
+        sendMessage('longgg', 'jaitegs', 'hello ')
+
     
-    user = entryInfo.entryInfo('Long Ho', 'lhho', 'lhho@princeton.edu', '7142602003', 'just a cali boy looking for kangaroos', 'Churchill Ave, Hobart TAS 7005, Australia')
-    userTwo = entryInfo.entryInfo('Slim Jim', 'sjim', 'sjim@princeton.edu', '1234567', 'im a stick', '4000 Union Pacific Ave, Commerce, CA')
-    print(40.348600, -74.659300)
+
+    
 
 
-    for i in range (0, 248):
-        coordinates = coordinateOffset(40.348600, -74.659300)
-        print(coordinates[0], coordinates[1])
+    
+
 
    
 
