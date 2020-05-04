@@ -348,14 +348,15 @@ def checkNetid(netid):
     query = """
             SELECT *
             FROM users
-            WHERE users.netid LIKE %s;
+            WHERE users.netid LIKE %s
+            ORDER BY netid;
             """
 
     conn = None
     try:
         # read connection parameters
         params = config()
-        user = netid + '%'
+        user = netid + '%' 
 
         # connect to the PostgreSQL server
         print('Connecting to the PostgreSQL database...')
@@ -363,10 +364,10 @@ def checkNetid(netid):
 
         # create a cursor
         cur = conn.cursor()
-        cur.execute(query, (user,))
-        row = cur.fetchone()
+        cur.execute(query, (user, ))
+        row = cur.fetchall()
         cur.close()
-        print(row, '***************')
+        print(row)
         return row
     except (Exception, psycopg2.DatabaseError) as error:
         print(error)
@@ -433,6 +434,9 @@ def getContacts(netid):
             
             if (row[2] != netid and row[2] not in contacts):
                 contacts.append(row[2])
+
+            if((row[1] == netid and row[2] == netid) and netid  not in contacts):
+                contacts.append(row[1])
             
             row = cur.fetchone()
 
@@ -622,6 +626,7 @@ def getNotificationDetails(netid):
     
 
 def main(argv):
+    checkNetid('j')
     # for i in range (0, 10):
     #     sendMessage('dora', 'jaitegs', 'hello ')
 
@@ -629,12 +634,7 @@ def main(argv):
     #     sendMessage('lola', 'jaitegs', 'hello ')
 
     # for i in range (0, 7):
-    #     sendMessage('blake', 'jaitegs', 'hello ')
-
-    for i in range (0, 4):
-        sendMessage('longgg', 'jaitegs', 'hello ')
-    deleteEntry('lhho')
-
+    #     sendMessage('blake', 'jaitegs', 'hello 
     
 
     

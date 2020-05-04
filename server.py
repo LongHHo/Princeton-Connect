@@ -242,7 +242,7 @@ def checkUser():
 
     if row is not None:
         for data in row:
-            html += ('<option value ="'+ data + '">')
+            html += ('<option value ="'+ data[0] + '">')
     
     print(html)
     response = make_response(html)

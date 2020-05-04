@@ -468,6 +468,7 @@ function handleResponse(response)
   {
    button = document.getElementById('sendNewMessage');
    console.log(response);
+   $('#userData').empty();
 
     $('#userData').html(response); // change id
     checkStatus() ;
