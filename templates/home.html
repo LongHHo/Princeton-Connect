@@ -4,10 +4,13 @@
       <title> Princeton Connect</title>
       <meta charset="utf-8">
       <!-- if two style sheets modify the same component, the last one takes precedence -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
+
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+
       <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
       <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+      <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script> -->
       <meta name="viewport" content="width=device-width, initial-scale=1">
       <style>
         /* Set the size of the div element that contains the map */
@@ -352,11 +355,20 @@
 
       </script>
 
-      <!-- Remember to include jQuery :) -->
+<!-- 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
 
-<!-- jQuery Modal -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script> -->
+
+
+
+
+
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
+
+
 
 
   <script>
@@ -496,7 +508,10 @@
         <span class="errorcity" aria-live="polite"></span>
 
       
-        <label for="address"><b>Address: </b></label>
+        <label for="address"><b>
+        <a href="#" data-toggle="popover" title="Address (optional)" data-placement="right"
+         data-content="If you want to put yourself on the map, put an address. This might be the location of your summer activity or your summer residence if you already have one. To protect our users, markers are approximations of the actual address.">
+          Address: </a></b></label>
         <input type="text" placeholder="Enter address" id="address" name="address">
         <span style="color:red" class="erroraddress" aria-live="polite"></span>
         
@@ -591,8 +606,7 @@
   
   <div class="cd-panel cd-panel--from-right js-cd-panel-main">
 		<header class="cd-panel__header">
-      <h1><a title="Header" data-toggle="popover" data-placement="left" data-content="Search for and then click on an entry to reveal more information">
-        Entry Look Up</a></h1>
+        <h1>Entry Look Up</h1>
 			<a href="#0" class="cd-panel__close js-cd-close">Close</a>
 		</header>
 
@@ -646,6 +660,7 @@
 
 
 
+
   <script>
 
     
@@ -684,10 +699,18 @@
 
 
 
-                
-  $(document).ready(function(){
-          $('[data-toggle="popover"]').popover();
-        });
+  $(function () {
+  $('[data-toggle="popover"]').popover()
+})
+
+$('body').on('click', function (e) {
+        //did not click a popover toggle, or icon in popover toggle, or popover
+        if ($(e.target).data('toggle') !== 'popover'
+            && $(e.target).parents('[data-toggle="popover"]').length === 0
+            && $(e.target).parents('.popover.in').length === 0) { 
+            $('[data-toggle="popover"]').popover('hide');
+        }
+    });
 
     var request = null;
 

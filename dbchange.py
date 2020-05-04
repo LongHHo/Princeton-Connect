@@ -46,8 +46,8 @@ def change():
         cur = conn.cursor()
 
         change = """
-        DELETE FROM msg_id_timestamp
-        
+        DELETE from userinformation 
+        WHERE netid = 'bgaerwgaer';
         """
 
         # change = """UPDATE userInformation
@@ -69,20 +69,7 @@ def change():
 
 
 def main(argv):
-    users = ['hi', 'hi', 'hi', 
-    'efw', 'efw']
-    
-    
-   
-    
-
-    
-
-    for user in users:
-        print(user)
-        print(users.index(user))
-
-
+   change()
 
 
 if __name__ == '__main__':
