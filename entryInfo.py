@@ -77,49 +77,98 @@ class entryInfo (object):
       if (self._name == ''):
           return '%'
       else:
-        newString = '%' + self._name + '%'
+        newString = ""
+        for char in self._name:
+          if (char == "%"):
+             char = "\%"
+          elif(char == "_"):
+             char = "\_"
+          newString += char
+        newString = '%' + newString + '%'
         return newString
     
     def retNetid(self): 
       if (self._netid == ''):
           return '%'
       else:
-        newString = '%' + self._netid + '%'
+        newString = ""
+        for char in self._netid:
+          if (char == "%"):
+             char = "\%"
+          elif(char == "_"):
+             char = "\_"
+          newString += char
+        newString = '%' + newString + '%'
         return newString
     
     def retEmail(self): 
       if (self._email == ''):
           return '%'
       else:
-        newString = '%' + self._email + '%'
+        newString = ""
+        for char in self._email:
+          if (char == "%"):
+             char = "\%"
+          elif(char == "_"):
+             char = "\_"
+          newString += char
+        newString = '%' + newString + '%'
         return newString
     
     def retPhone(self): 
       if (self._phone == ''):
           return '%'
       else:
-        newString = '%' + self._phone + '%'
+        newString = ""
+        for char in self._phone:
+          if (char == "%"):
+             char = "\%"
+          elif(char == "_"):
+             char = "\_"
+          newString += char
+        newString = '%' + newString + '%'
         return newString
     
     def retDescription(self): 
       if (self._description == ''):
           return '%'
       else:
-        newString = '%' + self._description + '%'
+        newString = ""
+        for char in self._description:
+          if (char == "%"):
+             char = "\%"
+          elif(char == "_"):
+             char = "\_"
+          newString += char
+        newString = '%' + newString + '%'
         return newString
 
     def retAddress(self): 
       if (self._address == ''):
           return '%'
       else:
-        newString = '%' + self._address + '%'
+        newString = ""
+        for char in self._address:
+          if (char == "%"):
+             char = "\%"
+          elif(char == "_"):
+             char = "\_"
+          newString += char
+        newString = '%' + newString + '%'
         return newString
 
     def retCity(self): 
       if (self._city == ''):
           return '%'
       else:
-        newString = '%' + self._city + '%'
+        newString = ""
+        for char in self._city:
+          if (char == "%"):
+             char = "\%"
+          elif(char == "_"):
+             char = "\_"
+          newString += char
+        newString = '%' + newString + '%'
         return newString
     
     # returns user Information as a complete string

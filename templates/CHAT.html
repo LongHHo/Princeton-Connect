@@ -338,7 +338,7 @@ font-size: 15px;
           </div>
 
           <div class="modal-footer">
-           <button type="submit" class="btn submit" onclick="send_new_message();document.getElementById('NewMessage').style.display='none';" id="sendNewMessage" align="left"> send </button>
+           <button type="submit" class="btn submit" onclick="send_new_message();document.getElementById('NewMessage').style.display='none';" id="sendNewMessage" align="left"> Send </button>
            <button type="button" class="btn cancel" onclick="document.getElementById('NewMessage').style.display='none'" align="right"> Cancel</button>
          </div>
        </div>
@@ -545,6 +545,11 @@ let request = null;
     console.log('sending message in chat to' + reciever);
     var rec = encodeURIComponent(reciever);
     var message = document.getElementById('in_chat_message').value;
+   
+    if (message == '') {
+      return;
+    }
+
     message = encodeURIComponent(message);
     document.getElementById('in_chat_message').value="";
     send_message(rec, message);
