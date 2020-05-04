@@ -434,6 +434,9 @@ def getContacts(netid):
             
             if (row[2] != netid and row[2] not in contacts):
                 contacts.append(row[2])
+
+            if((row[1] == netid and row[2] == netid) and netid  not in contacts):
+                contacts.append(row[1])
             
             row = cur.fetchone()
 
