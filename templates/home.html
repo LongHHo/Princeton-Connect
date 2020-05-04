@@ -380,6 +380,7 @@
           document.getElementById("entryEmail").innerHTML = userEmail;
           document.getElementById("entryDescription").innerHTML = userDescr;
           document.getElementById("entryCity").innerHTML = userCity;
+          document.getElementById('NewMessage').style.display='none';
           $('#entryModal').modal('toggle');
         }
 
@@ -401,7 +402,6 @@
         function validateForm(form) {
           /* const form = document.getElementById('id01'); */
           var address = document.getElementsByName('address')[0];
-          const adrError = document.querySelector('#address + span.erroraddress');
           var letters = /^[A-Za-z]+$/;
 
           if (address.value == ''){
@@ -416,10 +416,11 @@
           var statusCheck;
           var geocoder = new google.maps.Geocoder();
           results = geocoder.geocode({'address': address.value}, function check(results, status){
-            if (status === google.maps.GeocoderStatus.OK) {
+            if (status !== google.maps.GeocoderStatus.ZERO_RESULTS) {
               resolve('fine');
             } else {
               reject('error');
+
             }
             
           })
@@ -434,7 +435,10 @@
 
             })
             .catch(function notOk(err) {
-              alert('INVALID ADDRESS!');
+              const addressError = document.querySelector('#address + span.erroraddress')
+              addressError.textContent = '  This is an invalid address';
+              addressError.className = 'error active';
+
               console.error(err);
     
             })
@@ -491,9 +495,11 @@
         <input type="text" placeholder="Enter what city you will be staying in" id="city" name="city" required>
         <span class="errorcity" aria-live="polite"></span>
 
+      
         <label for="address"><b>Address: </b></label>
-        <input novalidate type="text" placeholder="Enter address" id="address" name="address">
-        <span class="erroraddress" aria-live="polite"></span>
+        <input type="text" placeholder="Enter address" id="address" name="address">
+        <span style="color:red" class="erroraddress" aria-live="polite"></span>
+        
         </div>
 
         <div class="modal-footer">
@@ -505,7 +511,48 @@
   </div>
 </div>
 </div>
-<!-- <a href="#1" class="cd-panel__close js-cd-close">Close</a> -->
+
+
+<div id="NewMessage" class="modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+        <div class = "modal-header">
+          <div class = "container">
+          <div class = "row">
+
+          <h1 class="modal-title">Send Message</h1>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span onclick="document.getElementById('NewMessage').style.display='none'" class="close" title="Close Modal">&times;</span>
+          </button>
+          </div>
+        </div>
+      </div>
+      <div class="modal-body">
+        <input type="text" name="NetID" id="msgNetid" list="userData" disabled></input>
+
+        <datalist id="userData">
+        </datalist>
+        <p></p>
+
+        <textarea name="message" placeholder="message" id="message" required></textarea>
+
+        <style>
+
+        .message {
+          width: 100%;
+        }
+        </style>
+
+      </div>
+
+      <div class="modal-footer">
+       <button type="submit" class="btn submit" onclick="send_new_message();" id="sendNewMessage" align="left"> Send </button>
+       <button type="button" class="btn cancel" onclick="document.getElementById('NewMessage').style.display='none'" align="right"> Cancel</button>
+     </div>
+   </div>
+  </div>
+</div>
+</div>
 
 
   <!-- Modal -->
@@ -530,12 +577,11 @@
           <p id="entryCity"></p>
         <label for="entryDescription"><b>Description: </b></label>
           <p id="entryDescription"></p>
-        <a href = "/templates/chat">Click here to send a message</a>
           <p></p>
         </div>
-        <!-- <div id="entryFooter" class="modal-footer">
-          <<button type="button" class="btn btn-default" onclick="closeEntry()">Close</button> 
-        </div> -->
+        <div id="entryFooter" class="modal-footer">
+        <button type="button" class="btn btn-light" id="sendMsgBtn" onclick="closeEntry(); openMsgForm();">Click here to send a message</button>
+        </div>
       </div>
     </div>
   </div>
@@ -601,8 +647,45 @@
 
 
   <script>
+
+    
+  function send_new_message(){
+
+    var reciever = document.getElementById('msgNetid').value;
+    rec = encodeURIComponent(reciever);
+    var message = document.getElementById('message').value;
+
+    if (message == '') {
+      return;
+    }
+
+    
+    message = encodeURIComponent(message);
+
+    let url = "/sendMessage?reciever=" + reciever + "&message=" + message
+
+          r = $.ajax(
+          {
+            type: "GET",
+            url: url,
+          }
+    );
+    document.getElementById('NewMessage').style.display='none';
+  }
+
+  function openMsgForm() {
+    
+    document.getElementById('msgNetid').value = document.getElementById('entryNetid').innerHTML;
+
+    document.getElementById('NewMessage').style.display='block';
+
+  } 
+
+
+
+
                 
-        $(document).ready(function(){
+  $(document).ready(function(){
           $('[data-toggle="popover"]').popover();
         });
 
@@ -923,6 +1006,13 @@ Slide In Panel - by CodyHouse.co
 
 #entryFooter {
   background-image: linear-gradient(-90deg, orange,black);
+}
+
+#entryFooter button{
+  margin-left: 0;
+  margin-right: 52%;
+  margin-top: 3px;
+  margin-bottom: 3px;
 }
 
 #entryHeader {
