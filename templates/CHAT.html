@@ -11,12 +11,19 @@
 
    body {
      width: 100%;
+     height: 100%
    }
 
-   .container {
-      width: 100%;
-      height: 100%;
+   .row{
+     margin-right: 0px;
+     height: 100%
    }
+
+   .left{
+     height: 100%
+   }
+
+   
 
 
    /* div.left{
@@ -34,7 +41,7 @@ div.right{
       height: 900px;
       overflow: auto;
 } */
-div.names{
+div.chat_ib{
    /* border: solid; */
    outline: 2px solid gray;
    background-color: lightblue;
@@ -61,39 +68,38 @@ div.messageRecieve{
 div.MessagesContainer{
    overflow: auto;
    height:100%;
-   width:100%;
+   width:100%;  
 
 }
 
-.names.active {
+.chat_ib:hover{
+  background-color: rgb(221, 134, 3);
+}
+
+.chat_ib.active {
 
 background-color: black;
 
 word-wrap:break-word;
 display: inline;
 overflow: visible;
-
-
-
-
 }
 
-.names{
+.chat_ib{
 
 background-color: rgb(255, 153, 0) ;
 word-wrap:break-word;
 display: inline;
 overflow: visible;
-
-
-
+cursor:pointer;
 }
 
 
 
+
 div.ContactContainer{
-   overflow: scroll;
-   height: 450px;
+   overflow-y: scroll;
+   height: inherit;
    width:100%;
 
 }
@@ -146,7 +152,7 @@ div.ContactContainer{
 .received_withd_msg { width: 57%;}
 .mesgs {
   float: left;
-  padding: 30px 15px 0 25px;
+  padding: 30px 30px 0 25px;
   width: 100%;
 }
 
@@ -182,10 +188,10 @@ div.ContactContainer{
 }
 
 .inbox_people {
-  background: lightblue none repeat scroll 0 0;
+  background: #424f5c none repeat scroll 0 0;
   float: left;
   overflow: hidden;
-  height: 535px;
+  height: 722px;
   width: 100%; border-right:1px solid #c4c4c4;
 }
 
@@ -199,7 +205,7 @@ div.ContactContainer{
 
 .sendResponse {
    padding-left: inherit;
-   margin-left: 25px;
+   margin-left: 9px;
   
 }
 
@@ -216,29 +222,34 @@ div.ContactContainer{
 .headind_srch{ padding:10px 29px 10px 20px; overflow:hidden; border-bottom:1px solid #c4c4c4;}
 
 .recent_heading h4 {
-  color: #05728f;
+  color: #e99f16;
   font-size: 21px;
   margin: auto;
+  text-align: center;
 }
 
 
-.chat_ib .names{ font-size:15px; color:#464646; margin:0 0 8px 0; }
+.chat_ib .chat_ib{ 
+  font-size:15px; 
+  color:#464646; 
+  margin:0 0 8px 0;
 
-.chat_ib {
-  float: left;
-  padding: 0 0 0 15px;
-  width: 88%;
 }
+
 
 .chat_people{ overflow:hidden; clear:both;}
-.chat_list {
+.chat_ib {
   border-bottom: 2px solid gray;
   border-right: 2px solid gray;
   border-left: 2px solid gray;
+  width: 100%;
   margin: 0;
   padding: 18px 16px 10px;
 }
-.inbox_chat { height: 450px; overflow-y: auto;}
+.inbox_chat { 
+  height: inherit; 
+  overflow-y: auto;
+}
 
 /*body {
   
@@ -246,7 +257,7 @@ div.ContactContainer{
 }
 
 */
-.names h4 {
+.chat_ib h4 {
     color: white;
 font-size: 15px;
 
@@ -348,7 +359,6 @@ font-size: 15px;
 
 
 
-<div class="container">
   <div class="row">
      <div class="col-sm-3">
           <div class="left">
@@ -356,9 +366,7 @@ font-size: 15px;
       <!-- People Directory -->
       <div class="inbox_people">
          <div class="headind_srch">
-           <div class="recent_heading">
-             <h4><strong>People</strong></h4>
-           </div>
+             <h4 style="color: white;"><center><strong>People</strong></center></h4>
          </div>
          <div class="msg_btn" onclick="document.getElementById('NewMessage').style.display='block';document.getElementById('message').value = '';">
                <button class="btn btn-secondary btn-lg" align="center">New Message</button>
@@ -378,7 +386,6 @@ font-size: 15px;
    </div>
 
    <div class="col-sm-9">
-      <div class="right">
         <br> </br>
         <h3 class="text-center">Messages</h3>
        <div class="mesgs">
@@ -386,7 +393,6 @@ font-size: 15px;
        <div class="MessagesContainer" style="white-space: pre-wrap;" id="mc">{{message}}
        </div>
 
-       </div>
       </div>
       <!-- <textarea class="textType" placeholder="Message"></textarea> -->
    </div>
@@ -402,7 +408,6 @@ font-size: 15px;
   </div>
     </div>
    </div>
-</div>
 
    <script src=
       "https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js">
@@ -455,7 +460,7 @@ function changeColor(arg){
 
   console.log('changing color');
   var x = "#" + arg; 
-  $('.names.active').removeClass('active'); 
+  $('.chat_ib.active').removeClass('active'); 
   $(x).addClass('active'); 
   status = 1; 
   contactSelected = arg; 
@@ -468,7 +473,7 @@ function handleResponse(response)
   {
    button = document.getElementById('sendNewMessage');
    console.log(response);
-   $('#userData').empty();
+    $('#userData').empty();	
 
     $('#userData').html(response); // change id
     checkStatus() ;
@@ -545,11 +550,11 @@ let request = null;
     console.log('sending message in chat to' + reciever);
     var rec = encodeURIComponent(reciever);
     var message = document.getElementById('in_chat_message').value;
-   
-    if (message == '') {
-      return;
+     
+    if (message == '') {	
+      return;	
     }
-
+     
     message = encodeURIComponent(message);
     document.getElementById('in_chat_message').value="";
     send_message(rec, message);
@@ -600,28 +605,24 @@ let request = null;
 
 
 for(i = 0; i < contacts.length; i++ ){
-   data+="<div class=\"chat_list\">"
-   data+="<div class=\"chat_people\">"
-   data+= "<div class=\"chat_ib\">"
+
    cl = ''; 
    console.log(contactSelected);
    console.log(status);
    if(status == 1 && contacts[i] == contactSelected){
-     cl = 'btn names active';
+     cl = 'chat_ib active';
    }
-   else cl = 'btn names'; 
+   else cl = 'chat_ib'; 
    data = data + '<button class=' + JSON.stringify(cl) +  ' id=' +  JSON.stringify(contacts[i]) + ' onclick= "getMessages('+ '\''+  contacts[i] + '\''+ '); changeColor(' + '\'' + contacts[i] + '\'' + '); scrollDown()'  + '" >' + 
     '<h4 class="personContact">' + contacts[i] + '</h4> </div>';
-   data += "</div>\
-           </div>\
-         </div>"
+   data += "\</div>"
    }
 
    $('#cc').html(data);
 
 for(i = 0; i < contacts.length; i++ ){
 
-      data = data + '<div class="names" id=' +  JSON.stringify(contacts[i]) + '>' + contacts[i] + '</div>';
+      data = data + '<div class="chat_ib" id=' +  JSON.stringify(contacts[i]) + '>' + contacts[i] + '</div>';
 
       }
 
