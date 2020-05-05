@@ -9,9 +9,6 @@ import requests
 import secrets
 import math
 import time 
-import os
-
-DATABASE_URL = os.environ['DATABASE_URL']
 
 # gmaps = googlemaps.Client(key='AIzaSyDQe5G3tqd5Vfwefn7w3Djrv1L1bmlKkTw')
 
@@ -31,7 +28,22 @@ def coordinateOffset(latitude, longitude):
     return coordinates
 
 
+def config(filename='database.ini', section='postgresql'):
+    # create a parser
+    parser = ConfigParser()
+    # read config file
+    parser.read(filename)
 
+    # get section, default to postgresql
+    db = {}
+    if parser.has_section(section):
+        params = parser.items(section)
+        for param in params:
+            db[param[0]] = param[1]
+    else:
+        raise Exception('Section {0} not found in the {1} file'.format(section, filename))
+
+    return db
 
 
 # returns latitude and longitude of a given address
@@ -54,11 +66,12 @@ def deleteEntry(netid):
     """ Connect to the PostgreSQL database server """
     conn = None
     try:
-
+        # read connection parameters
+        params = config()
 
         # connect to the PostgreSQL server
         print('Connecting to the PostgreSQL database...')
-        conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+        conn = psycopg2.connect(**params)
 
         # create a cursor
         cur = conn.cursor()
@@ -94,11 +107,12 @@ def insertUser(netid):
     """ Connect to the PostgreSQL database server """
     conn = None
     try:
-
+        # read connection parameters
+        params = config()
 
         # connect to the PostgreSQL server
         print('Connecting to the PostgreSQL database...')
-        conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+        conn = psycopg2.connect(**params)
 
         # create a cursor
         cur = conn.cursor()
@@ -127,9 +141,12 @@ def insertEntry(entryInfo):
     """ Connect to the PostgreSQL database server """
     conn = None
 
+    # read connection parameters
+    params = config()
+
     # connect to the PostgreSQL server
     print('Connecting to the PostgreSQL database...')
-    conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+    conn = psycopg2.connect(**params)
 
     # create a cursor
     cur = conn.cursor()
@@ -175,11 +192,13 @@ def searchEntry(entry):
     """ Connect to the PostgreSQL database server """
     conn = None
     try:
-
+        # read connection parameters
+        params = config()
 
         # connect to the PostgreSQL server
         print('Connecting to the PostgreSQL database...')
-        conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+        conn = psycopg2.connect(**params)
+
         # create a cursor
         cur = conn.cursor()
 
@@ -239,9 +258,10 @@ def searchName(netid):
     """ Connect to the PostgreSQL database server """
     conn = None
     try:
+        # read connection parameters
+        params = config()
 
-
-        conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+        conn = psycopg2.connect(**params)
 
         # create a cursor
         cur = conn.cursor()
@@ -280,11 +300,12 @@ def getAll():
     """ Connect to the PostgreSQL database server """
     conn = None
     try:
-
+        # read connection parameters
+        params = config()
 
         # connect to the PostgreSQL server
         print('Connecting to the PostgreSQL database...')
-        conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+        conn = psycopg2.connect(**params)
 
         # create a cursor
         cur = conn.cursor()
@@ -333,12 +354,13 @@ def checkNetid(netid):
 
     conn = None
     try:
-
+        # read connection parameters
+        params = config()
         user = netid + '%' 
 
         # connect to the PostgreSQL server
         print('Connecting to the PostgreSQL database...')
-        conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+        conn = psycopg2.connect(**params)
 
         # create a cursor
         cur = conn.cursor()
@@ -355,11 +377,12 @@ def sendMessage(sender, reciever, message):
     
     conn = None
     try:
-
+        # read connection parameters
+        params = config()
 
         # connect to the PostgreSQL server
        
-        conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+        conn = psycopg2.connect(**params)
 
         # create a cursor
         cur = conn.cursor()
@@ -384,11 +407,12 @@ def sendMessage(sender, reciever, message):
 def getContacts(netid):
     conn = None
     try:
-
+        # read connection parameters
+        params = config()
 
         # connect to the PostgreSQL server
         print('Connecting to the PostgreSQL database...')
-        conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+        conn = psycopg2.connect(**params)
 
         # create a cursor
         cur = conn.cursor()
@@ -432,10 +456,12 @@ def getContacts(netid):
 def getMessages(netid, contact):
     conn = None
     try:
+        # read connection parameters
+        params = config()
 
         # connect to the PostgreSQL server
         print('Connecting to the PostgreSQL database...')
-        conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+        conn = psycopg2.connect(**params)
 
         # create a cursor
         cur = conn.cursor()
@@ -489,11 +515,12 @@ def getNotification(netid):
     "SELECT COUNT(*) FROM users WHERE name = @Name"
     conn = None
     try:
-
+        # read connection parameters
+        params = config()
 
         # connect to the PostgreSQL server
         print('Connecting to the PostgreSQL database...')
-        conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+        conn = psycopg2.connect(**params)
 
         # create a cursor
         cur = conn.cursor()
@@ -524,11 +551,12 @@ def getNotification(netid):
 def getNotificationDetails(netid):
     conn = None
     try:
-
+        # read connection parameters
+        params = config()
 
         # connect to the PostgreSQL server
         print('Connecting to the PostgreSQL database...')
-        conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+        conn = psycopg2.connect(**params)
 
         # create a cursor
         cur = conn.cursor()
@@ -609,6 +637,10 @@ def main(argv):
     #     sendMessage('blake', 'jaitegs', 'hello 
     
 
+    
+
+
+    
 
 
    
