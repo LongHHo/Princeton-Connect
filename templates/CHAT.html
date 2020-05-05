@@ -120,7 +120,7 @@ div.ContactContainer{
   width: 92%;
  }
  .received_withd_msg p {
-  background: #ebebeb none repeat scroll 0 0;
+  background: orange none repeat scroll 0 0;
   border-radius: 3px;
   color: #646464;
   font-size: 14px;
@@ -151,7 +151,7 @@ div.ContactContainer{
 }
 
  .sent_msg p {
-  background: #05728f none repeat scroll 0 0;
+  background: black none repeat scroll 0 0;
   border-radius: 3px;
   font-size: 14px;
   margin: 0; color:#fff;
@@ -360,7 +360,7 @@ font-size: 15px;
              <h4><strong>People</strong></h4>
            </div>
          </div>
-         <div class="msg_btn" onclick="document.getElementById('NewMessage').style.display='block'">
+         <div class="msg_btn" onclick="document.getElementById('NewMessage').style.display='block';document.getElementById('message').value = '';">
                <button class="btn btn-secondary btn-lg" align="center">New Message</button>
           </div>
           <style>
