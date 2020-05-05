@@ -50,9 +50,9 @@ def logout():
 @app.route('/templates/home')
 def home():
    
-    netid = CASClient().authenticate()
+    netid = CASClient().authenticate().strip('\n')
     print(netid)
-    insertUser(netid.strip('\n'))
+    insertUser(netid)
     
     # find particular entry of user
     user = entryInfo.entryInfo()
@@ -112,7 +112,7 @@ def home():
 @app.route('/templates/lookup', methods=['POST'])
 def lookup():
         # maybe put a "hello username" at the top
-        username = CASClient().authenticate()
+        username = CASClient().authenticate().strip('\n')
 
         # get search query of what user PUTS IN (not to be confused with user)
         netid = request.args.get('netid')
@@ -165,7 +165,7 @@ def handleSubmit():
     
     # find entry of logged on user, put in entry   
     user = entryInfo.entryInfo()
-    user.setNetid(netid.strip('\n'))
+    user.setNetid(netid)
     
     entry = searchEntry(user)
     userEntry = entryInfo.entryInfo()
@@ -195,10 +195,10 @@ def handleSubmit():
 @app.route('/templates/delete', methods=['GET'])
 def handleDelete():
     
-    netid = CASClient().authenticate()
+    netid = CASClient().authenticate().strip('\n')
     
     # cas client appends a new line
-    deleteEntry(netid.strip('\n'))
+    deleteEntry(netid)
     
 
     # entry won't exist so pass in empty strings

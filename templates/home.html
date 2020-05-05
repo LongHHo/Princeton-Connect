@@ -105,7 +105,13 @@
           list[3] + "</p>" + "<p>" + "Description: " + list[4] + "</p> </div>";
           return st;
         }
+
+        function toString(item) {
+          return item.toString()
+
+        }
         var infowindow;
+
 
 
 
@@ -319,12 +325,26 @@
           // The anchor for this image is the base of the tiger at (10, 32).
           anchor: new google.maps.Point(10, 32)
            };
+
+           var yourImage = {
+          url: '/static/whitetigericon.png',
+          scaledSize: new google.maps.Size(32,28),
+          // The origin for this image is (0, 0).
+          origin: new google.maps.Point(0, 0),
+          // The anchor for this image is the base of the tiger at (10, 32).
+          anchor: new google.maps.Point(10, 32)
+           };
+
           for (i = 0; i < data.length; i++) {
 
             if (data[i].length > 5){
               info = stringBuilder(data[i]);
-              addMarker({lat: data[i][5], lng: data[i][6]}, map, info, image);
 
+              if (data[i][0] == {{netid | tojson}}) {
+              addMarker({lat: data[i][5], lng: data[i][6]}, map, info, yourImage);
+              } else {
+              addMarker({lat: data[i][5], lng: data[i][6]}, map, info, image);
+              }
             }
             }
           //Associate the styled map with the MapTypeId and set it to display.
@@ -691,6 +711,8 @@
   function openMsgForm() {
     
     document.getElementById('msgNetid').value = document.getElementById('entryNetid').innerHTML;
+    document.getElementById('message').value = '';
+
 
     document.getElementById('NewMessage').style.display='block';
 
