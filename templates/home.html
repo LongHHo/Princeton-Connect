@@ -400,6 +400,7 @@
           document.getElementsByName('description')[0].value= {{description | tojson}};
           document.getElementsByName('city')[0].value= {{city | tojson}};
           document.getElementsByName('address')[0].value= {{address | tojson}};
+
           // $('#id01').modal('show');
 
         }
@@ -468,9 +469,8 @@
             .catch(function notOk(err) {
               const addressError = document.querySelector('#address + span.erroraddress')
               addressError.textContent = '  This is an invalid address';
-              addressError.className = 'error active';
 
-              console.error(err);
+
     
             })
 
@@ -862,7 +862,9 @@ $('body').on('click', function (e) {
 				panel.addEventListener('click', function(event){
 					if( hasClass(event.target, 'js-cd-close') || hasClass(event.target, panelClass)) {
 						event.preventDefault();
-						removeClass(panel, 'cd-panel--is-visible');
+            removeClass(panel, 'cd-panel--is-visible');
+            const addressError = document.querySelector('#address + span.erroraddress')
+            addressError.textContent = '  ';
 					}
 				});
 			})(i);
