@@ -101,7 +101,7 @@
 
         function stringBuilder(list){
           var st = "<div class=\"informWindow\"><p>" + "NETID: " + list[0] + "</p>" + "<p>" + "Name: " + list[1] + "</p>" + "<p>" + "Email: " + list[2] + "</p>" + "<p>" + "Phone: " +
-          list[3] + "</p>" + "<p>" + "Description: " + list[4] + "</p> </div>";
+          list[3] + "</p>" + "<p>" + "Description: " + list[4] + "</p> <button type=\"button\" class=\"btn\" onclick=\"openMsgBox('" + list[0] + "')\">Send Message</button></div>";
           return st;
         }
 
@@ -308,6 +308,7 @@
 
           infowindow = new google.maps.InfoWindow();
           var map = new google.maps.Map(document.getElementById('map'), {
+
             center: new google.maps.LatLng(40.349990 ,-74.658580),
             zoom: 4,
             mapTypeControlOptions: {
@@ -718,6 +719,15 @@
 
   } 
 
+  function openMsgBox(netid) {
+    
+    document.getElementById('msgNetid').value = netid;
+    document.getElementById('message').value = '';
+
+
+    document.getElementById('NewMessage').style.display='block';
+
+  } 
 
 
 
@@ -1075,6 +1085,11 @@ Slide In Panel - by CodyHouse.co
    overflow: wrap;
    word-wrap: break-word;
    max-width: 100%;
+}
+
+.informWindow button {
+   font: 12px;
+   background-color: lightgreen;
 }
 
 /* #searchArea {
