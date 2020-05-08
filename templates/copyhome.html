@@ -98,15 +98,278 @@
 
       <script>
 
-     var data= {{ markersData|tojson }};
-      data = JSON.parse(data);
-      var userNetid = {{ netid|tojson }};
 
+        function stringBuilder(list){
+          var st = "<div class=\"informWindow\"><p>" + "NETID: " + list[0] + "</p>" + "<p>" + "Name: " + list[1] + "</p>" + "<p>" + "Email: " + list[2] + "</p>" + "<p>" + "Phone: " +
+          list[3] + "</p>" + "<p>" + "Description: " + list[4] + "</p> <button type=\"button\" class=\"btn\" onclick=\"openMsgBox('" + list[0] + "')\">Send Message</button></div>";
+          return st;
+        }
+
+        function toString(item) {
+          return item.toString()
+
+        }
+        var infowindow;
+
+
+
+
+        function addMarker(coordinates, map, info, image){
+          var marker = new google.maps.Marker({
+            position: coordinates,
+            map: map,
+            icon: image
+            // add tiger icon
+          });
+
+          // var infowindow = new google.maps.InfoWindow({
+          //   content: info
+          // });
+          marker.addListener('click', function() {
+            infowindow.setContent(info);
+            infowindow.open(map, marker);
+            });
+          console.log('success')
+        }
+
+
+        function initMap() {
+          // Create a new StyledMapType object, passing it an array of styles,
+          // and the name to be displayed on the map type control.
+          var styledMapType = new google.maps.StyledMapType(
+            [
+              {
+                "elementType": "geometry",
+                "stylers": [
+                  {
+                    "color": "#f5f5f5"
+                  }
+                ]
+              },
+              {
+                "elementType": "labels.icon",
+                "stylers": [
+                  {
+                    "visibility": "off"
+                  }
+                ]
+              },
+              {
+                "elementType": "labels.text.fill",
+                "stylers": [
+                  {
+                    "color": "#616161"
+                  }
+                ]
+              },
+              {
+                "elementType": "labels.text.stroke",
+                "stylers": [
+                  {
+                    "color": "#f5f5f5"
+                  }
+                ]
+              },
+              {
+                "featureType": "administrative.land_parcel",
+                "elementType": "labels.text.fill",
+                "stylers": [
+                  {
+                    "color": "#bdbdbd"
+                  }
+                ]
+              },
+              {
+                "featureType": "poi",
+                "elementType": "geometry",
+                "stylers": [
+                  {
+                    "color": "#eeeeee"
+                  }
+                ]
+              },
+              {
+                "featureType": "poi",
+                "elementType": "labels.text.fill",
+                "stylers": [
+                  {
+                    "color": "#757575"
+                  }
+                ]
+              },
+              {
+                "featureType": "poi.park",
+                "elementType": "geometry",
+                "stylers": [
+                  {
+                    "color": "#e5e5e5"
+                  }
+                ]
+              },
+              {
+                "featureType": "poi.park",
+                "elementType": "labels.text.fill",
+                "stylers": [
+                  {
+                    "color": "#9e9e9e"
+                  }
+                ]
+              },
+              {
+                "featureType": "road",
+                "elementType": "geometry",
+                "stylers": [
+                  {
+                    "color": "#ffffff"
+                  }
+                ]
+              },
+              {
+                "featureType": "road.arterial",
+                "elementType": "labels.text.fill",
+                "stylers": [
+                  {
+                    "color": "#757575"
+                  }
+                ]
+              },
+              {
+                "featureType": "road.highway",
+                "elementType": "geometry",
+                "stylers": [
+                  {
+                    "color": "#dadada"
+                  }
+                ]
+              },
+              {
+                "featureType": "road.highway",
+                "elementType": "labels.text.fill",
+                "stylers": [
+                  {
+                    "color": "#616161"
+                  }
+                ]
+              },
+              {
+                "featureType": "road.local",
+                "elementType": "labels.text.fill",
+                "stylers": [
+                  {
+                    "color": "#9e9e9e"
+                  }
+                ]
+              },
+              {
+                "featureType": "transit.line",
+                "elementType": "geometry",
+                "stylers": [
+                  {
+                    "color": "#e5e5e5"
+                  }
+                ]
+              },
+              {
+                "featureType": "transit.station",
+                "elementType": "geometry",
+                "stylers": [
+                  {
+                    "color": "#eeeeee"
+                  }
+                ]
+              },
+              {
+                "featureType": "water",
+                "elementType": "geometry",
+                "stylers": [
+                  {
+                    "color": "#c9c9c9"
+                  }
+                ]
+              },
+              {
+                "featureType": "water",
+                "elementType": "labels.text.fill",
+                "stylers": [
+                  {
+                    "color": "#9e9e9e"
+                  }
+                ]
+              }
+
+            ],
+              {name: 'Styled Map'});
+
+          // Create a map object, and include the MapTypeId to add
+          // to the map type control.
+          var data= {{ markersData|tojson }};
+          data = JSON.parse(data);
+
+
+          infowindow = new google.maps.InfoWindow();
+          var map = new google.maps.Map(document.getElementById('map'), {
+
+            center: new google.maps.LatLng(40.349990 ,-74.658580),
+            zoom: 4,
+            mapTypeControlOptions: {
+              mapTypeIds: ['roadmap', 'satellite', 'hybrid', 'terrain',
+                      'styled_map']
+            }
+          });
+          var info = ""
+          var image = {
+          url: '/static/babytigericon.png',
+          scaledSize: new google.maps.Size(32,28),
+          // The origin for this image is (0, 0).
+          origin: new google.maps.Point(0, 0),
+          // The anchor for this image is the base of the tiger at (10, 32).
+          anchor: new google.maps.Point(10, 32)
+           };
+
+           var yourImage = {
+          url: '/static/whitetigericon.png',
+          scaledSize: new google.maps.Size(32,28),
+          // The origin for this image is (0, 0).
+          origin: new google.maps.Point(0, 0),
+          // The anchor for this image is the base of the tiger at (10, 32).
+          anchor: new google.maps.Point(10, 32)
+           };
+
+          for (i = 0; i < data.length; i++) {
+
+            if (data[i].length > 5){
+              info = stringBuilder(data[i]);
+
+              if (data[i][0] == {{netid | tojson}}) {
+              addMarker({lat: data[i][5], lng: data[i][6]}, map, info, yourImage);
+              } else {
+              addMarker({lat: data[i][5], lng: data[i][6]}, map, info, image);
+              }
+            }
+            }
+          //Associate the styled map with the MapTypeId and set it to display.
+          map.mapTypes.set('styled_map', styledMapType);
+          map.setMapTypeId('roadmap');
+          map.setOptions({minZoom: 3});
+          google.maps.event.addListener(map, "click", function(event) {
+            infowindow.close();
+          });
+
+
+          function initialize() {
+        var input = document.getElementById('address');
+        var autocomplete = new google.maps.places.Autocomplete(input);
+        // changes whenever user selects new address in drop down
+        google.maps.event.addListener(autocomplete, 'place_changed', function () {
+                    var place = autocomplete.getPlace();
+                });
+          }
+
+        google.maps.event.addDomListener(window, 'load', initialize);
+
+
+        }
       </script>
-
-      
-  <script type="text/javascript" src="{{ url_for('static', filename='js/mapbuilder.js') }}">
-  </script>
       <script async defer
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDQe5G3tqd5Vfwefn7w3Djrv1L1bmlKkTw&libraries=places, geometry&callback=initMap">
 
@@ -125,22 +388,98 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
 
-<script>
-  function openForm() {
-  document.getElementsByName('name')[0].value= {{name | tojson}};
-  document.getElementsByName('email')[0].value= {{email | tojson}};
-  document.getElementsByName('phone')[0].value= {{phone | tojson}};
-  document.getElementsByName('description')[0].value= {{description | tojson}};
-  document.getElementsByName('city')[0].value= {{city | tojson}};
-  document.getElementsByName('address')[0].value= {{address | tojson}};
-
-  // $('#id01').modal('show');
-
-}
-</script>
 
 
-  <script type="text/javascript" src="{{ url_for('static', filename='js/forms.js') }}">
+
+  <script>
+
+
+        function openForm() {
+          document.getElementsByName('name')[0].value= {{name | tojson}};
+          document.getElementsByName('email')[0].value= {{email | tojson}};
+          document.getElementsByName('phone')[0].value= {{phone | tojson}};
+          document.getElementsByName('description')[0].value= {{description | tojson}};
+          document.getElementsByName('city')[0].value= {{city | tojson}};
+          document.getElementsByName('address')[0].value= {{address | tojson}};
+
+          // $('#id01').modal('show');
+
+        }
+
+        function displayResults(userNetid, userName, userEmail, userPhone, userDescr, userCity) {
+          document.getElementById("entryNetid").innerHTML = userNetid;
+          document.getElementById("entryName").innerHTML = userName;
+          document.getElementById("entryPhone").innerHTML = userPhone;
+          document.getElementById("entryEmail").innerHTML = userEmail;
+          document.getElementById("entryDescription").innerHTML = userDescr;
+          document.getElementById("entryCity").innerHTML = userCity;
+          document.getElementById('NewMessage').style.display='none';
+          $('#entryModal').modal('toggle');
+        }
+
+
+        function closeEntry(){
+          document.getElementById("entryModal").style.display = "none";
+
+        }
+
+        // document.getElementById("submitForm").addEventListener("submit", function(event){
+        //   event.preventDefault()
+        //  );
+
+
+
+        // this is meant to validate the address
+        // my problem is that geocode is making an asynchronous call so this function finishes before
+        // geocode is even done. how do i make the function wait for geocode?
+        function validateForm(form) {
+          /* const form = document.getElementById('id01'); */
+          var address = document.getElementsByName('address')[0];
+          var letters = /^[A-Za-z]+$/;
+
+          if (address.value == ''){
+            form.submit();
+          }
+
+          // Get geocoder instance
+      
+
+
+          myPromise = new Promise(function(resolve, reject) {
+          var statusCheck;
+          var geocoder = new google.maps.Geocoder();
+          results = geocoder.geocode({'address': address.value}, function check(results, status){
+            if (status !== google.maps.GeocoderStatus.ZERO_RESULTS) {
+              resolve('fine');
+            } else {
+              reject('error');
+
+            }
+            
+          })
+              });
+          
+   
+
+          myPromise
+            .then(function whenOk(response) {
+              form.submit();
+              console.log(response);
+
+            })
+            .catch(function notOk(err) {
+              const addressError = document.querySelector('#address + span.erroraddress')
+              addressError.textContent = '  This is an invalid address';
+
+
+    
+            })
+
+        }
+
+        
+        
+      
         </script>
 
 
@@ -341,9 +680,54 @@
 </div>
 
 
-<script type="text/javascript" src="{{ url_for('static', filename='js/handleMessages.js') }}"></script>
+
 
   <script>
+
+    
+  function send_new_message(){
+
+    var reciever = document.getElementById('msgNetid').value;
+    rec = encodeURIComponent(reciever);
+    var message = document.getElementById('message').value;
+
+    if (message == '') {
+      return;
+    }
+
+    
+    message = encodeURIComponent(message);
+
+    let url = "/sendMessage?reciever=" + reciever + "&message=" + message
+
+          r = $.ajax(
+          {
+            type: "GET",
+            url: url,
+          }
+    );
+    document.getElementById('NewMessage').style.display='none';
+  }
+
+  function openMsgForm() {
+    
+    document.getElementById('msgNetid').value = document.getElementById('entryNetid').innerHTML;
+    document.getElementById('message').value = '';
+
+
+    document.getElementById('NewMessage').style.display='block';
+
+  } 
+
+  function openMsgBox(netid) {
+    
+    document.getElementById('msgNetid').value = netid;
+    document.getElementById('message').value = '';
+
+
+    document.getElementById('NewMessage').style.display='block';
+
+  } 
 
 
 
@@ -359,6 +743,37 @@ $('body').on('click', function (e) {
             $('[data-toggle="popover"]').popover('hide');
         }
     });
+
+    var request = null;
+
+    function createAjaxRequest()  // From Nixon book
+    {
+       var req;
+
+       try  // Some browser other than Internet Explorer
+       {
+          req = new XMLHttpRequest();
+       }
+       catch (e1)
+       {
+          try  // Internet Explorer 6+
+          {
+             req = new ActiveXObject("Msxml2.XMLHTTP");
+          }
+          catch (e2)
+          {
+             try  // Internet Explorer 5
+             {
+                req = new ActiveXObject("Microsoft.XMLHTTP");
+             }
+             catch (e3)
+             {
+                req = false;
+             }
+          }
+       }
+       return req;
+    }
 
     function handleN(result){
       $('.badge').html(result);
@@ -378,15 +793,114 @@ $('body').on('click', function (e) {
     );
     }
 
+    function processReadyStateChange()
+    {
+       var STATE_UNINITIALIZED = 0;
+       var STATE_LOADING       = 1;
+       var STATE_LOADED        = 2;
+       var STATE_INTERACTIVE   = 3;
+       var STATE_COMPLETED     = 4;
+
+       if (this.readyState != STATE_COMPLETED)
+          return;
+
+       if (this.status != 200)         // Request succeeded?
+       {
+          //alert("AJAX error: Request failed: " +
+          //   this.statusText);
+          return;
+       }
+
+       if (this.responseText == null)  // Data received?
+       {
+          alert("AJAX error: No data received");
+          return;
+       }
+       var resultsArea = document.getElementById('ResultsArea');
+       resultsArea.innerHTML = this.responseText;
+    }
+
+    function getResults()
+    {
+       var name1 = document.getElementById('name1').value;
+       var description1 =
+          document.getElementById('description1').value;
+       var city1 = document.getElementById('city1').value;
+
+       name1 = encodeURIComponent(name1);
+       description1 = encodeURIComponent(description1);
+       city1 = encodeURIComponent(city1);
+
+       if (request != null)
+          request.abort();
+
+       request = createAjaxRequest();
+       if (! request)
+       {
+          alert("AJAX error: Your browser doesn't support AJAX");
+          return;
+       }
+
+       request.onreadystatechange = processReadyStateChange;
+
+       request.open("POST", "/templates/lookup?" +
+          "name1=" + name1 +
+          "&description1=" + description1 +
+          "&city1=" + city1);
+       request.send(null);
+    }
+
  </script>
 
-       
-<script type="text/javascript" src="{{ url_for('static', filename='js/handleSearch.js') }}">
-</script>
 
-<script type="text/javascript" src="{{ url_for('static', filename='js/panels.js') }}">
-</script>
 
+  <script>
+      (function(){
+    // Slide In Panel - by CodyHouse.co
+	var panelTriggers = document.getElementsByClassName('js-cd-panel-trigger');
+	if( panelTriggers.length > 0 ) {
+		for(var i = 0; i < panelTriggers.length; i++) {
+			(function(i){
+				var panelClass = 'js-cd-panel-'+panelTriggers[i].getAttribute('data-panel'),
+					panel = document.getElementsByClassName(panelClass)[0];
+				// open panel when clicking on trigger btn
+				panelTriggers[i].addEventListener('click', function(event){
+					event.preventDefault();
+					addClass(panel, 'cd-panel--is-visible');
+				});
+				//close panel when clicking on 'x' or outside the panel
+				panel.addEventListener('click', function(event){
+					if( hasClass(event.target, 'js-cd-close') || hasClass(event.target, panelClass)) {
+						event.preventDefault();
+            removeClass(panel, 'cd-panel--is-visible');
+            const addressError = document.querySelector('#address + span.erroraddress')
+            addressError.textContent = '  ';
+					}
+				});
+			})(i);
+		}
+	}
+
+	//class manipulations - needed if classList is not supported
+	//https://jaketrent.com/post/addremove-classes-raw-javascript/
+	function hasClass(el, className) {
+	  	if (el.classList) return el.classList.contains(className);
+	  	else return !!el.className.match(new RegExp('(\\s|^)' + className + '(\\s|$)'));
+	}
+	function addClass(el, className) {
+	 	if (el.classList) el.classList.add(className);
+	 	else if (!hasClass(el, className)) el.className += " " + className;
+	}
+	function removeClass(el, className) {
+	  	if (el.classList) el.classList.remove(className);
+	  	else if (hasClass(el, className)) {
+	    	var reg = new RegExp('(\\s|^)' + className + '(\\s|$)');
+	    	el.className=el.className.replace(reg, ' ');
+	  	}
+	}
+})();
+
+  </script> <!-- Resource JavaScript -->
   <style>
     /* --------------------------------
 
