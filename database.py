@@ -192,7 +192,8 @@ def searchEntry(entry):
             userInformation.phone ILIKE %s AND
             userInformation.description ILIKE %s AND
             userInformation.address ILIKE %s AND
-            userInformation.city ILIKE %s;
+            userInformation.city ILIKE %s
+            ORDER BY city ASC;
         """
 
 

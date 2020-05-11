@@ -364,6 +364,7 @@
                     var place = autocomplete.getPlace();
                 });
           }
+        // map.controls[google.maps.ControlPosition.TOP_CENTER].push(document.getElementById("NewMessage"));
 
         google.maps.event.addDomListener(window, 'load', initialize);
 
@@ -414,7 +415,7 @@
           document.getElementById("entryDescription").innerHTML = userDescr;
           document.getElementById("entryCity").innerHTML = userCity;
           document.getElementById('NewMessage').style.display='none';
-          $('#entryModal').modal('toggle');
+          document.getElementById('entryModal').style.display='block';
         }
 
 
@@ -588,7 +589,7 @@
    </div>
   </div>
 </div>
-</div>
+
 
 
   <!-- Modal -->
@@ -621,8 +622,7 @@
       </div>
     </div>
   </div>
-</div>
-</div>
+
 
   
   <div class="cd-panel cd-panel--from-right js-cd-panel-main">
@@ -1043,6 +1043,7 @@ Slide In Panel - by CodyHouse.co
 
 .modal{
   height: 90%;
+
 }
 
 #entryBody {
@@ -1313,4 +1314,4 @@ Slide In Panel - by CodyHouse.co
     </body>
 </html>
 
-</html>
+

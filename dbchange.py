@@ -47,7 +47,7 @@ def change():
 
         change = """
         DELETE from userinformation 
-        WHERE netid = 'bgaerwgaer';
+        WHERE netid = 'bj';
         """
 
         # change = """UPDATE userInformation
