@@ -5,7 +5,7 @@
     rec = encodeURIComponent(reciever);
     var message = document.getElementById('message').value;
 
-    if (message == '') {
+    if (message.trim() == '') {
       return;
     }
 

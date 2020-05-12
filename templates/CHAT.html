@@ -551,7 +551,7 @@ let request = null;
     var rec = encodeURIComponent(reciever);
     var message = document.getElementById('in_chat_message').value;
      
-    if (message == '') {	
+    if (message.trim() == '') {	
       return;	
     }
      
