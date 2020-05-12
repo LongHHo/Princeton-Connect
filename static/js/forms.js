@@ -10,7 +10,7 @@ function displayResults(userNetid, userName, userEmail, userPhone, userDescr, us
   document.getElementById("entryDescription").innerHTML = userDescr;
   document.getElementById("entryCity").innerHTML = userCity;
   document.getElementById('NewMessage').style.display='none';
-  $('#entryModal').modal('toggle');
+  document.getElementById('entryModal').style.display='block';
 }
 
 
