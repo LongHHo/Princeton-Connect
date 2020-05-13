@@ -556,7 +556,8 @@
           <div class = "container">
           <div class = "row">
 
-          <h1 class="modal-title">Send Message</h1>
+          <h1 class="modal-title"><a href="#" data-toggle="popover" title="Inbox" data-placement="top"
+            data-content="View your messages by navigating to 'Inbox' in the top navigation bar">Send Message</a></h1>
             <span onclick="document.getElementById('NewMessage').style.display='none'" class="close" title="Close Modal">&times;</span>
           </div>
         </div>
@@ -731,6 +732,7 @@
   $(function () {
   $('[data-toggle="popover"]').popover()
 })
+$('[data-toggle="popover"]').on('click', function(e) {e.preventDefault(); return true;});
 
 $('body').on('click', function (e) {
         //did not click a popover toggle, or icon in popover toggle, or popover
