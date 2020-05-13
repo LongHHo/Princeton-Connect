@@ -323,7 +323,8 @@ font-size: 15px;
               <div class = "container">
               <div class = "row">
 
-              <h1 class="modal-title">Send Message</h1>
+              <h1 class="modal-title"><a href="#" data-toggle="popover" title="Inbox" data-placement="top"
+                data-content="Note: You can only send messages to users who have logged onto our website before">Send Message</a></h1>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span onclick="document.getElementById('NewMessage').style.display='none'" class="close" title="Close Modal">&times;</span>
               </button>
@@ -417,6 +418,19 @@ font-size: 15px;
 
 
 
+$(function () {
+  $('[data-toggle="popover"]').popover()
+})
+$('[data-toggle="popover"]').on('click', function(e) {e.preventDefault(); return true;});
+
+$('body').on('click', function (e) {
+        //did not click a popover toggle, or icon in popover toggle, or popover
+        if ($(e.target).data('toggle') !== 'popover'
+            && $(e.target).parents('[data-toggle="popover"]').length === 0
+            && $(e.target).parents('.popover.in').length === 0) { 
+            $('[data-toggle="popover"]').popover('hide');
+        }
+    });
 
 
 
