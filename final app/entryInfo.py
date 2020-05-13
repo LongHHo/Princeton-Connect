@@ -170,7 +170,7 @@ class entryInfo (object):
           newString += char
         newString = '%' + newString + '%'
         return newString
-    
+
     # returns user Information as a complete string
     def retUserInfo(self):
         string = self._name +  '  ' + self._netid + '  ' + \
