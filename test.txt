@@ -1,3 +1,0 @@
-Connecting to the PostgreSQL database...
-Database connection closed.
-40.39364701924047 -74.71288503218365

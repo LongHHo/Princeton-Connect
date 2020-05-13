@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html>
+  <head>
+      <title> Princeton Connect</title>
+      <meta charset="utf-8">
+      <!-- if two style sheets modify the same component, the last one takes precedence -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
+
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+      <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+      <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script> -->
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <style>
+        /* Set the size of the div element that contains the map */
+        body, html, #map {
+          height: 100%;
+          width: 100%;  /* The height is 400 pixels */
+     /* The width is the width of the web page */
+        }
+        .bg-primary {
+          background-color: #000000!important;
+        }
+
+        .badge{
+          position: relative;
+          top: -15px;
+          padding: 5px 10px;
+          border-radius: 50%;
+          background-color: red;
+          color: white;
+          }
+      </style>
+  </head>
+  <body onLoad="document.getElementById('name1').focus(); getResults()">
+
+
+    <main class="cd-main-content">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-primary static-top">
+        <div class="container">
+          <a class="navbar-brand" href="/templates/home">
+            <img src="/static/connectlogo.png" height="45" class="d-inline-block align-top" alt="Princeton Connect">
+              </a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+              </button>
+          <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav ml-auto">
+              <li class="nav-item active">
+                <a class="nav-link" href="/templates/home">Home
+                      <span class="sr-only">(current)</span>
+                    </a>
+              </li>
+              <li class="nav-item">
+                <a  class="nav-link" href = "/templates/chat">Inbox<span class="sr-only">(current)</span><span class="badge"></span></a>
+    
+              </li>              
+              <li class="nav-item">
+                <a class="nav-link" href="/logout">Logout</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+
+
+      <!-- <div id = "header">
+          <h1>Princeton Connect</h1>
+      </div> -->
+
+
+      <div id = "content">
+        <h3> Welcome to Princeton Connect!</h3>
+        <!-- feel free to move this or delete, just testing -->
+        <h4> Hello, {{netid}} </h4>
+        <p> Princeton Connect helps students find roommates for summer travels. If this is your first time on the site, go ahead and
+          make an entry by clicking the 'Your Entry' button, where you will enter where you will be for the summer. You can also search
+          for already existing entries by clicking the 'Entry Look-Up' button or clicking on the tigers in the map below.
+        </p>
+        <a href="#1" class ="cd-btn js-cd-panel-trigger" data-panel="left" onclick="openForm()">Your Entry</a>
+        <a href="#0" class="cd-btn js-cd-panel-trigger" data-panel="main">Entry Look-Up</a>
+      </div>
+      <style>
+        .modal-content{
+          background-color: #424f5c;
+        }
+        .btn{
+          font-size: inherit;
+        }
+      </style>
+      
+    </main>
+
+
+      <div id="map"></div>
+
+
+      <script>
+
+     var data= {{ markersData|tojson }};
+      data = JSON.parse(data);
+      var userNetid = {{ netid|tojson }};
+
+      </script>
+
+      
+  <script type="text/javascript" src="{{ url_for('static', filename='js/mapbuilder.js') }}">
+  </script>
+      <script async defer
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDQe5G3tqd5Vfwefn7w3Djrv1L1bmlKkTw&libraries=places, geometry&callback=initMap">
+
+      </script>
+
+<!-- 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script> -->
+
+
+
+
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
+
+<script>
+  function openForm() {
+  document.getElementsByName('name')[0].value= {{name | tojson}};
+  document.getElementsByName('email')[0].value= {{email | tojson}};
+  document.getElementsByName('phone')[0].value= {{phone | tojson}};
+  document.getElementsByName('description')[0].value= {{description | tojson}};
+  document.getElementsByName('city')[0].value= {{city | tojson}};
+  document.getElementsByName('address')[0].value= {{address | tojson}};
+
+  // $('#id01').modal('show');
+
+}
+</script>
+
+
+  <script type="text/javascript" src="{{ url_for('static', filename='js/forms.js') }}">
+        </script>
+
+
+
+
+  <div class="cd-panel cd-panel--from-left js-cd-panel-left">
+    <header class="cd-panel__header">
+      <h1>Your Entry</h1>
+      <a href="#1" class="cd-panel__close js-cd-close">Close</a>
+    </header>
+    <div class="cd-panel__container">
+        <div class="modal dialog modal-dialog-scrollable">
+        <form id="submitForm" name="submitForm" class="modal-content" action="/templates/handleSubmit" onsubmit="validateForm(this); return false"  method="POST">
+          <div class="modal-header">
+            <div class="container">
+              <div class="row">
+              <p>Submit or edit your entry here</p>
+              </div>
+              <div class="row">
+              <p>If you already submitted an entry, it will display in the text boxes</p>
+              </div>
+            </div>
+          </div>
+    
+
+        <div class= "modal-body">
+        <label for="name"><b>Name*:</b></label>
+        <input type="text" placeholder="" id="name" name="name" required>
+        <span class="errorname" aria-live="polite"></span>
+
+        <label for="email"><b>Email*: </b></label>
+        <input type="email" placeholder="ex: bob@princeton.edu" id="email" name="email" pattern="^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$" required>
+        <span class="erroremail" aria-live="polite"></span>
+
+        <label for="phone"><b>Phone: </b></label>
+        <input type="tel" placeholder="Format: 123-456-7890" id="phone" name="phone" pattern="([0-9]{3}-[0-9]{3}-[0-9]{4})|([0-9]{1}-[0-9]{3}-[0-9]{3}-[0-9]{4})|([0-9]{10})" >
+        <span class="errorphone" aria-live="polite"></span>
+        <p></p>
+        <label for="description"><b>Description: </b></label>
+        <textarea type="textarea" placeholder="Whether for a roommate or a friend, tell us about yourself and what you're looking for"
+        id="description" name="description" style="height:200px"></textarea>
+        <span class="errordesc" aria-live="polite"></span>
+
+        <label for="city"><b>City*: </b></label>
+        <input type="text" placeholder="Enter what city you will be staying in" id="city" name="city" required>
+        <span class="errorcity" aria-live="polite"></span>
+
+      
+        <label for="address"><b>
+        <a href="#" data-toggle="popover" title="Address (optional)" data-placement="right"
+         data-content="If you want to put yourself on the map, put an address. This might be the location of your summer activity or your summer residence if you already have one. YOU will be represented by a white tiger.
+         To protect our users, markers are approximations of the actual address.">
+          Address: </a></b></label>
+        <input type="text" placeholder="Enter address" id="address" name="address">
+        <span style="color:red" class="erroraddress" aria-live="polite"></span>
+        
+        </div>
+
+        <div class="modal-footer">
+          <button type="submit" class="btn submit">Submit</button>
+          <button href="#1" type="button" class="btn cancel js-cd-close">Close</a>
+          <a href="/templates/delete"><button type="button" class="btn delete">Delete Entry</button></a>
+        </div>
+    </form>
+  </div>
+</div>
+</div>
+
+
+<div id="NewMessage" class="modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+        <div class = "modal-header">
+          <div class = "container">
+          <div class = "row">
+
+
+
+            <h1 class="modal-title"><a href="#" data-toggle="popover" title="Inbox" data-placement="top"
+              data-content="View your messages by navigating to 'Inbox' in the top navigation bar">Send Message</a></h1>
+              <span onclick="document.getElementById('NewMessage').style.display='none'" class="close" title="Close Modal">&times;</span>
+          </div>
+        </div>
+      </div>
+      <div class="modal-body">
+        <input type="text" name="NetID" id="msgNetid" list="userData" disabled></input>
+
+        <datalist id="userData">
+        </datalist>
+        <p></p>
+
+        <textarea name="message" placeholder="message" id="message" required></textarea>
+
+        <style>
+
+        .message {
+          width: 100%;
+        }
+        </style>
+
+      </div>
+
+      <div class="modal-footer">
+       <button type="submit" class="btn submit" onclick="send_new_message();" id="sendNewMessage" align="left"> Send </button>
+       <button type="button" class="btn cancel" onclick="document.getElementById('NewMessage').style.display='none'" align="right"> Cancel</button>
+     </div>
+   </div>
+  </div>
+</div>
+</div>
+
+
+  <!-- Modal -->
+  <div id="entryModal" class="modal" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+
+      <!-- Modal content Shows the Information for each student-->
+      <div class="modal-content">
+        <div id="entryHeader" class="modal-header">
+          <span onclick="closeEntry()" class="close" title="Close Modal">&times;</span>
+
+          <h2 id="entryNetid" class="modal-header"></h2>
+        </div>
+        <div id="entryBody" class="modal-body">
+        <label for="entryName"><b>Name: </b></label>
+          <p id="entryName"></p>
+        <label for="entryEmail"><b>Email: </b></label>
+          <p id="entryEmail"></p>
+        <label for="entryPhone"><b>Phone: </b></label>
+          <p id="entryPhone"></p>
+        <label for="entryCity"><b>City: </b></label>
+          <p id="entryCity"></p>
+        <label for="entryDescription"><b>Description: </b></label>
+          <p id="entryDescription"></p>
+          <p></p>
+        </div>
+        <div id="entryFooter" class="modal-footer">
+        <button type="button" class="btn btn-light" id="sendMsgBtn" onclick="closeEntry(); openMsgForm();">Click here to send a message</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+  
+  <div class="cd-panel cd-panel--from-right js-cd-panel-main">
+		<header class="cd-panel__header">
+        <h1>Entry Look Up</h1>
+			<a href="#0" class="cd-panel__close js-cd-close">Close</a>
+		</header>
+
+		<div class="cd-panel__container">
+			<div id="searchArea" class="cd-panel__content">
+        <tr>
+          <td align = "left">
+            <label for="description">
+              <p></p>
+              <h3>Search for entries by name, description, or city here. Click on an entry to reveal more information.</h3>
+            </label>
+          </td>
+        </tr>
+       <form>
+        <table class="searchbox">
+          <tr>
+            <td align = "left">
+            <label for="name">
+              <h2>&nbsp;&nbsp; &nbsp;&nbsp; Name: </h2>
+            </label>
+          </td>
+            <td><input type="text" placeholder="Name" id="name1" name="name1" oninput="getResults()"/></td>
+          </tr>
+
+          <tr>
+            <td align = "left">
+              <label for="description">
+                <h2>&nbsp;&nbsp; &nbsp;&nbsp; Description: &nbsp;&nbsp;</h2>
+              </label>
+            </td>
+              <td><input type="text" placeholder="Description" id="description1" name="description1" oninput="getResults()"/></td>
+          </tr>
+
+          <tr>
+          <td align = "left">
+            <label for="City">
+              <h2>&nbsp;&nbsp; &nbsp;&nbsp; City: </h2>
+            </label>
+          </td>            
+            <td><input type="text" placeholder="City" id="city1" name="city1" oninput="getResults()"/></td>
+          </tr>
+        </table>
+
+
+      <div class="container">
+        <p id="ResultsArea"></p>
+     </div>
+    </div>
+  </div>
+</div>
+
+
+<script type="text/javascript" src="{{ url_for('static', filename='js/handleMessages.js') }}"></script>
+
+  <script>
+
+
+$(function () {
+  $('[data-toggle="popover"]').popover()
+})
+$('[data-toggle="popover"]').on('click', function(e) {e.preventDefault(); return true;});
+
+$('body').on('click', function (e) {
+        //did not click a popover toggle, or icon in popover toggle, or popover
+        if ($(e.target).data('toggle') !== 'popover'
+            && $(e.target).parents('[data-toggle="popover"]').length === 0
+            && $(e.target).parents('.popover.in').length === 0) { 
+            $('[data-toggle="popover"]').popover('hide');
+        }
+    });
+
+
+    function handleN(result){
+      $('.badge').html(result);
+
+
+    }
+    getNotifications();
+    setInterval(function(){ getNotifications()}, 10000);
+    function getNotifications(){
+      url = '/getNotifications'
+      r = $.ajax(
+      {
+        type: "GET",
+        url: url,
+        success: handleN
+      }
+    );
+    }
+
+ </script>
+
+       
+<script type="text/javascript" src="{{ url_for('static', filename='js/handleSearch.js') }}">
+</script>
+
+<script type="text/javascript" src="{{ url_for('static', filename='js/panels.js') }}">
+</script>
+
+  <style>
+    /* --------------------------------
+
+Primary style
+
+-------------------------------- */
+*, *::after, *::before {
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+html {
+  font-size: 62.5%;
+}
+
+body {
+  font-size: 1.6rem;
+  font-family: "Droid Sans", sans-serif;
+  color: #dbe2e9;
+  background: #424f5c;
+}
+
+a {
+  color: #d47d0a;
+  text-decoration: none;
+}
+
+/* --------------------------------
+
+Slide In Panel - by CodyHouse.co
+
+-------------------------------- */
+
+
+.cd-btn {
+  position: relative;
+  display: inline-block;
+  padding: 1em 2em;
+  background-color: #d47d0a;
+  color: #ffffff;
+  border-radius: 50em;
+  -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5), 0 0 5px rgba(0, 0, 0, 0.1);
+          box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5), 0 0 5px rgba(0, 0, 0, 0.1);
+  -webkit-transition: -webkit-box-shadow 0.2s;
+  transition: -webkit-box-shadow 0.2s;
+  transition: box-shadow 0.2s;
+  transition: box-shadow 0.2s, -webkit-box-shadow 0.2s;
+}
+
+.cd-btn:hover {
+  -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5), 0 0 20px rgba(0, 0, 0, 0.3);
+          box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5), 0 0 20px rgba(0, 0, 0, 0.3);
+}
+
+@media only screen and (min-width: 1170px) {
+  .cd-main-content h1 {
+    font-size: 3.2rem;
+  }
+}
+
+.cd-panel {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  visibility: hidden;
+  -webkit-transition: visibility 0s 0.6s;
+  transition: visibility 0s 0.6s;
+}
+
+.cd-panel::after {
+  /* overlay layer */
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  cursor: pointer;
+  -webkit-transition: background 0.3s 0.3s;
+  transition: background 0.3s 0.3s;
+}
+
+.cd-panel.cd-panel--is-visible {
+  visibility: visible;
+  -webkit-transition: visibility 0s 0s;
+  transition: visibility 0s 0s;
+}
+
+.cd-panel.cd-panel--is-visible::after {
+  background: rgba(0, 0, 0, 0.6);
+  -webkit-transition: background 0.3s 0s;
+  transition: background 0.3s 0s;
+}
+
+.cd-panel__header {
+  position: fixed;
+  width: 90%;
+  height: 50px;
+  line-height: 50px;
+  background: rgba(0, 0, 0, 0.96);
+  z-index: 2;
+  -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.08);
+          box-shadow: 0 1px 1px rgba(0, 0, 0, 0.08);
+  -webkit-transition: -webkit-transform 0.3s 0s;
+  transition: -webkit-transform 0.3s 0s;
+  transition: transform 0.3s 0s;
+  transition: transform 0.3s 0s, -webkit-transform 0.3s 0s;
+  -webkit-transform: translateY(-50px);
+      -ms-transform: translateY(-50px);
+          transform: translateY(-50px);
+}
+
+.cd-panel__header h1 {
+  background-color: black;
+  color: #fa940f;
+  padding-left: 5%;
+  padding-top: 1.5%;
+}
+
+.cd-panel--from-right .cd-panel__header {
+  right: 0;
+}
+
+.cd-panel--from-left .cd-panel__header {
+  left: 0;
+}
+
+.cd-panel--is-visible .cd-panel__header {
+  -webkit-transition: -webkit-transform 0.3s 0.3s;
+  transition: -webkit-transform 0.3s 0.3s;
+  transition: transform 0.3s 0.3s;
+  transition: transform 0.3s 0.3s, -webkit-transform 0.3s 0.3s;
+  -webkit-transform: translateY(0px);
+      -ms-transform: translateY(0px);
+          transform: translateY(0px);
+}
+
+.modal{
+  height: 90%;
+}
+
+#entryBody {
+  background-image: url(/static/princeton.png);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+
+}
+
+
+#entryBody p {
+   color: white;
+}
+#entryBody label {
+   color: rgb(248, 189, 80);
+}
+
+#entryFooter {
+  background-image: linear-gradient(-90deg, orange,black);
+}
+
+#entryFooter button{
+  margin-left: 0;
+  margin-right: 52%;
+  margin-top: 3px;
+  margin-bottom: 3px;
+}
+
+#entryHeader {
+  background-image: linear-gradient(90deg, orange,black);
+}
+
+#entryHeader h2{
+   color: white; 
+}
+
+.informWindow p{
+   color: black;
+   overflow: wrap;
+   word-wrap: break-word;
+   max-width: 100%;
+}
+
+.informWindow button {
+   font: 12px;
+   background-color: lightgreen;
+}
+
+/* #searchArea {
+  background-image: linear-gradient(45deg, orange,black);
+} */
+
+
+
+
+
+
+@media only screen and (min-width: 768px) {
+  .cd-panel__header {
+    width: 70%;
+  }
+}
+
+@media only screen and (min-width: 1170px) {
+  .cd-panel__header {
+    width: 50%;
+  }
+}
+
+.cd-panel__close {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: 60px;
+  /* image replacement */
+  display: inline-block;
+  overflow: hidden;
+  text-indent: 100%;
+  white-space: nowrap;
+}
+
+.cd-panel__close::before, .cd-panel__close::after {
+  /* close icon created in CSS */
+  content: '';
+  position: absolute;
+  top: 22px;
+  left: 20px;
+  height: 3px;
+  width: 20px;
+  background-color: #424f5c;
+  /* this fixes a bug where pseudo elements are slighty off position */
+  -webkit-backface-visibility: hidden;
+          backface-visibility: hidden;
+}
+
+.cd-panel__close::before {
+  -webkit-transform: rotate(45deg);
+      -ms-transform: rotate(45deg);
+          transform: rotate(45deg);
+}
+
+.cd-panel__close::after {
+  -webkit-transform: rotate(-45deg);
+      -ms-transform: rotate(-45deg);
+          transform: rotate(-45deg);
+}
+
+.cd-panel__close:hover {
+  background-color: #424f5c;
+}
+
+.cd-panel__close:hover::before, .cd-panel__close:hover::after {
+  background-color: #000000;
+  -webkit-transition: -webkit-transform 0.3s;
+  transition: -webkit-transform 0.3s;
+  transition: transform 0.3s;
+  transition: transform 0.3s, -webkit-transform 0.3s;
+}
+
+.cd-panel__close:hover::before {
+  -webkit-transform: rotate(220deg);
+      -ms-transform: rotate(220deg);
+          transform: rotate(220deg);
+}
+
+.cd-panel__close:hover::after {
+  -webkit-transform: rotate(135deg);
+      -ms-transform: rotate(135deg);
+          transform: rotate(135deg);
+}
+
+.cd-panel--is-visible .cd-panel__close::before {
+  -webkit-animation: cd-close-1 0.6s 0.3s;
+          animation: cd-close-1 0.6s 0.3s;
+}
+
+.cd-panel--is-visible .cd-panel__close::after {
+  -webkit-animation: cd-close-2 0.6s 0.3s;
+          animation: cd-close-2 0.6s 0.3s;
+}
+
+@-webkit-keyframes cd-close-1 {
+  0%, 50% {
+    -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(45deg);
+            transform: rotate(45deg);
+  }
+}
+
+@keyframes cd-close-1 {
+  0%, 50% {
+    -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(45deg);
+            transform: rotate(45deg);
+  }
+}
+
+@-webkit-keyframes cd-close-2 {
+  0%, 50% {
+    -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(-45deg);
+            transform: rotate(-45deg);
+  }
+}
+
+@keyframes cd-close-2 {
+  0%, 50% {
+    -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(-45deg);
+            transform: rotate(-45deg);
+  }
+}
+
+.cd-panel__container {
+  position: fixed;
+  width: 90%;
+  height: 100%;
+  top: 50px;
+  background: #424f5c;
+  z-index: 1;
+  -webkit-transition: -webkit-transform 0.3s 0.3s;
+  transition: -webkit-transform 0.3s 0.3s;
+  transition: transform 0.3s 0.3s;
+  transition: transform 0.3s 0.3s, -webkit-transform 0.3s 0.3s;
+}
+
+.cd-panel--from-right .cd-panel__container {
+  right: 0;
+  -webkit-transform: translate3d(100%, 0, 0);
+          transform: translate3d(100%, 0, 0);
+}
+
+.cd-panel--from-left .cd-panel__container {
+  left: 0;
+  -webkit-transform: translate3d(-100%, 0, 0);
+          transform: translate3d(-100%, 0, 0);
+}
+
+.cd-panel--is-visible .cd-panel__container {
+  -webkit-transform: translate3d(0, 0, 0);
+          transform: translate3d(0, 0, 0);
+  -webkit-transition-delay: 0s;
+          transition-delay: 0s;
+}
+
+@media only screen and (min-width: 768px) {
+  .cd-panel__container {
+    width: 70%;
+  }
+}
+
+@media only screen and (min-width: 1170px) {
+  .cd-panel__container {
+    width: 50%;
+  }
+}
+
+.cd-panel__content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding-left: 20px;
+  width: 100%;
+  height: 100%;
+  background-color: #424f5c;
+  overflow:scroll;
+  /* smooth scrolling on touch devices */
+  -webkit-overflow-scrolling: touch;
+}
+
+.cd-panel__content p {
+  font-size: 1.4rem;
+  color: #424f5c;
+  line-height: 1.4;
+  margin-top: 1rem;
+}
+
+.cd-panel__content h2 {
+  margin-top: 1rem;
+}
+
+.cd-panel__content p:first-of-type {
+  margin-top: 0;
+}
+
+@media only screen and (min-width: 768px) {
+  .cd-panel__content p {
+    font-size: 1.6rem;
+    line-height: 1.6;
+  }
+}
+
+  </style>
+    </body>
+</html>
+
+</html>
