@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <title>Inbox</title>
+      <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" type="text/css" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+   </head>
+   <style>
+
+   body {
+     width: 100%;
+     height: 100%
+   }
+
+   .row{
+     margin-right: 0px;
+     height: 100%
+   }
+
+   .left{
+     height: 100%
+   }
+
+   
+
+
+   /* div.left{
+      position:relative;
+      float: left;
+      width: 50%;
+      height: 900px;
+      overflow: auto;
+}
+
+div.right{
+      position:relative;
+      float: right;
+      width: 100%;
+      height: 900px;
+      overflow: auto;
+} */
+div.chat_ib{
+   /* border: solid; */
+   outline: 2px solid gray;
+   background-color: lightblue;
+   margin: 10px;
+   outline-offset: 15px;
+   align: center;
+}
+
+div.messageSend{
+   border: solid;
+   margin: 8px;
+   width: 200px;
+   background-color: lightgoldenrodyellow;
+}
+
+div.messageRecieve{
+   border: solid;
+   margin: 8px;
+   width: 200px;
+   background-color: lightcoral;
+}
+
+
+div.MessagesContainer{
+   overflow: auto;
+   height:100%;
+   width:100%;  
+
+}
+
+.chat_ib:hover{
+  background-color: rgb(221, 134, 3);
+}
+
+.chat_ib.active {
+
+background-color: black;
+
+word-wrap:break-word;
+display: inline;
+overflow: visible;
+}
+
+.chat_ib{
+
+background-color: rgb(255, 153, 0) ;
+word-wrap:break-word;
+display: inline;
+overflow: visible;
+cursor:pointer;
+}
+
+
+
+
+div.ContactContainer{
+   overflow-y: scroll;
+   height: inherit;
+   width:100%;
+
+}
+
+
+/* #NewMessage{
+
+   box-shadow:2px 10px 30px;
+   position: fixed;
+   display: none;
+   right: 50%;
+   width:600px;
+   z-index: 1000;
+   background-color: white;
+
+}
+
+/* .container{max-width:1170px; margin:auto;} */
+
+.received_msg {
+  display: inline-block;
+  padding: 0 0 0 10px;
+  vertical-align: top;
+  width: 92%;
+ }
+ .received_withd_msg p {
+  background: orange none repeat scroll 0 0;
+  border-radius: 3px;
+  color: #646464;
+  font-size: 14px;
+  margin: 0;
+  padding: 5px 10px 5px 12px;
+  width: 100%;
+  word-wrap: break-word;
+}
+
+.received_withd_msg h6 {
+  color: #646464;
+  font-size: 10px;
+  padding-left: 12px;
+  margin: 0;
+  word-wrap: break-word;
+}
+.time_date {
+  color: #747474;
+  display: block;
+  font-size: 12px;
+  margin: 8px 0 0;
+}
+.received_withd_msg { width: 57%;}
+.mesgs {
+  float: left;
+  padding: 30px 30px 0 25px;
+  width: 100%;
+}
+
+ .sent_msg p {
+  background: black none repeat scroll 0 0;
+  border-radius: 3px;
+  font-size: 14px;
+  margin: 0; color:#fff;
+  padding: 5px 10px 5px 12px;
+  width:100%;
+  word-wrap: break-word;
+}
+.outgoing_msg{ overflow:hidden; margin:26px 0 26px;}
+.sent_msg {
+  float: right;
+  width: 46%;
+}
+.input_msg_write input {
+  background: rgba(0, 0, 0, 0) none repeat scroll 0 0;
+  border: medium none;
+  color: #4c4c4c;
+  font-size: 15px;
+  min-height: 48px;
+  width: 100%;
+}
+.messaging { padding: 0 0 0 0;}
+.msg_history {
+  height: 420px;
+  overflow-y: auto;
+  border-style: groove;
+
+  
+}
+
+.inbox_people {
+  background: #424f5c none repeat scroll 0 0;
+  float: left;
+  overflow: hidden;
+  height: 722px;
+  width: 100%; border-right:1px solid #c4c4c4;
+}
+
+
+
+.inbox_msg {
+  border: 1px solid #c4c4c4;
+  clear: both;
+  overflow: hidden;
+}
+
+.sendResponse {
+   padding-left: inherit;
+   margin-left: 9px;
+  
+}
+
+#send_message_in_chat{
+   margin-top: 44px;
+
+}
+
+.top_spac{ margin: 20px 0 0;}
+
+
+.recent_heading {float: left; width:40%;}
+
+.headind_srch{ padding:10px 29px 10px 20px; overflow:hidden; border-bottom:1px solid #c4c4c4;}
+
+.recent_heading h4 {
+  color: #e99f16;
+  font-size: 21px;
+  margin: auto;
+  text-align: center;
+}
+
+
+.chat_ib .chat_ib{ 
+  font-size:15px; 
+  color:#464646; 
+  margin:0 0 8px 0;
+
+}
+
+
+.chat_people{ overflow:hidden; clear:both;}
+.chat_ib {
+  border-bottom: 2px solid gray;
+  border-right: 2px solid gray;
+  border-left: 2px solid gray;
+  width: 100%;
+  margin: 0;
+  padding: 18px 16px 10px;
+}
+.inbox_chat { 
+  height: 622.33px; 
+  overflow-y: auto;
+}
+
+/*body {
+  
+  background: #E8E8E8;
+}
+
+*/
+.chat_ib h4 {
+    color: white;
+font-size: 15px;
+
+}
+
+
+.bg-primary {
+          background-color: #000000!important;
+        }
+
+   </style>
+
+
+
+   <body>
+      <nav class="navbar navbar-expand-lg navbar-dark bg-primary static-top">
+         <div class="container">
+           <a class="navbar-brand" href="/templates/home">
+             <img src="/static/connectlogo.png" height="45" class="d-inline-block align-top" alt="Princeton Connect">
+               </a>
+           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                 <span class="navbar-toggler-icon"></span>
+               </button>
+           <div class="collapse navbar-collapse" id="navbarResponsive">
+             <ul class="navbar-nav ml-auto">
+               <li class="nav-item">
+                 <a class="nav-link" href="/templates/home">Home
+                       <span class="sr-only">(current)</span>
+                     </a>
+               </li>
+
+               <li class="nav-item active">
+                 <a  class="nav-link" href = "/templates/chat">Inbox<span class="sr-only">(current)</span></a>
+               </li>
+               <li class="nav-item">
+                <a class="nav-link" href="/logout">Logout</a>
+              </li>
+
+             </ul>
+           </div>
+         </div>
+       </nav>
+
+       <style>
+         .modal-content{
+           background-color: #424f5c;
+         }
+         .btn{
+           font-size: inherit;
+         }
+
+         .modal-title{
+            color: #dbe2e9;
+
+         }
+       </style>
+
+
+<div id="NewMessage" class="modal" tabindex="-1" role="dialog">
+      <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class = "modal-header">
+              <div class = "container">
+              <div class = "row">
+
+              <h1 class="modal-title">Send Message</h1>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span onclick="document.getElementById('NewMessage').style.display='none'" class="close" title="Close Modal">&times;</span>
+              </button>
+              </div>
+            </div>
+          </div>
+          <div class="modal-body">
+            <input type="text" placeholder="NetID" name="NetID" id="netid" list="userData" oninput="available_users()"></input>
+
+            <datalist id="userData">
+            </datalist>
+            <p></p>
+
+            <textarea name="message" placeholder="message" id="message" oninput="checkStatus()"></textarea>
+
+            <style>
+
+            .message {
+              width: 100%;
+            }
+            </style>
+
+          </div>
+
+          <div class="modal-footer">
+           <button type="submit" class="btn submit" onclick="send_new_message();document.getElementById('NewMessage').style.display='none';" id="sendNewMessage" align="left"> Send </button>
+           <button type="button" class="btn cancel" onclick="document.getElementById('NewMessage').style.display='none'" align="right"> Cancel</button>
+         </div>
+       </div>
+      </div>
+    </div>
+</div>
+
+
+
+  <div class="row">
+     <div class="col-sm-3">
+          <div class="left">
+
+      <!-- People Directory -->
+      <div class="inbox_people">
+         <div class="headind_srch">
+             <h4 style="color: white;"><center><strong>People</strong></center></h4>
+         </div>
+         <div class="msg_btn" onclick="document.getElementById('NewMessage').style.display='block';document.getElementById('message').value = '';">
+               <button class="btn btn-secondary btn-lg" align="center">New Message</button>
+          </div>
+          <style>
+          .btn-secondary {
+
+            width: 100%;
+          }
+
+          </style>
+        <div class="inbox_chat">
+        <div class="ContactContainer" id ="cc"></div>
+        </div>
+     </div>
+   </div>
+   </div>
+
+   <div class="col-sm-9">
+        <br> </br>
+        <h3 class="text-center">Messages</h3>
+       <div class="mesgs">
+       <div class="msg_history">
+       <div class="MessagesContainer" style="white-space: pre-wrap;" id="mc">{{message}}
+       </div>
+
+      </div>
+      <!-- <textarea class="textType" placeholder="Message"></textarea> -->
+   </div>
+   <div class="container sendResponse">
+   <div class="row">
+    <div class="col-sm-10">
+   <textarea cols="5" id="in_chat_message"></textarea>
+  </div>
+  <div class="col-sm-2">
+   <button class="btn btn-primary" id="send_message_in_chat">Reply</button>
+  </div>
+  </div>
+  </div>
+    </div>
+   </div>
+
+   <script src=
+      "https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js">
+    </script>
+
+  <script>
+
+
+
+
+
+
+
+status = 0; 
+contactSelected = ''; 
+
+
+
+function checkStatus(){
+   console.log('checkingstatus');
+   console.log(document.getElementById('message').value);
+
+   button = document.getElementById('sendNewMessage');
+   val = document.getElementById('netid').value;
+   obj = $("#userData").find("option[value='" + val + "']");
+
+   if(document.getElementById('message').value != "" && (obj  != null && obj.length > 0 )) {
+      button.disabled = false;
+    }
+    else button.disabled = true; 
+}
+
+function setup()
+  {
+   getContacts();
+   button = document.getElementById('sendNewMessage');
+   button.disabled = true;
+   checkStatus();
+   
+
+  }
+
+
+
+function changeColor(arg){
+    // scroll all the way down as well
+  var element = document.getElementById('mc');
+  element.scrollTop = element.scrollHeight;
+
+
+  console.log('changing color');
+  var x = "#" + arg; 
+  $('.chat_ib.active').removeClass('active'); 
+  $(x).addClass('active'); 
+  status = 1; 
+  contactSelected = arg; 
+
+  
+}
+
+
+function handleResponse(response)
+  {
+   button = document.getElementById('sendNewMessage');
+   console.log(response);
+    $('#userData').empty();	
+
+    $('#userData').html(response); // change id
+    checkStatus() ;
+
+  }
+
+
+let request = null;
+  function available_users(){
+
+   var netid = document.getElementById('netid').value;
+   netid = encodeURIComponent(netid);
+   let url = "/checkUser?netid=" + netid
+
+    if (request != null){
+      request.abort();
+    }
+
+    request = $.ajax(
+      {
+        type: "GET",
+        url: url,
+        success: handleResponse
+      }
+    );
+
+
+
+  }
+
+  function send_new_message(){
+    console.log('sending new message')
+    var reciever = document.getElementById('netid').value;
+    rec = encodeURIComponent(reciever);
+    var message = document.getElementById('message').value;
+    message = encodeURIComponent(message);
+    send_message(rec, message);
+    status = 1; 
+    contactSelected = rec;
+    setTimeout( function(){
+    getContacts(); setTimeout( function(){
+    getMessages(reciever)}, 500);}, 200);
+  
+  }
+
+  function refresh(){
+    console.log('refresh');
+    if(status == 1){
+      setTimeout( function(){
+      getMessages(contactSelected); setTimeout( function(){
+      getContacts()}, 500);}, 200);
+}
+  else {
+    getContacts();
+  }
+  }
+
+
+  function send_message(reciever, message){
+    
+     let url = "/sendMessage?reciever=" + reciever + "&message=" + message
+
+     r = $.ajax(
+      {
+        type: "GET",
+        url: url,
+      }
+    );
+
+
+  }
+
+  function send_message_in_chat(reciever){
+    console.log('sending message in chat to' + reciever);
+    var rec = encodeURIComponent(reciever);
+    var message = document.getElementById('in_chat_message').value;
+     
+    if (message.trim() == '') {	
+      return;	
+    }
+     
+    message = encodeURIComponent(message);
+    document.getElementById('in_chat_message').value="";
+    send_message(rec, message);
+    status = 1; 
+    contactSelected = reciever;
+    setTimeout( function(){
+      getMessages(reciever); setTimeout( function(){
+      getContacts();}, 500)}, 200);
+
+  }
+
+
+
+
+
+  function getMessages(contact){
+
+    console.log('getting messages')
+     cntct =  encodeURIComponent(contact);
+     var arg = contact; 
+     $("#send_message_in_chat").off();
+     $("#send_message_in_chat").on("click",  function(){
+   send_message_in_chat(arg)} ); 
+     //document.getElementById("send_message_in_chat").addEventListener("click", function(){
+   //send_message_in_chat(arg)});
+      
+
+     let url = "/getMessages?contact=" + cntct
+
+     r = $.ajax(
+      {
+        type: "GET",
+        url: url,
+        success: handleMessages
+      }
+    );
+
+
+
+
+  }
+
+  function handleContacts(cntcts){
+     var contacts = JSON.parse(cntcts);
+
+     data = '';
+
+
+
+for(i = 0; i < contacts.length; i++ ){
+
+   cl = ''; 
+   console.log(contactSelected);
+   console.log(status);
+   if(status == 1 && contacts[i] == contactSelected){
+     cl = 'chat_ib active';
+   }
+   else cl = 'chat_ib'; 
+   data = data + '<button class=' + JSON.stringify(cl) +  ' id=' +  JSON.stringify(contacts[i]) + ' onclick= "getMessages('+ '\''+  contacts[i] + '\''+ '); changeColor(' + '\'' + contacts[i] + '\'' + '); scrollDown()'  + '" >' + 
+    '<h4 class="personContact">' + contacts[i] + '</h4> </div>';
+   data += "\</div>"
+   }
+
+   $('#cc').html(data);
+
+for(i = 0; i < contacts.length; i++ ){
+
+      data = data + '<div class="chat_ib" id=' +  JSON.stringify(contacts[i]) + '>' + contacts[i] + '</div>';
+
+      }
+
+
+  }
+
+  function getContacts(){
+
+    url = "/getContacts"
+
+    r = $.ajax(
+      {
+        type: "GET",
+        url: url,
+        success: handleContacts
+      }
+    );
+
+  
+
+  }
+
+var checker = false;
+function scrollDown() {
+  checker = false;
+}
+
+function handleMessages(messagesData){
+
+
+var messages = JSON.parse(messagesData);
+
+
+
+var id = messages[0];
+var sender = messages[2];
+console.log('yolo')
+data = ''
+for (i = 0; i < messages[1].length; i++){
+
+   if(messages[1][i][0] == id){
+      data+="<div class=\"outgoing_msg\">"
+      data+="<div class=\"sent_msg\">"
+      data+="<p>" + messages[1][i][1] + "</p>"
+      data+= "</div>\
+            </div>"
+      // data = data + '<div class="messageSend">' + messages[1][i][1] +  '</div>';
+      }
+
+   else{
+      data+="<div class=\"incoming_msg\">"
+      data+="<div class=\"received_msg\">"
+      data+="<div class=\"received_withd_msg\">"
+      data+="<h6 class=\"msgSender\">" + sender + ": </h6>"
+      data+="<p>" + messages[1][i][1] + "</p>"
+      data += "</div>\
+              </div>\
+          </div>"
+      // data = data + '<div class="messageRecieve">' + messages[1][i][1] +  '</div>';
+   }
+
+}
+$('#mc').empty();
+$('#mc').html(data);
+
+  if (checker == false) {
+   var element = document.getElementById('mc');
+   element.scrollTop = element.scrollHeight;
+   checker = true;
+  }
+ 
+
+
+}
+
+$('document').ready(setup);
+
+setInterval(function(){ refresh()}, 10000);
+
+
+  </script>
+
+
+
+
+
+
+
+   </body>
+
+
+</html>

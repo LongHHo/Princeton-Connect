@@ -13,6 +13,7 @@ import os
 from location import geocode, coordinateOffset
 
 
+
 DATABASE_URL = os.environ['DATABASE_URL']
 # gmaps = googlemaps.Client(key='AIzaSyDQe5G3tqd5Vfwefn7w3Djrv1L1bmlKkTw')
 
