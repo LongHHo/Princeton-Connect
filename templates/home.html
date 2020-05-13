@@ -217,10 +217,11 @@
           <div class = "container">
           <div class = "row">
 
-          <h1 class="modal-title">Send Message</h1>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span onclick="document.getElementById('NewMessage').style.display='none'" class="close" title="Close Modal">&times;</span>
-          </button>
+
+
+            <h1 class="modal-title"><a href="#" data-toggle="popover" title="Inbox" data-placement="top"
+              data-content="View your messages by navigating to 'Inbox' in the top navigation bar">Send Message</a></h1>
+              <span onclick="document.getElementById('NewMessage').style.display='none'" class="close" title="Close Modal">&times;</span>
           </div>
         </div>
       </div>
@@ -346,10 +347,10 @@
   <script>
 
 
-
-  $(function () {
+$(function () {
   $('[data-toggle="popover"]').popover()
 })
+$('[data-toggle="popover"]').on('click', function(e) {e.preventDefault(); return true;});
 
 $('body').on('click', function (e) {
         //did not click a popover toggle, or icon in popover toggle, or popover
@@ -359,6 +360,7 @@ $('body').on('click', function (e) {
             $('[data-toggle="popover"]').popover('hide');
         }
     });
+
 
     function handleN(result){
       $('.badge').html(result);
